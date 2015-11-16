@@ -11,13 +11,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dmtool.dao.impl.DeloymentOptionsDao;
 import com.dmtool.domain.AdmConfig;
+import com.dmtool.domain.AgentInfo;
 import com.dmtool.domain.CommandTemplates;
 import com.dmtool.domain.DeploymentOptions;
 import com.dmtool.domain.EnvInfo;
@@ -91,9 +98,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 								repos, admConfig);
 						String commandWithValues = applyTokenValuesForCommand(command, tokenMaps);
 						
-						String consoleOutput = executeCommand(commandWithValues);
-						sb.append(System.lineSeparator());
-						sb.append(consoleOutput);
+						String consoleOutput;
+						try {
+							consoleOutput = executeCommand(commandWithValues);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						System.out.println("	Command after parsing:"+commandWithValues);
 						System.out.println("***End****ServerName:"+key);
 						System.out.println();
@@ -111,7 +122,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		//Need map for ADM_CONFIG#ENV_NAME#EXPORT
 		return sb.toString();
 	}
- 
+ /**
 	private String executeCommand(String command) {
 		Process p;
 		StringBuilder  sb = new StringBuilder();
@@ -131,7 +142,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			e.printStackTrace();
 		}
 		return sb.toString();
-	}
+	}**/
 
 	private String applyTokenValuesForCommand(String command,
 			VelocityContext context) {
@@ -203,35 +214,21 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		}
 		return envNameServerNameEnvInfo;
 	}
-	private  String getStringFromInputStream(InputStream is) {
-		if(true){
-			return "";
-		}	
-		BufferedReader br = null;
-		StringBuilder sb = new StringBuilder();
 
-		
-		try {
-
-			br = new BufferedReader(new InputStreamReader(is));
-			String line = br.readLine();	
-			while ((line = br.readLine()) != null) {
-				sb.append(line);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return sb.toString();
-
-	}
+	private String executeCommand(String command) throws IOException {
+		String POST_URL ="http://localhost:8080/SDMToolAgent/rest/executeCommand/"; 
+		   CloseableHttpClient client = HttpClients.createDefault();
+		    HttpPost httpPost = new HttpPost(POST_URL);
+		    StringEntity entity = new StringEntity(command);
+		    httpPost.setEntity(entity);
+		    //httpPost.setHeader("Accept", "application/json");
+		    //httpPost.setHeader("Content-type", "application/json");
+		 
+		    CloseableHttpResponse response = client.execute(httpPost);
+		    System.out.println(response.getStatusLine().getStatusCode());
+		    System.out.println(response.getStatusLine().getReasonPhrase());
+		    client.close();
+		    return "executed";
+ 
+    }
 }

@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 public class AuditInfo {
 	private Timestamp createTime;
 	private Timestamp updateTime;
-	private int createUser;
-	private int updateUser;
+	private Integer createUser;
+	private Integer updateUser;
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -19,16 +19,17 @@ public class AuditInfo {
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
 	}
-	public int getCreateUser() {
+	public Integer getCreateUser() {
 		return createUser;
 	}
-	public void setCreateUser(int createUser) {
+	public void setCreateUser(Integer createUser) {
 		this.createUser = createUser;
 	}
-	public int getUpdateUser() {
+	public Integer getUpdateUser() {
 		return updateUser;
 	}
-	public void setUpdateUser(int updateUser) {
+	public void setUpdateUser(Integer updateUser) {
 		this.updateUser = updateUser;
 	}
+
 }

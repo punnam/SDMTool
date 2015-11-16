@@ -66,6 +66,10 @@ app.controller('envSetupCtrl', [ '$scope', '$http', '$filter',
 				$scope.admPath = "";
 				$scope.enterpriseName = "";
 				$scope.modifyEnv = false;
+				$scope.createTime = "";
+				$scope.updateTime = "";
+				$scope.createUser = "";
+				$scope.updateUser = "";
 			}
 			$scope.deleteEnvInfo = function(envObj) {
 				$http({
@@ -93,6 +97,10 @@ app.controller('envSetupCtrl', [ '$scope', '$http', '$filter',
 				$scope.serverHost = envObj.serverHost;
 				$scope.admPath = envObj.admPath;
 				$scope.enterpriseName = envObj.enterpriseName;
+				$scope.createTime = envObj.createTime;
+				$scope.updateTime = envObj.updateTime;
+				$scope.createUser = envObj.createUser;
+				$scope.updateUser = envObj.updateUser;
 			};
 			$scope.reloadAllEnvInfo = function() {
 				$http.get("rest/getAllenvs/").success(function(response) {
@@ -109,7 +117,11 @@ app.controller('envSetupCtrl', [ '$scope', '$http', '$filter',
 					seibelPath : $scope.seibelPath,
 					serverHost : $scope.serverHost,
 					admPath : $scope.admPath,
-					enterpriseName : $scope.enterpriseName
+					enterpriseName : $scope.enterpriseName,
+					createTime : $scope.createTime,
+					updateTime : $scope.updateTime,
+					createUser : $scope.createUser,
+					updateUser : $scope.updateUser
 				};
 
 				$http({
@@ -590,16 +602,12 @@ app.controller('RegisterController', [ '$scope', '$http','$location',
 /**
  * Controls all other Pages
  */
-app.controller('PageCtrl', function(/* $scope, $location, $http */) {
-	console.log("Page Controller reporting for duty.");
+app.controller('homeCtrl', [ '$scope', '$http', '$filter',
+                          		function($scope, $http, $filter) {
+                          	alert("Punnam");
+                          			$http.get("rest/getAgentInfo/").success(function(response) {
+                          				
+                          				$scope.agentInfo = response.data;
+                          			});
 
-	// Activates the Carousel
-	$('.carousel').carousel({
-		interval : 5000
-	});
-
-	// Activates Tooltips for Social Links
-	$('.tooltip-social').tooltip({
-		selector : "a[data-toggle=tooltip]"
-	})
-});
+                          		} ]);

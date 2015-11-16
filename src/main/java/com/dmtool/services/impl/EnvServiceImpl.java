@@ -1,5 +1,6 @@
 package com.dmtool.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,18 @@ public class EnvServiceImpl implements EnvService{
 
 	@Override
 	public EnvInfo createEnv(EnvInfo envInfo) {
+		Integer objectId = envInfo.getId();
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		if(objectId == null){
+			envInfo.setCreateTime(currentTimestamp);
+			envInfo.setUpdateTime(currentTimestamp);
+			envInfo.setCreateUser(new Integer(0000));
+			envInfo.setUpdateUser(new Integer(0000));
+		}else{
+			
+			envInfo.setUpdateTime(currentTimestamp);
+			envInfo.setUpdateUser(new Integer(1111));
+		}
 		envInfo = envDao.createEnv(envInfo);
 		return envInfo;
 	}
@@ -62,6 +75,4 @@ public class EnvServiceImpl implements EnvService{
 		// TODO Auto-generated method stub
 		return envDao.getAllEnvByEnvName(envName);
 	}
-
-	
 }
