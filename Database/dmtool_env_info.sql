@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `dmtool` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `dmtool`;
--- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: localhost    Database: dmtool
 -- ------------------------------------------------------
--- Server version	5.5.46-log
+-- Server version	5.7.9-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -34,8 +34,12 @@ CREATE TABLE `env_info` (
   `SERVICE` varchar(45) DEFAULT NULL,
   `SEIBEL_PATH` varchar(45) DEFAULT NULL,
   `ADM_PATH` varchar(45) DEFAULT NULL,
+  `CREATE_TIME` datetime DEFAULT NULL,
+  `UPDATE_TIME` datetime DEFAULT NULL,
+  `CREATE_USER` int(11) DEFAULT NULL,
+  `UPDATE_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +48,7 @@ CREATE TABLE `env_info` (
 
 LOCK TABLES `env_info` WRITE;
 /*!40000 ALTER TABLE `env_info` DISABLE KEYS */;
-INSERT INTO `env_info` VALUES (5,'QA-2-Punnam','lkjkj','kjk','kj','kjk','jkjk','jk','kjk'),(6,'QA-2','mnmn','mnmn','mnm','nmnm','nmn','mnmn','mnmnm'),(7,'QA-5','bvb','','','','vcbvc','',''),(8,'QA-1m','lkjkjm','kjkhmm','kjm','kjkm','jkjkm','jkm','kjkm'),(9,'UdateQA-1m','lkjkjm','kjkm','kjm','kjkm','jkjkm','jkm','kjkm'),(10,'QA-12','lkjkj','kjk','kj','kjk','jkjk','jk','kjk'),(11,'QA-2',NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,'QA-12','SDSAD','SADSAD','sadSA','sadsa','sadSA','SDSA','DSADSA');
+INSERT INTO `env_info` VALUES (5,'QA-2-Punnam','lkjkj','kjk','kj','kjk','jkjk','jk','kjk',NULL,NULL,NULL,NULL),(10,'QA-12','lkjkj','kjk','kj','kjk','jkjk','jk','kjk',NULL,NULL,NULL,NULL),(12,'QA-12','SDSAD','SADSAD','sadSA','sadsa','sadSA','SDSA','DSADSA',NULL,NULL,NULL,NULL),(13,'QA-1','jhjh','jhj','hjhj','hjh','jhj','hjhj','hjh',NULL,'2015-11-16 11:51:44',NULL,1111),(14,'QA-2','sdsad','sdasd','sdas','sdasds','dsadasd','dsadsad','dasdas','2015-11-16 12:04:11','2015-11-16 12:04:25',0,1111);
 /*!40000 ALTER TABLE `env_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +61,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-10 20:35:30
+-- Dump completed on 2015-11-16 20:22:17
