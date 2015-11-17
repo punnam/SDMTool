@@ -1,0 +1,15 @@
+<?xml version="1.0"?> <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.dmtool.domain">
+	<class name="AgentInfo" table="agent_info">
+		<id name="id" column="ID" type="java.lang.Integer">
+			<generator class="increment"></generator>
+		</id>
+		<property name="host" column="host" type="string" />
+		<property name="remotePort" column="remote_port" type="java.lang.Integer" />
+		<property name="remoteUser" column="remote_user" type="string" />
+		<property name="remoteAddress" column="remote_address" type="string" />
+		
+		<property name="serverName" column="server_name" type="string" />
+		<property name="serverPort" column="server_port" type="java.lang.Integer" />
+	</class>
+</hibernate-mapping>
