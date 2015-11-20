@@ -1,6 +1,8 @@
 package com.dmtool.services.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +69,19 @@ public class EnvServiceImpl implements EnvService{
 	@Override
 	public List<EnvInfo> getAllEnvNames() {
 		// TODO Auto-generated method stub
-		return envDao.getAllEnvNames();
+		List<EnvInfo> envInfoList =  envDao.getAllEnvNames();
+		List<EnvInfo> envInfoUniqueList =  new ArrayList<EnvInfo>();
+		List<String> envNamesTemp = new ArrayList<String>();
+		for (Iterator<EnvInfo> iterator = envInfoList.iterator(); iterator.hasNext();) {
+			EnvInfo envInfo = iterator.next();
+			if(envNamesTemp.contains(envInfo.getName())){
+				//
+			}else{
+				envNamesTemp.add(envInfo.getName());
+				envInfoUniqueList.add(envInfo);
+			}
+		}
+		return envInfoUniqueList;
 	}
 
 	@Override

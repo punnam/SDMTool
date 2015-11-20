@@ -24,7 +24,7 @@ public class EnvDao extends HibernateDaoSupport{
 	}
 	public List<EnvInfo> getAllEnvNames() {
 	       @SuppressWarnings("unchecked")
-		List<EnvInfo> envInfoList = (List<EnvInfo>)getHibernateTemplate().find("from EnvInfo group by name");
+		List<EnvInfo> envInfoList = (List<EnvInfo>)getHibernateTemplate().find("from EnvInfo");
 	    return envInfoList;
 	}
 	
