@@ -20,7 +20,7 @@ import com.dmtool.services.UserInfoService;
  * FundsController class will expose a series of RESTful endpoints
  */
 @Controller
-public class UserInfoController {
+public class UserInfoController extends RootController{
 	@Autowired
 	private UserInfoService userInfoService;
 
@@ -66,7 +66,7 @@ public class UserInfoController {
 		logger_c.debug("Creating User Info: " + userInfo.toString());
 
 		try {
-			userInfoService.createUserInfo(userInfo);
+			userInfoService.createUserInfo(userInfo, CREATED_USER_ID);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
 			return createErrorResponse(String.format(sMessage, e.toString()));
@@ -117,7 +117,7 @@ public class UserInfoController {
 		logger_c.debug("Creating User Info: " + userInfo.toString());
 
 		try {
-			userInfoService.createUserInfo(userInfo);
+			userInfoService.createUserInfo(userInfo, CREATED_USER_ID);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
 			return createErrorResponse(String.format(sMessage, e.toString()));

@@ -28,7 +28,7 @@ import com.dmtool.user.actions.AdmServicesActions;
  * FundsController class will expose a series of RESTful endpoints
  */
 @Controller
-public class AdmConfigController {
+public class AdmConfigController extends RootController{
 	@Autowired
 	private EnvService envService;
 
@@ -52,7 +52,7 @@ public class AdmConfigController {
 		logger_c.debug("Creating Env: " + admConfig.toString());
 
 		try {
-			admConfigService.createAdmConfig(admConfig);
+			admConfigService.createAdmConfig(admConfig, CREATED_USER_ID);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
 			return createErrorResponse(String.format(sMessage, e.toString()));

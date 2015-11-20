@@ -1,6 +1,6 @@
 package com.dmtool.domain;
 
-public class AdmConfig {
+public class AdmConfig  extends AuditInfo{
 	private Integer id;
 	private String envName;
 	private String userId;

@@ -2,7 +2,7 @@ package com.dmtool.domain;
 
 import java.sql.Date;
 
-public class LicenseMgt {
+public class LicenseMgt  extends AuditInfo{
 	private Integer id;
 	private String type;
 	private Date expiryDate;

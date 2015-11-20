@@ -11,5 +11,9 @@
 		<property name="seibelServer" column="SEIBEL_SERVER" type="string" />
 		<property name="rowId" column="ROW_ID" type="string" />
 		<property name="logFilePath" column="LOG_FILE_PATH" type="string" />
+		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
+		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
+		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />
 	</class>
 </hibernate-mapping>

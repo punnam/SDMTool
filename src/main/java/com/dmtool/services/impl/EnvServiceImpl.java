@@ -33,18 +33,18 @@ public class EnvServiceImpl implements EnvService{
 	}
 
 	@Override
-	public EnvInfo createEnv(EnvInfo envInfo) {
+	public EnvInfo createEnv(EnvInfo envInfo, int userId) {
 		Integer objectId = envInfo.getId();
 		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
 		if(objectId == null){
-			envInfo.setCreateTime(currentTimestamp);
-			envInfo.setUpdateTime(currentTimestamp);
-			envInfo.setCreateUser(new Integer(0000));
-			envInfo.setUpdateUser(new Integer(0000));
+			envInfo.setCreatedTime(currentTimestamp);
+			envInfo.setUpdatedTime(currentTimestamp);
+			envInfo.setCreatedUser(userId);
+			envInfo.setUpdatedUser(userId);
 		}else{
 			
-			envInfo.setUpdateTime(currentTimestamp);
-			envInfo.setUpdateUser(new Integer(1111));
+			envInfo.setUpdatedTime(currentTimestamp);
+			envInfo.setUpdatedUser(userId);
 		}
 		envInfo = envDao.createEnv(envInfo);
 		return envInfo;

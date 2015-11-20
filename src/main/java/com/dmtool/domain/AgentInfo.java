@@ -1,7 +1,7 @@
 package com.dmtool.domain;
 
-public class AgentInfo {	
-	private int id;
+public class AgentInfo  extends AuditInfo {	
+	private Integer id;
 	private String host;
 	private int remotePort;
 	private String remoteUser;
@@ -57,10 +57,11 @@ public class AgentInfo {
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
 	}
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
+
 }

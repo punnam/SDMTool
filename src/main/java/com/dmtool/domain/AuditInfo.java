@@ -3,33 +3,32 @@ package com.dmtool.domain;
 import java.sql.Timestamp;
 
 public class AuditInfo {
-	private Timestamp createTime;
-	private Timestamp updateTime;
-	private Integer createUser;
-	private Integer updateUser;
-	public Timestamp getCreateTime() {
-		return createTime;
+	private Timestamp createdTime;
+	private Timestamp updatedTime;
+	private Integer createdUser;
+	private Integer updatedUser;
+	public Timestamp getCreatedTime() {
+		return createdTime;
 	}
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+	public void setCreatedTime(Timestamp createdTime) {
+		this.createdTime = createdTime;
 	}
-	public Timestamp getUpdateTime() {
-		return updateTime;
+	public Timestamp getUpdatedTime() {
+		return updatedTime;
 	}
-	public void setUpdateTime(Timestamp updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdatedTime(Timestamp updatedTime) {
+		this.updatedTime = updatedTime;
 	}
-	public Integer getCreateUser() {
-		return createUser;
+	public Integer getCreatedUser() {
+		return createdUser;
 	}
-	public void setCreateUser(Integer createUser) {
-		this.createUser = createUser;
+	public void setCreatedUser(Integer createdUser) {
+		this.createdUser = createdUser;
 	}
-	public Integer getUpdateUser() {
-		return updateUser;
+	public Integer getUpdatedUser() {
+		return updatedUser;
 	}
-	public void setUpdateUser(Integer updateUser) {
-		this.updateUser = updateUser;
+	public void setUpdatedUser(Integer updatedUser) {
+		this.updatedUser = updatedUser;
 	}
-
 }

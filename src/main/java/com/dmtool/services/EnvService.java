@@ -12,7 +12,7 @@ public interface EnvService {
 
 	void deleteEnvInfoById(EnvInfo env_p);
 
-	EnvInfo createEnv(EnvInfo env_p);
+	EnvInfo createEnv(EnvInfo env_p, int userId);
 
 	void modifyEnv(EnvInfo env_p);
 	public List<EnvInfo> getAllEnvNames();

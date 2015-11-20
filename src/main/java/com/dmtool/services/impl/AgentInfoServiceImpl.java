@@ -1,5 +1,7 @@
 package com.dmtool.services.impl;
 
+import java.util.Calendar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +15,21 @@ public class AgentInfoServiceImpl implements AgentInfoService {
 	AgentInfoDao agentInfoDao;
 
 	@Override
-	public AgentInfo createAgentInfo(AgentInfo agentInfo) {
-		return agentInfoDao.createUserInfo(agentInfo);
+	public AgentInfo createAgentInfo(AgentInfo agentInfo, int userId) {
+		Integer objectId = agentInfo.getId();
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		if(objectId == null){
+			agentInfo.setCreatedTime(currentTimestamp);
+			agentInfo.setUpdatedTime(currentTimestamp);
+			agentInfo.setCreatedUser(userId);
+			agentInfo.setUpdatedUser(userId);
+		}else{
+			
+			agentInfo.setUpdatedTime(currentTimestamp);
+			agentInfo.setUpdatedUser(userId);
+		}
+		agentInfo = agentInfoDao.createUserInfo(agentInfo);
+		return agentInfo;
+		
 	}
 }

@@ -25,7 +25,7 @@ import com.dmtool.services.ReposService;
  * FundsController class will expose a series of RESTful endpoints
  */
 @Controller
-public class RepoController {
+public class RepoController extends RootController{
 	@Autowired
 	private EnvService envService;
 
@@ -49,7 +49,7 @@ public class RepoController {
 		logger_c.debug("Creating Env: " + repos.toString());
 
 		try {
-			repoService.createRepos(repos);
+			repoService.createRepos(repos, CREATED_USER_ID);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
 			return createErrorResponse(String.format(sMessage, e.toString()));

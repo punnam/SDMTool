@@ -1,6 +1,6 @@
 package com.dmtool.domain;
 
-public class Repos {
+public class Repos  extends AuditInfo{
 	private Integer id;
 	private String envName;
 	private String userId;

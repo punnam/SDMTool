@@ -1,6 +1,6 @@
 package com.dmtool.domain;
 
-public class DeploymentOptions {
+public class DeploymentOptions extends AuditInfo {
 	private Integer id;
 	private String code;
 	private String description;

@@ -11,7 +11,7 @@ public interface ReposService {
 
 	void deleteRepos(Repos repo);
 
-	Repos createRepos(Repos repo);
+	Repos createRepos(Repos repo, int userId);
 
 	void modifyRepos(Repos repo);
 

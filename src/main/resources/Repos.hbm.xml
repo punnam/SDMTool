@@ -15,6 +15,10 @@
 		<property name="logFilePath" column="LOG_FILE_PATH" type="string" />
 		<property name="tableDDLSync" column="TableDDLSync" type="string" />
 		<property name="indexDDLSync" column="IndexDDLSync" type="string" />
+		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
+		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
+		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />		
 		
 	</class>
 </hibernate-mapping>

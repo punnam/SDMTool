@@ -8,6 +8,10 @@
 		<property name="description" column="DESCRIPTION" type="string" />
 		<property name="category" column="category" type="string" />
 		<property name="command" column="command" type="string" />
+		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
+		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
+		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />		
 		
 	</class>
 </hibernate-mapping>

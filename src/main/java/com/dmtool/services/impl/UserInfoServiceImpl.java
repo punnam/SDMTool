@@ -1,5 +1,6 @@
 package com.dmtool.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,21 @@ public class UserInfoServiceImpl implements UserInfoService {
 	}
 
 	@Override
-	public UserInfo createUserInfo(UserInfo userInfo) {
-		return userInfoDao.createUserInfo(userInfo);
+	public UserInfo createUserInfo(UserInfo userInfo, int userId) {
+		Integer objectId = userInfo.getId();
+		
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		if(objectId == null){
+			userInfo.setCreatedTime(currentTimestamp);
+			userInfo.setUpdatedTime(currentTimestamp);
+			userInfo.setCreatedUser(userId);
+			userInfo.setUpdatedUser(userId);
+		}else{
+			userInfo.setUpdatedTime(currentTimestamp);
+			userInfo.setUpdatedUser(userId);
+		}
+		userInfo = userInfoDao.createUserInfo(userInfo);
+		return userInfo;
 	}
 
 	@Override

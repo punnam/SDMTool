@@ -8,5 +8,9 @@
 		<property name="password" column="password" type="string" />
 		<property name="firstName" column="first_Name" type="string" />
 		<property name="lastName" column="last_Name" type="string" />
+		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
+		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
+		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />		
 	</class>
 </hibernate-mapping>

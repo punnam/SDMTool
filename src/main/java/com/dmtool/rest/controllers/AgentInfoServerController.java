@@ -35,7 +35,7 @@ import com.dmtool.services.AgentInfoService;
  * FundsController class will expose a series of RESTful endpoints
  */
 @Controller
-public class AgentInfoServerController {
+public class AgentInfoServerController extends RootController{
 
 	@Autowired
 	private AgentInfoService agentInfoService;
@@ -64,7 +64,7 @@ public class AgentInfoServerController {
 		//JSON from String to Object
 		agentInfo = mapper.readValue(jsonString, AgentInfo.class);
 		
-		agentInfoService.createAgentInfo(agentInfo);
+		agentInfoService.createAgentInfo(agentInfo, CREATED_USER_ID);
 		logger_c.debug("Returing Agent Info: " + agentInfo.toString());
 		}
 		return new ModelAndView(jsonView_i, DATA_FIELD, agentInfo);

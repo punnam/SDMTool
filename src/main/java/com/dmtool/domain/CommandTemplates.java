@@ -1,6 +1,6 @@
 package com.dmtool.domain;
 
-public class CommandTemplates {
+public class CommandTemplates  extends AuditInfo{
 	private Integer id;
 	private String code;
 	private String description;

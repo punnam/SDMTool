@@ -1,6 +1,6 @@
 package com.dmtool.domain;
 
-public class UserInfo {
+public class UserInfo  extends AuditInfo{
 	private Integer id;
 	private String userId;
 	private String password;

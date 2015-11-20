@@ -6,5 +6,9 @@
         </id>
 		<property name="type" column="type" type="string" />
 		<property name="expiryDate" column="expiry_date" type="java.sql.Date" />
+		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
+		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
+		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />		
 	</class>
 </hibernate-mapping>

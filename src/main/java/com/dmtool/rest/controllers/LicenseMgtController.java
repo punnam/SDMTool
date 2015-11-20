@@ -9,7 +9,7 @@ import org.springframework.web.servlet.View;
 import com.dmtool.services.LicenseMgtService;
 
 @Controller
-public class LicenseMgtController {
+public class LicenseMgtController extends RootController {
 	@Autowired
 	private LicenseMgtService licenseMgtService;
 

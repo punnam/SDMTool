@@ -1,5 +1,6 @@
 package com.dmtool.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,22 @@ public class ReposServiceImpl implements ReposService{
 	}
 
 	@Override
-	public Repos createRepos(Repos repos) {
-		// TODO Auto-generated method stub
-		return reposDao.createRepos(repos);
+	public Repos createRepos(Repos repos, int userId) {
+		Integer objectId = repos.getId();
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		if(objectId == null){
+			repos.setCreatedTime(currentTimestamp);
+			repos.setUpdatedTime(currentTimestamp);
+			repos.setCreatedUser(userId);
+			repos.setUpdatedUser(userId);
+		}else{
+			repos.setUpdatedTime(currentTimestamp);
+			repos.setUpdatedUser(userId);
+		}
+		repos = reposDao.createRepos(repos);
+		return repos;
+		
+		
 	}
 
 	@Override

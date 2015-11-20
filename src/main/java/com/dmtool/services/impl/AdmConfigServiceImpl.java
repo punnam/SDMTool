@@ -1,5 +1,6 @@
 package com.dmtool.services.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,21 @@ public class AdmConfigServiceImpl  implements AdmConfigService{
 	}
 
 	@Override
-	public AdmConfig createAdmConfig(AdmConfig admConfig) {
-		// TODO Auto-generated method stub
-		return admConfigDao.createAdmConfig(admConfig);
+	public AdmConfig createAdmConfig(AdmConfig admConfig, int userId) {
+		Integer objectId = admConfig.getId();
+		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTimeInMillis());
+		if(objectId == null){
+			admConfig.setCreatedTime(currentTimestamp);
+			admConfig.setUpdatedTime(currentTimestamp);
+			admConfig.setCreatedUser(userId);
+			admConfig.setUpdatedUser(userId);
+		}else{
+			
+			admConfig.setUpdatedTime(currentTimestamp);
+			admConfig.setUpdatedUser(userId);
+		}
+		admConfig = admConfigDao.createAdmConfig(admConfig);
+		return admConfig;
 	}
 
 	@Override

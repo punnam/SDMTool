@@ -13,9 +13,9 @@
 		<property name="seibelPath" column="SEIBEL_PATH" type="string" />
 		
 		<property name="admPath" column="ADM_PATH" type="string" />
-		<property name="createTime" column="CREATE_TIME" type="timestamp" />
-		<property name="updateTime" column="UPDATE_TIME" type="timestamp" />
-		<property name="createUser" column="CREATE_USER" type="java.lang.Integer" />
-		<property name="updateUser" column="UPDATE_USER" type="java.lang.Integer" />
+		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
+		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
+		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />
 	</class>
 </hibernate-mapping>

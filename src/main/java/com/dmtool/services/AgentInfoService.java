@@ -4,5 +4,5 @@ import com.dmtool.domain.AgentInfo;
 
 public interface AgentInfoService {
 
-	public AgentInfo createAgentInfo(AgentInfo agentInfo);
+	public AgentInfo createAgentInfo(AgentInfo agentInfo, int userId);
 }

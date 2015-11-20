@@ -66,10 +66,10 @@ app.controller('envSetupCtrl', [ '$scope', '$http', '$filter',
 				$scope.admPath = "";
 				$scope.enterpriseName = "";
 				$scope.modifyEnv = false;
-				$scope.createTime = "";
-				$scope.updateTime = "";
-				$scope.createUser = "";
-				$scope.updateUser = "";
+				$scope.createdTime = "";
+				$scope.updatedTime = "";
+				$scope.createdUser = "";
+				$scope.updatedUser = "";
 			}
 			$scope.deleteEnvInfo = function(envObj) {
 				$http({
@@ -97,10 +97,10 @@ app.controller('envSetupCtrl', [ '$scope', '$http', '$filter',
 				$scope.serverHost = envObj.serverHost;
 				$scope.admPath = envObj.admPath;
 				$scope.enterpriseName = envObj.enterpriseName;
-				$scope.createTime = envObj.createTime;
-				$scope.updateTime = envObj.updateTime;
-				$scope.createUser = envObj.createUser;
-				$scope.updateUser = envObj.updateUser;
+				$scope.createdTime = envObj.createdTime;
+				$scope.updatedTime = envObj.updatedTime;
+				$scope.createdUser = envObj.createdUser;
+				$scope.updatedUser = envObj.updatedUser;
 			};
 			$scope.reloadAllEnvInfo = function() {
 				$http.get("rest/getAllenvs/").success(function(response) {
@@ -118,10 +118,10 @@ app.controller('envSetupCtrl', [ '$scope', '$http', '$filter',
 					serverHost : $scope.serverHost,
 					admPath : $scope.admPath,
 					enterpriseName : $scope.enterpriseName,
-					createTime : $scope.createTime,
-					updateTime : $scope.updateTime,
-					createUser : $scope.createUser,
-					updateUser : $scope.updateUser
+					createdTime : $scope.createdTime,
+					updatedTime : $scope.updatedTime,
+					createdUser : $scope.createdUser,
+					updatedUser : $scope.updatedUser
 				};
 
 				$http({
@@ -172,6 +172,10 @@ app.controller('reposCtrl', [ '$scope', '$http', function($scope, $http) {
 		$scope.logFilePath = "";
 		$scope.tableDDLSync = "";
 		$scope.indexDDLSync = "";
+		$scope.createdTime = "";
+		$scope.updatedTime = "";
+		$scope.createdUser = "";
+		$scope.updatedUser = "";
 		
 	}
 	$scope.deleteRepos = function(repoObj) {
@@ -202,6 +206,10 @@ app.controller('reposCtrl', [ '$scope', '$http', function($scope, $http) {
 		$scope.logFilePath = repoObj.logFilePath;
 		$scope.tableDDLSync = repoObj.tableDDLSync;
 		$scope.indexDDLSync = repoObj.indexDDLSync;
+		$scope.createdTime = envObj.createdTime;
+		$scope.updatedTime = envObj.updatedTime;
+		$scope.createdUser = envObj.createdUser;
+		$scope.updatedUser = envObj.updatedUser;
 		
 	};
 	$scope.reloadAllRepos = function() {
@@ -221,8 +229,11 @@ app.controller('reposCtrl', [ '$scope', '$http', function($scope, $http) {
 			repoName : $scope.repoName,
 			logFilePath : $scope.logFilePath,
 			tableDDLSync : $scope.tableDDLSync,
-			indexDDLSync : $scope.indexDDLSync
-
+			indexDDLSync : $scope.indexDDLSync,
+			createdTime : $scope.createdTime,
+			updatedTime : $scope.updatedTime,
+			createdUser : $scope.createdUser,
+			updatedUser : $scope.updatedUser
 		};
 
 		$http({
@@ -272,6 +283,10 @@ app.controller('admConfigCtrl', [ '$scope', '$http', function($scope, $http) {
 		$scope.seibelServer = "";
 		$scope.rowId = "";
 		$scope.logFilePath = "";
+		$scope.createdTime = "";
+		$scope.updatedTime = "";
+		$scope.createdUser = "";
+		$scope.updatedUser = "";
 	}
 	$scope.deleteAdmConfig = function(admConfig) {
 		$http({
@@ -301,6 +316,10 @@ app.controller('admConfigCtrl', [ '$scope', '$http', function($scope, $http) {
 		$scope.seibelServer = admConfig.seibelServer;
 		$scope.rowId = admConfig.rowId;
 		$scope.logFilePath = admConfig.logFilePath;
+		$scope.createdTime = envObj.createdTime;
+		$scope.updatedTime = envObj.updatedTime;
+		$scope.createdUser = envObj.createdUser;
+		$scope.updatedUser = envObj.updatedUser;
 	};
 	$scope.reloadAllAdmConfigs = function() {
 		$http.get("rest/admConfig/getAllAdmConfig/").success(function(response) {
@@ -316,7 +335,11 @@ app.controller('admConfigCtrl', [ '$scope', '$http', function($scope, $http) {
 			seibelServer : $scope.seibelServer,
 			rowId : $scope.rowId,
 			logFilePath : $scope.logFilePath,
-			admConfigType:$scope.admConfigType
+			admConfigType:$scope.admConfigType,
+			createdTime : $scope.createdTime,
+			updatedTime : $scope.updatedTime,
+			createdUser : $scope.createdUser,
+			updatedUser : $scope.updatedUser
 		};
 		
 		$http({
