@@ -13,7 +13,7 @@ public class UserInfoDao extends HibernateDaoSupport {
 	public List<UserInfo> getUserByUserId(String userId) {
 		@SuppressWarnings("unchecked")
 		List<UserInfo> users = getHibernateTemplate().find(
-				"from UserInfo d where d.userid=?", userId);
+				"from UserInfo d where d.userId=?", new Object[]{userId});
 		return users;
 	}
 

@@ -19,19 +19,21 @@ public class UserInfoServiceImpl implements UserInfoService {
 		UserInfo userInfo = null;
 		List<UserInfo> userInfos = userInfoDao.getUserByUserId(userId);
 		if(userInfos != null && userInfos.size() > 0 ){
-			userInfo = userInfos.get(1);
+			userInfo = userInfos.get(0);
 		}
 		return userInfo;
 	}
 
 	@Override
-	public boolean logIn(UserInfo userInfo) {
+	public UserInfo logIn(UserInfo userInfo) {
 		UserInfo userInfoFromDB = getUserByUserId(userInfo.getUserId());
 		boolean success = false;
 		if(userInfoFromDB.getPassword().equals(userInfo.getPassword())){
 			success = true;
+			return userInfoFromDB;
 		}
-		return success;
+		return null;
+		
 	}
 
 	@Override

@@ -589,6 +589,10 @@ app.controller('RegisterController', [ '$scope', '$http','$location',
 					userId : vm.user.username,
 					password : vm.user.password
 				};
+				var headerObj = {
+						userId : "Punnam",
+						sessionId : "xxxxx",
+				};
 				alert('Punnam refister:' + dataObj);
 				$http({
 					data : dataObj,
