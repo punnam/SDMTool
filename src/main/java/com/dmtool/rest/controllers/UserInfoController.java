@@ -1,6 +1,8 @@
 package com.dmtool.rest.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +38,18 @@ public class UserInfoController extends RootController{
 	}
 	@RequestMapping(value = { "/rest/UserInfo/logIn/" }, method = { RequestMethod.POST })
 	public ModelAndView logIn(@RequestBody UserInfo userInfo,
-			HttpServletResponse httpResponse_p, WebRequest request_p) {
+			HttpServletResponse httpResponse_p, HttpServletRequest httpRequest) {
 		
 		logger_c.debug("Creating User Info: " + userInfo.toString());
-
+		boolean logInStatus =  false;
 		try {
-			userInfoService.logIn(userInfo);
+			UserInfo userInfoFromSystem = userInfoService.logIn(userInfo);
+			HttpSession session = httpRequest.getSession();
+			if(userInfoFromSystem != null){
+				session.setAttribute("CURRENT_USER", userInfoFromSystem);
+				logInStatus = true;
+			}	
+			
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
 			return createErrorResponse(String.format(sMessage, e.toString()));
@@ -51,21 +59,22 @@ public class UserInfoController extends RootController{
 		httpResponse_p.setStatus(HttpStatus.CREATED.value());
 
 		/* set location of created resource */
-		httpResponse_p.setHeader("Location", request_p.getContextPath() + "/rest/userInfo/logIn" + userInfo.getId());
+		httpResponse_p.setHeader("Location", httpRequest.getContextPath() + "/rest/userInfo/logIn" + userInfo.getId());
 
 		/**
 		 * Return the view
 		 */
-		return new ModelAndView(jsonView_i, DATA_FIELD, userInfo);
+		return new ModelAndView(jsonView_i, DATA_FIELD, logInStatus);
 	}
 
 	@RequestMapping(value = { "/rest/UserInfo/registerUser/" }, method = { RequestMethod.POST })
 	public ModelAndView registerUser(@RequestBody UserInfo userInfo,
-			HttpServletResponse httpResponse_p, WebRequest request_p) {
+			HttpServletResponse httpResponse_p, HttpServletRequest request) {
 		
 		logger_c.debug("Creating User Info: " + userInfo.toString());
 
 		try {
+			boolean valid = validateUser(request);
 			userInfoService.createUserInfo(userInfo, CREATED_USER_ID);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
@@ -76,7 +85,7 @@ public class UserInfoController extends RootController{
 		httpResponse_p.setStatus(HttpStatus.CREATED.value());
 
 		/* set location of created resource */
-		httpResponse_p.setHeader("Location", request_p.getContextPath() + "/rest/userInfo/logIn" + userInfo.getId());
+		httpResponse_p.setHeader("Location", request.getContextPath() + "/rest/userInfo/logIn" + userInfo.getId());
 
 		/**
 		 * Return the view
@@ -87,11 +96,12 @@ public class UserInfoController extends RootController{
 	
 	@RequestMapping(value = { "/rest/UserInfo/getUserProfile/" }, method = { RequestMethod.POST })
 	public ModelAndView getUserProfile(@RequestBody UserInfo userInfo,
-			HttpServletResponse httpResponse_p, WebRequest request_p) {
+			HttpServletResponse httpResponse_p, HttpServletRequest request) {
 		
 		logger_c.debug("getUserProfile: " + userInfo.toString());
 
 		try {
+			boolean valid = validateUser(request);
 			userInfoService.getUserInfo(userInfo);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
@@ -102,7 +112,7 @@ public class UserInfoController extends RootController{
 		httpResponse_p.setStatus(HttpStatus.CREATED.value());
 
 		/* set location of created resource */
-		httpResponse_p.setHeader("Location", request_p.getContextPath() + "/rest/UserInfo/getUserProfile/" + userInfo.getId());
+		httpResponse_p.setHeader("Location", request.getContextPath() + "/rest/UserInfo/getUserProfile/" + userInfo.getId());
 
 		/**
 		 * Return the view
@@ -112,11 +122,12 @@ public class UserInfoController extends RootController{
 
 	@RequestMapping(value = { "/rest/UserInfo/updateUser/" }, method = { RequestMethod.POST })
 	public ModelAndView updateUser(@RequestBody UserInfo userInfo,
-			HttpServletResponse httpResponse_p, WebRequest request_p) {
-		
+			HttpServletResponse httpResponse_p, HttpServletRequest request) {
+
 		logger_c.debug("Creating User Info: " + userInfo.toString());
 
 		try {
+			boolean valid = validateUser(request);
 			userInfoService.createUserInfo(userInfo, CREATED_USER_ID);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
@@ -127,7 +138,7 @@ public class UserInfoController extends RootController{
 		httpResponse_p.setStatus(HttpStatus.CREATED.value());
 
 		/* set location of created resource */
-		httpResponse_p.setHeader("Location", request_p.getContextPath() + "/rest/userInfo/logIn" + userInfo.getId());
+		httpResponse_p.setHeader("Location", request.getContextPath() + "/rest/userInfo/logIn" + userInfo.getId());
 
 		/**
 		 * Return the view
@@ -153,5 +164,6 @@ public class UserInfoController extends RootController{
 	 */
 	public void setJsonView(View view) {
 		jsonView_i = view;
-	}	
+	}
+
 }
