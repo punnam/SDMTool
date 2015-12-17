@@ -30,20 +30,14 @@ CREATE TABLE `userinfo` (
   `password` varchar(45) DEFAULT NULL,
   `first_name` varchar(45) DEFAULT NULL,
   `last_name` varchar(45) DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `CREATED_USER` int(11) DEFAULT NULL,
+  `UPDATED_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `userid_UNIQUE` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `userinfo`
---
-
-LOCK TABLES `userinfo` WRITE;
-/*!40000 ALTER TABLE `userinfo` DISABLE KEYS */;
-INSERT INTO `userinfo` VALUES (1,'dmtool','test1234',NULL,NULL),(2,'test1','test1234','John','Doe'),(3,'test2','dsadsad','ddfdf','dsfdsf'),(4,'test3','dsadsad','adds','sadsad'),(5,'test4','dsadsad','fdgfgf','gfdgfdg'),(6,'test5','dsadsad','dsfdsf','dsfdsf'),(7,'test11','dsadsad','dsad','dsadsad'),(8,'test12','dsadsad','vcxv','vcxvcx'),(9,'test123','dsadsad','cx','cxvcx'),(10,'test14','dsadsad','sds','sdsadsa'),(11,'test21','dsadsad','xcxc','cxzcxz'),(13,'test23','dsadsad','dsfds','dsadsa'),(14,'test24','dsadsad','tytyt','hghg'),(15,'test25','dsadsad','sdsd','dsadsa');
-/*!40000 ALTER TABLE `userinfo` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -54,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 20:22:17
+-- Dump completed on 2015-12-16 21:48:27

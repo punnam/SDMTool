@@ -33,19 +33,13 @@ CREATE TABLE `adm_config` (
   `SEIBEL_SERVER` varchar(45) DEFAULT NULL,
   `ROW_ID` varchar(45) DEFAULT NULL,
   `LOG_FILE_PATH` varchar(45) DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `CREATED_USER` int(11) DEFAULT NULL,
+  `UPDATED_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `adm_config`
---
-
-LOCK TABLES `adm_config` WRITE;
-/*!40000 ALTER TABLE `adm_config` DISABLE KEYS */;
-INSERT INTO `adm_config` VALUES (6,'QA-1',NULL,'nmn','sads','fdsf',NULL,'sadsa'),(7,'Select Environment',NULL,'user','password','seibel server','','filepath'),(8,'QA-2','Export','user id','password','seibelserver',NULL,'logfile'),(9,'QA-1','Export','nmn','sads','fdsf',NULL,'sadsa'),(10,'QA-2-Punnam','Import',NULL,NULL,NULL,NULL,NULL),(11,'QA-2-Punnam','Export','hghgjmm','jhjhmmm','jhjhjmmm','rowww','jhjhmmm'),(12,'QA-2','Export',NULL,NULL,NULL,NULL,NULL),(13,'QA-12','Export','fdsf','dfsdf','fsf','dsfs','dfsd');
-/*!40000 ALTER TABLE `adm_config` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -56,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 20:22:16
+-- Dump completed on 2015-12-16 21:48:26

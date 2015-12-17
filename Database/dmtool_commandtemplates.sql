@@ -30,19 +30,13 @@ CREATE TABLE `commandtemplates` (
   `command` varchar(255) DEFAULT NULL,
   `command_order` int(11) DEFAULT NULL,
   `description` varchar(45) DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `CREATED_USER` int(11) DEFAULT NULL,
+  `UPDATED_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `commandtemplates`
---
-
-LOCK TABLES `commandtemplates` WRITE;
-/*!40000 ALTER TABLE `commandtemplates` DISABLE KEYS */;
-INSERT INTO `commandtemplates` VALUES (1,'StopServer','sc //$HOST_NAME stop //$SERVICE_NAME',1,'Server');
-/*!40000 ALTER TABLE `commandtemplates` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -53,4 +47,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 20:22:17
+-- Dump completed on 2015-12-16 21:48:27

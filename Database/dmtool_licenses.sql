@@ -30,18 +30,13 @@ CREATE TABLE `licenses` (
   `is_active` tinyint(1) DEFAULT '0',
   `updated_at` varchar(45) COLLATE utf8_unicode_ci DEFAULT 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `CREATED_USER` int(11) DEFAULT NULL,
+  `UPDATED_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`,`licensekey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `licenses`
---
-
-LOCK TABLES `licenses` WRITE;
-/*!40000 ALTER TABLE `licenses` DISABLE KEYS */;
-/*!40000 ALTER TABLE `licenses` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -52,4 +47,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 20:22:17
+-- Dump completed on 2015-12-16 21:48:27

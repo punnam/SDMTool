@@ -32,19 +32,13 @@ CREATE TABLE `agent_info` (
   `remote_address` varchar(45) DEFAULT NULL,
   `server_name` varchar(45) DEFAULT NULL,
   `server_port` varchar(45) DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `CREATED_USER` int(11) DEFAULT NULL,
+  `UPDATED_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `agent_info`
---
-
-LOCK TABLES `agent_info` WRITE;
-/*!40000 ALTER TABLE `agent_info` DISABLE KEYS */;
-INSERT INTO `agent_info` VALUES (1,NULL,'0',NULL,NULL,NULL,'0'),(2,NULL,'0',NULL,NULL,NULL,'0'),(3,NULL,'0',NULL,NULL,NULL,'0'),(4,NULL,'0',NULL,NULL,NULL,'0'),(5,'0:0:0:0:0:0:0:1','63282',NULL,'0:0:0:0:0:0:0:1','localhost','8080'),(6,'0:0:0:0:0:0:0:1','63298',NULL,'0:0:0:0:0:0:0:1','localhost','8080');
-/*!40000 ALTER TABLE `agent_info` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -55,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 20:22:16
+-- Dump completed on 2015-12-16 21:48:26

@@ -36,19 +36,13 @@ CREATE TABLE `export_repos` (
   `REPO_NAME` varchar(45) DEFAULT NULL,
   `TableDDLSync` varchar(45) DEFAULT NULL,
   `IndexDDLSync` varchar(45) DEFAULT NULL,
+  `CREATED_TIME` datetime DEFAULT NULL,
+  `UPDATED_TIME` datetime DEFAULT NULL,
+  `CREATED_USER` int(11) DEFAULT NULL,
+  `UPDATED_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `export_repos`
---
-
-LOCK TABLES `export_repos` WRITE;
-/*!40000 ALTER TABLE `export_repos` DISABLE KEYS */;
-INSERT INTO `export_repos` VALUES (1,'QA-1','userid','password','server','e file path','Export','logfile','row','ddl sync','index'),(2,'QA-2-Punnam',NULL,NULL,NULL,NULL,'Export',NULL,NULL,NULL,NULL),(3,'QA-2-Punnam',NULL,NULL,NULL,NULL,'DDLSync',NULL,NULL,NULL,NULL),(4,'UdateQA-1m',NULL,NULL,NULL,NULL,'Import',NULL,NULL,NULL,NULL),(5,'QA-12','dfdf','dfd','df','fsdf','Export','fdf','dfd','dfsd','dfsd');
-/*!40000 ALTER TABLE `export_repos` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -59,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-16 20:22:16
+-- Dump completed on 2015-12-16 21:48:26
