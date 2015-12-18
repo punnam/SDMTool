@@ -542,7 +542,7 @@ app.controller('BlogCtrl', function(/* $scope, $location, $http */) {
 });
 
 /** login **/
-app.controller('LoginController', ['$scope','$http', function($scope,$http) {
+app.controller('LoginController', ['$scope','$http','$location', function($scope,$http,$location) {
 			var vm = this;
 
 			// vm.login = login;
@@ -564,7 +564,31 @@ app.controller('LoginController', ['$scope','$http', function($scope,$http) {
 					method : 'POST',
 					url : 'rest/UserInfo/logIn/'
 				}).then(function successCallback(response) {
-
+			
+					var loggedIn = response.data.data;
+		
+					if (loggedIn==true) {
+						//FlashService.Success('Registration successful', true);
+						alert("Success fwd to /index.html");
+						//vm.dataLoading=true;
+						$location.path('index.html');
+						$location.path(returnUrl.replace(origin, ""))
+						$Scope.flash = {
+			                    message: 'login successful',
+			                    type: 'success', 
+			                    keepAfterLocationChange: 'false'
+			                };
+						
+					} else {
+						//FlashService.Error(response.message);
+						$location.path('/login.html');
+					       $Scope.flash = {
+					                message: 'Fail',
+					                type: 'error',
+					                keepAfterLocationChange: 'false'
+					            };
+						vm.dataLoading = false;
+					}
 				}, function errorCallback(response) {
 					// called asynchronously if an error occurs
 					// or server returns response with an error status.
