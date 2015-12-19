@@ -27,13 +27,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 	@Override
 	public UserInfo logIn(UserInfo userInfo) {
 		UserInfo userInfoFromDB = getUserByUserId(userInfo.getUserId());
-		boolean success = false;
-		if(userInfoFromDB.getPassword().equals(userInfo.getPassword())){
-			success = true;
-			return userInfoFromDB;
-		}
+		if(userInfoFromDB != null && userInfo != null){
+			if(userInfoFromDB.getPassword().equals(userInfo.getPassword())){
+				return userInfoFromDB;
+			}
+		}	
 		return null;
-		
 	}
 
 	@Override

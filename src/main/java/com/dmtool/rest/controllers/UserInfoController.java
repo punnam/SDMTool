@@ -52,7 +52,8 @@ public class UserInfoController extends RootController{
 			
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
-			return createErrorResponse(String.format(sMessage, e.toString()));
+			//return createErrorResponse(String.format(sMessage, e.toString()));
+			logInStatus = false;
 		}
 
 		/* set HTTP response code */
@@ -74,7 +75,7 @@ public class UserInfoController extends RootController{
 		logger_c.debug("Creating User Info: " + userInfo.toString());
 
 		try {
-			boolean valid = validateUser(request);
+			//boolean valid = validateUser(request);
 			userInfoService.createUserInfo(userInfo, CREATED_USER_ID);
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";

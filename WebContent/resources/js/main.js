@@ -566,13 +566,13 @@ app.controller('LoginController', ['$scope','$http','$location', function($scope
 				}).then(function successCallback(response) {
 			
 					var loggedIn = response.data.data;
-		
+					alert("Success block:"+loggedIn);
 					if (loggedIn==true) {
 						//FlashService.Success('Registration successful', true);
 						alert("Success fwd to /index.html");
 						//vm.dataLoading=true;
-						$location.path('index.html');
-						$location.path(returnUrl.replace(origin, ""))
+						$location.path('/');
+						$location.replace();
 						$Scope.flash = {
 			                    message: 'login successful',
 			                    type: 'success', 
@@ -617,7 +617,7 @@ app.controller('RegisterController', [ '$scope', '$http','$location',
 						userId : "Punnam",
 						sessionId : "xxxxx",
 				};
-				alert('Punnam refister:' + dataObj);
+				alert('Punnam register:' + dataObj);
 				$http({
 					data : dataObj,
 					method : 'POST',
