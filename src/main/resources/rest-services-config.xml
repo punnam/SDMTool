@@ -17,7 +17,7 @@
   						
 	<!-- Enables automatic mapping of fund objects to and from JSON -->
 	<mvc:annotation-driven />
-	<mvc:resources mapping="/**" location="/resources/" />
+	<mvc:resources mapping="/**" location="/app/" />
 	<!-- Setup spring to pull in @Controller, @RequestMapping, etc Configuration 
 		scans specified packages for classes configured as Spring managed beans and 
 		automatically sets up objects annotated with @Controller, @Service etc. -->
