@@ -13,7 +13,6 @@
 
 		(function initController() {
 			//reset login status
-			alert('hitting auth')
 			AuthenticationService.ClearCredentials();
 		})();
 		$scope.id = 1;
@@ -23,7 +22,6 @@
 				userId : $scope.username,
 				password : $scope.password
 			};
-			alert('Punnam login:' + dataObj);
 			$http({
 				data : dataObj,
 				method : 'POST',
@@ -31,10 +29,8 @@
 			}).then(function successCallback(response) {
 		
 				var loggedIn = response.data.data;
-				alert("Success block:"+loggedIn);
 				if (loggedIn==true) {
 					//FlashService.Success('Registration successful', true);
-					alert("Success fwd to /index.html");
 					//vm.dataLoading=true;
 					$rootScope.showlogIn = false;
 					$rootScope.showlogout = true;
@@ -57,18 +53,19 @@
 				                keepAfterLocationChange: 'false'
 				            };
 					vm.dataLoading = false;
-					$rootscope.loggedIn= true;
+					$rootScope.showlogIn = true;
+					$rootScope.showlogout = false;
 				}
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
 			});
 
+
 		};
 		$scope.logout = function() {
 			(function initController() {
 				//reset login status
-				alert('hitting auth')
 				AuthenticationService.ClearCredentials();
 			})();
 			$http({
