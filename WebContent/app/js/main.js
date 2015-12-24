@@ -38,6 +38,10 @@ app.config([ '$routeProvider', '$locationProvider', function($routeProvider,$loc
         controller: 'LoginController',
         templateUrl: 'partials/login.html',
         controllerAs: 'vm'
+    }).when('/logout', {
+        controller: 'LogoutController',
+        templateUrl: 'partials/login.html',
+        controllerAs: 'vm'
     }).when('/register', {
         controller: 'RegisterController',
         templateUrl: 'partials/register.view.html',
@@ -61,7 +65,9 @@ app.run(['$rootScope', '$location', '$cookieStore', '$http',
 
           $rootScope.$on('$locationChangeStart', function (event, next, current) {
               // redirect to login page if not logged in
-              if ($location.path() !== '/login' || $location.path() !== '/login' || !$rootScope.globals.currentUser) {
+        	  $rootScope.showlogIn = !$rootScope.globals.currentUser;
+        	  $rootScope.showlogout = $rootScope.globals.currentUser;
+        	  if ($location.path() == '/login' || !$rootScope.globals.currentUser) {
                   $location.path('/login');
               }
           });
