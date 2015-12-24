@@ -67,7 +67,7 @@ app.run(['$rootScope', '$location', '$cookieStore', '$http',
               // redirect to login page if not logged in
         	  $rootScope.showlogIn = !$rootScope.globals.currentUser;
         	  $rootScope.showlogout = $rootScope.globals.currentUser;
-        	  if ($location.path() == '/login' || !$rootScope.globals.currentUser) {
+        	  if ($location.path() == '/login' || !$rootScope.globals.currentUser || $location.path() !== '/register') {
                   $location.path('/login');
               }
           });
