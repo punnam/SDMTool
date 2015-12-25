@@ -17,7 +17,7 @@ app.config([ '$routeProvider', '$locationProvider', function($routeProvider,$loc
 	$routeProvider
 	// Home
 	.when("/", {
-		templateUrl : "partials/ 	.html",
+		templateUrl : "partials/home.html",
 		controller : "PageCtrl"
 	}).when("/repos", {
 		templateUrl : "partials/repos.html",
@@ -67,10 +67,13 @@ app.run(['$rootScope', '$location', '$cookieStore', '$http',
               // redirect to login page if not logged in
         	  $rootScope.showlogIn = !$rootScope.globals.currentUser;
         	  $rootScope.showlogout = $rootScope.globals.currentUser;
-        	  if ($location.path() == '/login' || !$rootScope.globals.currentUser || $location.path() !== '/register') {
-                  $location.path('/login');
+        	  if ($location.path() == '/login' || !$rootScope.globals.currentUser)  {
+        		  if($location.path() != '/register'){
+        			  alert("Please login.");
+        			  $location.path('/login');
+        		  }	  
               }
-          });
+           });
       }]);
 
 /**

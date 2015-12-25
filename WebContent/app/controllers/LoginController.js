@@ -35,8 +35,7 @@
 					$rootScope.showlogIn = false;
 					$rootScope.showlogout = true;
 					AuthenticationService.SetCredentials($scope.username, $scope.password);
-					$location.path('/');
-					$location.replace();
+					$location.path('/environmentSetup');
 					$Scope.flash = {
 		                    message: 'login successful',
 		                    type: 'success', 
