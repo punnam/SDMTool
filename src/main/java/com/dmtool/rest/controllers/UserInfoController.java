@@ -15,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
+import com.dmtool.domain.ConfirmUserPass;
 import com.dmtool.domain.UserInfo;
 import com.dmtool.services.UserInfoService;
 
@@ -145,6 +146,33 @@ public class UserInfoController extends RootController{
 		 * Return the view
 		 */
 		return new ModelAndView(jsonView_i, DATA_FIELD, userInfo);
+	}
+	@RequestMapping(value = { "/rest/UserInfo/resetPassword/" }, method = { RequestMethod.POST })
+	public ModelAndView resetPassword(@RequestBody ConfirmUserPass userInfo,
+			HttpServletResponse httpResponse_p, HttpServletRequest request) {
+
+		logger_c.debug("Reset Password: " + userInfo.toString());
+		boolean result = false;
+
+		try {
+			//boolean valid = validateUser(request);
+			result = userInfoService.resetPassword(userInfo, CREATED_USER_ID);
+			
+		} catch (Exception e) {
+			String sMessage = "Error creating new Env. [%1$s]";
+			return createErrorResponse(String.format(sMessage, e.toString()));
+		}
+
+		/* set HTTP response code */
+		httpResponse_p.setStatus(HttpStatus.CREATED.value());
+
+		/* set location of created resource */
+		httpResponse_p.setHeader("Location", request.getContextPath() + "/rest/userInfo/resetPassword" + userInfo.getId());
+
+		/**
+		 * Return the view
+		 */
+		return new ModelAndView(jsonView_i, DATA_FIELD, result);
 	}
 	/**
 	 * Create an error REST response.

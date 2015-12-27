@@ -46,6 +46,10 @@ app.config([ '$routeProvider', '$locationProvider', function($routeProvider,$loc
         controller: 'RegisterController',
         templateUrl: 'partials/register.view.html',
         controllerAs: 'vm'
+    }).when('/forgotPass', {
+        controller: 'forgotPassController',
+        templateUrl: 'partials/forgotPassword.html',
+        controllerAs: 'vm'
     })
 	
 	
@@ -68,8 +72,8 @@ app.run(['$rootScope', '$location', '$cookieStore', '$http',
         	  $rootScope.showlogIn = !$rootScope.globals.currentUser;
         	  $rootScope.showlogout = $rootScope.globals.currentUser;
         	  if ($location.path() == '/login' || !$rootScope.globals.currentUser)  {
-        		  if($location.path() != '/register'){
-        			  alert("Please login.");
+        		  if($location.path() != '/register' && $location.path() != '/forgotPass'){
+        			  alert("Please login.:"+$location.path());
         			  $location.path('/login');
         		  }	  
               }

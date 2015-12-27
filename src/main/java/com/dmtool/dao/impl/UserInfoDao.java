@@ -2,9 +2,11 @@ package com.dmtool.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
+import com.dmtool.domain.ConfirmUserPass;
 import com.dmtool.domain.UserInfo;
 
 @Repository

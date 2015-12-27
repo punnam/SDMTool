@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dmtool.dao.impl.UserInfoDao;
+import com.dmtool.domain.ConfirmUserPass;
 import com.dmtool.domain.UserInfo;
 import com.dmtool.services.UserInfoService;
 @Repository
@@ -55,8 +56,24 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 	@Override
 	public UserInfo getUserInfo(UserInfo userInfo) {
-		
 		return userInfoDao.getUserInfoByUserId(userInfo.getUserId());
-		
+	}
+
+	@Override
+	public boolean resetPassword(ConfirmUserPass userInfo, int createdUserId) {
+		if (userInfo != null
+				&& userInfo.getPassword().equals(userInfo.getConfirmPassword())) {
+			UserInfo userInfofromDB = getUserByUserId(userInfo.getUserId());
+			if (userInfofromDB != null) {
+				userInfofromDB.setPassword(userInfo.getPassword());
+				createUserInfo(userInfofromDB, createdUserId);
+				return true;
+			} else {
+				return false;
+			}
+
+		} else {
+			return false;
+		}
 	}
 }
