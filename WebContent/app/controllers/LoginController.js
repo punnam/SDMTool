@@ -17,6 +17,7 @@
 		})();
 		$scope.id = 1;
 		$scope.logIn = function() {
+			alert("in LoginController");
 			var dataObj = {
 					id: $scope.id,
 				userId : $scope.username,
@@ -27,11 +28,12 @@
 				method : 'POST',
 				url : 'rest/UserInfo/logIn/'
 			}).then(function successCallback(response) {
-		
+
 				var loggedIn = response.data.data;
 				if (loggedIn==true) {
 					//FlashService.Success('Registration successful', true);
 					//vm.dataLoading=true;
+alert("Punnam-login -success");					
 					$rootScope.showlogIn = false;
 					$rootScope.showlogout = true;
 					AuthenticationService.SetCredentials($scope.username, $scope.password);
