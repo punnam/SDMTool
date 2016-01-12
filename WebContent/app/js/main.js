@@ -73,7 +73,7 @@ app.run(['$rootScope', '$location', '$cookieStore', '$http',
         	  $rootScope.showlogout = $rootScope.globals.currentUser;
         	  if ($location.path() == '/login' || !$rootScope.globals.currentUser)  {
         		  if($location.path() != '/register' && $location.path() != '/forgotPass'){
-        			  alert("Please login.:"+$location.path());
+        			  alert("Please login.");
         			  $location.path('/login');
         		  }	  
               }
