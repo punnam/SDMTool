@@ -33,6 +33,16 @@ CREATE TABLE `server_info` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `server_info`
+--
+
+LOCK TABLES `server_info` WRITE;
+/*!40000 ALTER TABLE `server_info` DISABLE KEYS */;
+INSERT INTO `server_info` VALUES (4,'locahost',8080,'index.html','DMTool');
+/*!40000 ALTER TABLE `server_info` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -43,4 +53,4 @@ CREATE TABLE `server_info` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-19  7:21:43
+-- Dump completed on 2016-01-13 10:49:34

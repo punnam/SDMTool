@@ -38,8 +38,17 @@ CREATE TABLE `adm_config` (
   `CREATED_USER` int(11) DEFAULT NULL,
   `UPDATED_USER` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `adm_config`
+--
+
+LOCK TABLES `adm_config` WRITE;
+/*!40000 ALTER TABLE `adm_config` DISABLE KEYS */;
+/*!40000 ALTER TABLE `adm_config` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -50,4 +59,4 @@ CREATE TABLE `adm_config` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-19  7:21:42
+-- Dump completed on 2016-01-13 10:49:34

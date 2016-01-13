@@ -37,6 +37,16 @@ CREATE TABLE `deployment_options` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `deployment_options`
+--
+
+LOCK TABLES `deployment_options` WRITE;
+/*!40000 ALTER TABLE `deployment_options` DISABLE KEYS */;
+INSERT INTO `deployment_options` VALUES (1,'StopServer','Stop Server','Option','sc $HOST_NAME Stop $SERVICE_NAME',NULL,NULL,NULL,NULL),(2,'CopySRFBS','Copy SRF/BS','Option',NULL,NULL,NULL,NULL,NULL),(3,'CopyWebTemplate','Copy Web Template','Option',NULL,NULL,NULL,NULL,NULL),(4,'CopyOtherFiles','Copy other Files (Specified in package)','Option',NULL,NULL,NULL,NULL,NULL),(5,'ImportRespository','Import Respository','Option',NULL,NULL,NULL,NULL,NULL),(6,'RenameRespository','Rename Respository','Option',NULL,NULL,NULL,NULL,NULL),(7,'ApplySchemaChanges','Apply Schema Changes','Option',NULL,NULL,NULL,NULL,NULL),(8,'StartServers','Start Servers','Option',NULL,NULL,NULL,NULL,NULL),(9,'ImportADM','Import  ADM','Option',NULL,NULL,NULL,NULL,NULL),(10,'BuildNow','Build Now','package',NULL,NULL,NULL,NULL,NULL),(11,'ScheduleDeploy','Schedule Deploy','package',NULL,NULL,NULL,NULL,NULL),(12,'MigrateSRFRepositoryNow','Migrate SRF/Repository Now','package',NULL,NULL,NULL,NULL,NULL),(13,'ADMExportImport','ADM Export/Import','package',NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `deployment_options` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -47,4 +57,4 @@ CREATE TABLE `deployment_options` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-12-19  7:21:42
+-- Dump completed on 2016-01-13 10:49:34

@@ -100,8 +100,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 						
 						String consoleOutput;
 						try {
+							//consoleOutput = executeCommandWithAgent(commandWithValues);
 							consoleOutput = executeCommand(commandWithValues);
-						} catch (IOException e) {
+						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
@@ -122,7 +123,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		//Need map for ADM_CONFIG#ENV_NAME#EXPORT
 		return sb.toString();
 	}
- /**
+ 
 	private String executeCommand(String command) {
 		Process p;
 		StringBuilder  sb = new StringBuilder();
@@ -142,7 +143,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			e.printStackTrace();
 		}
 		return sb.toString();
-	}**/
+	}
 
 	private String applyTokenValuesForCommand(String command,
 			VelocityContext context) {
@@ -214,8 +215,39 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		}
 		return envNameServerNameEnvInfo;
 	}
+	private  String getStringFromInputStream(InputStream is) {
+		if(true){
+			return "";
+		}	
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
 
-	private String executeCommand(String command) throws IOException {
+		
+		try {
+
+			br = new BufferedReader(new InputStreamReader(is));
+			String line = br.readLine();	
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
+
+	}
+	private String executeCommandWithAgent(String command) throws IOException {
+		// in databasevalue is //   sc //$HOST_NAME stop //$SERVICE_NAME
 		String POST_URL ="http://localhost:8080/SDMToolAgent/rest/executeCommand/"; 
 		   CloseableHttpClient client = HttpClients.createDefault();
 		    HttpPost httpPost = new HttpPost(POST_URL);
@@ -231,4 +263,25 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		    return "executed";
  
     }
+	private String executeBatchFile(String command) {
+		Process p;
+		StringBuilder  sb = new StringBuilder();
+		try {
+			String cmd="cmd /c start c:samplenote.bat"; 
+			p = Runtime.getRuntime().exec(command);
+			InputStream error = p.getErrorStream();
+			InputStream output = p.getInputStream();
+			String errorString = getStringFromInputStream(error);
+			String outputString = getStringFromInputStream(output);
+			sb.append(errorString);
+			sb.append(System.lineSeparator());
+			sb.append(outputString);
+			return sb.toString();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
 }
