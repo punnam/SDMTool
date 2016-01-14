@@ -52,6 +52,7 @@ public class UserInfoController extends RootController{
 			}	
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			String sMessage = "Error creating new Env. [%1$s]";
 			//return createErrorResponse(String.format(sMessage, e.toString()));
 			logInStatus = false;

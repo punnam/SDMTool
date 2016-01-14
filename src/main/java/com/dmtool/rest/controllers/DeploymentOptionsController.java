@@ -101,8 +101,12 @@ public class DeploymentOptionsController {
 		
 		logger_c.debug("Creating Env: " + env_p.toString());
 		String output ="";
+		boolean commandStatus = false;
 		try {
 			 output = deploymentOptionsService.processdeDloymentOptionsService(env_p);
+			 if(output != null || !output.equals("")){
+				 commandStatus= true;
+			 }
 		} catch (Exception e) {
 			String sMessage = "Error creating new Env. [%1$s]";
 			return createErrorResponse(String.format(sMessage, e.toString()));
@@ -117,6 +121,6 @@ public class DeploymentOptionsController {
 		/**
 		 * Return the view
 		 */
-		return new ModelAndView(jsonView_i, DATA_FIELD, output);
+		return new ModelAndView(jsonView_i, DATA_FIELD, commandStatus);
 	}
 }

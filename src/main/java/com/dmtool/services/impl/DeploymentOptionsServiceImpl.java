@@ -98,17 +98,17 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 								repos, admConfig);
 						String commandWithValues = applyTokenValuesForCommand(command, tokenMaps);
 						
-						String consoleOutput;
+						String consoleOutput= "";
 						try {
 							//consoleOutput = executeCommandWithAgent(commandWithValues);
 							consoleOutput = executeCommand(commandWithValues);
+							return consoleOutput;
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+							return null;
 						}
-						System.out.println("	Command after parsing:"+commandWithValues);
-						System.out.println("***End****ServerName:"+key);
-						System.out.println();
+
 					}
 				}
 			}
@@ -128,6 +128,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		Process p;
 		StringBuilder  sb = new StringBuilder();
 		try {
+			System.out.println("Executing the command:"+command);
 			p = Runtime.getRuntime().exec(command);
 			InputStream error = p.getErrorStream();
 			InputStream output = p.getInputStream();
@@ -136,13 +137,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			sb.append(errorString);
 			sb.append(System.lineSeparator());
 			sb.append(outputString);
+			System.out.println("Executed the command:"+command);
 			return sb.toString();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
-		return sb.toString();
 	}
 
 	private String applyTokenValuesForCommand(String command,
