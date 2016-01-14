@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
@@ -33,7 +32,7 @@ public class UserInfoController extends RootController{
 	private static final String DATA_FIELD = "data";
 	private static final String ERROR_FIELD = "error";
 
-	private static final Logger logger_c = Logger.getLogger(UserInfoController.class);
+	private static final Logger logger = Logger.getLogger(UserInfoController.class);
 	public static boolean isEmpty(String s_p) {
 		return (null == s_p) || s_p.trim().length() == 0;
 	}
@@ -41,7 +40,7 @@ public class UserInfoController extends RootController{
 	public ModelAndView logIn(@RequestBody UserInfo userInfo,
 			HttpServletResponse httpResponse_p, HttpServletRequest httpRequest) {
 		
-		logger_c.debug("Creating User Info: " + userInfo.toString());
+		logger.debug("Creating User Info: " + userInfo.toString());
 		boolean logInStatus =  false;
 		try {
 			UserInfo userInfoFromSystem = userInfoService.logIn(userInfo);
@@ -74,7 +73,7 @@ public class UserInfoController extends RootController{
 	public ModelAndView registerUser(@RequestBody UserInfo userInfo,
 			HttpServletResponse httpResponse_p, HttpServletRequest request) {
 		
-		logger_c.debug("Creating User Info: " + userInfo.toString());
+		logger.debug("Creating User Info: " + userInfo.toString());
 
 		try {
 			//boolean valid = validateUser(request);
@@ -101,7 +100,7 @@ public class UserInfoController extends RootController{
 	public ModelAndView getUserProfile(@RequestBody UserInfo userInfo,
 			HttpServletResponse httpResponse_p, HttpServletRequest request) {
 		
-		logger_c.debug("getUserProfile: " + userInfo.toString());
+		logger.debug("getUserProfile: " + userInfo.toString());
 
 		try {
 			boolean valid = validateUser(request);
@@ -127,7 +126,7 @@ public class UserInfoController extends RootController{
 	public ModelAndView updateUser(@RequestBody UserInfo userInfo,
 			HttpServletResponse httpResponse_p, HttpServletRequest request) {
 
-		logger_c.debug("Creating User Info: " + userInfo.toString());
+		logger.debug("Creating User Info: " + userInfo.toString());
 
 		try {
 			boolean valid = validateUser(request);
@@ -152,7 +151,7 @@ public class UserInfoController extends RootController{
 	public ModelAndView resetPassword(@RequestBody ConfirmUserPass userInfo,
 			HttpServletResponse httpResponse_p, HttpServletRequest request) {
 
-		logger_c.debug("Reset Password: " + userInfo.toString());
+		logger.debug("Reset Password: " + userInfo.toString());
 		boolean result = false;
 
 		try {
