@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -29,6 +30,7 @@ import com.dmtool.domain.CommandTemplates;
 import com.dmtool.domain.DeploymentOptions;
 import com.dmtool.domain.EnvInfo;
 import com.dmtool.domain.Repos;
+import com.dmtool.rest.controllers.UserInfoController;
 import com.dmtool.services.AdmConfigService;
 import com.dmtool.services.CommandTemplatesService;
 import com.dmtool.services.DeploymentOptionsService;
@@ -39,6 +41,8 @@ import com.dmtool.utils.DMCommandTokens;
 
 @Repository
 public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
+	private static final Logger logger = Logger.getLogger(DeploymentOptionsServiceImpl.class);
+	
 	@Autowired
 	private DeloymentOptionsDao deloymentOptionsDao;
 	
@@ -125,6 +129,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 	}
  
 	private String executeCommand(String command) {
+		logger.info("Executing executeCommand method:"+command);
 		Process p;
 		StringBuilder  sb = new StringBuilder();
 		try {
@@ -137,12 +142,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			sb.append(errorString);
 			sb.append(System.lineSeparator());
 			sb.append(outputString);
-			System.out.println("Executed the command:"+command);
+			logger.info("Executed executeCommand method:"+command);
 			return sb.toString();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.info("Executed executeCommand method:"+command, e);
 			return null;
 		}
 	}

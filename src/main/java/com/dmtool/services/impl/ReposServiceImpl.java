@@ -3,6 +3,7 @@ package com.dmtool.services.impl;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,7 @@ import com.dmtool.services.ReposService;
 
 @Repository
 public class ReposServiceImpl implements ReposService{
+	private static final Logger logger = Logger.getLogger(ReposServiceImpl.class);
 	
 	@Autowired
 	private ReposDao reposDao;

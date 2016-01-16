@@ -3,6 +3,7 @@ package com.dmtool.services.impl;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import com.dmtool.domain.AdmConfig;
 import com.dmtool.services.AdmConfigService;
 @Service
 public class AdmConfigServiceImpl  implements AdmConfigService{
-	
+	private Logger logger = Logger.getLogger(AdmConfigServiceImpl.class);
 	@Autowired
 	private AdmConfigDao admConfigDao;
 	
