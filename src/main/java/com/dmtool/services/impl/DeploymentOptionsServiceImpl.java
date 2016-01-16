@@ -64,7 +64,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		// TODO Auto-generated method stub	
 		return deloymentOptionsDao.getAllDeploymentOptionsByCategory("Option");
 	}
-
+/**
 	@Override
 	public String processdeDloymentOptionsService(DeploymentOptionsActions env_p) {
 		String selectedEnvName = env_p.getEnvName();
@@ -126,8 +126,39 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		//Need map for ADM_CONFIG#ENV_NAME#IMPORT
 		//Need map for ADM_CONFIG#ENV_NAME#EXPORT
 		return sb.toString();
+	}**/
+	@Override
+	public String processdeDloymentOptionsService(DeploymentOptionsActions env_p) {
+		logger.info("Executing processdeDloymentOptionsService method:"+env_p.getDeploymentServices());
+		StringBuilder  sb = new StringBuilder();
+		try{
+		List<String> services = env_p.getDeploymentServices();
+	
+		if( services == null || !(services.size() > 0)){
+			logger.error("No actions selected.");
+		}
+		for (int i = 0; i < services.size(); i++) {
+			logger.info("Services Actions:"+services.get(i));
+			String selectedAction = services.get(i);
+			List<CommandTemplates> commandsList = commandTemplatesService.getAllCommandTemplatesByCode(selectedAction);
+			if(commandsList != null && commandsList.size()>0){
+				for (int j = 0; j < commandsList.size(); j++) {
+					CommandTemplates cmdTemplate = commandsList.get(j);
+					String command = cmdTemplate.getCommand();
+					String result = executeBatchFile(command);
+					sb.append(result).append("\n");
+				}
+			}else{
+				logger.error("Commands not found for action:"+selectedAction);
+			}
+		}
+		}catch(Exception e){
+			logger.error("Error while processinf command.",e);
+		}
+		logger.info("Executed processdeDloymentOptionsService method:"+env_p.getDeploymentServices());
+		return sb.toString();
 	}
- 
+	
 	private String executeCommand(String command) {
 		logger.info("Executing executeCommand method:"+command);
 		Process p;
@@ -272,6 +303,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
  
     }
 	private String executeBatchFile(String command) {
+		logger.info("Executing executeBatchFile:"+command);
 		Process p;
 		StringBuilder  sb = new StringBuilder();
 		try {
@@ -284,12 +316,15 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			sb.append(errorString);
 			sb.append(System.lineSeparator());
 			sb.append(outputString);
+			logger.info("Executed executeBatchFile:"+command);
 			return sb.toString();
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.error("Executed executeBatchFile:"+command, e);
 		}
+		logger.info("Executed executeBatchFile:"+command);
 		return sb.toString();
 	}
 }
