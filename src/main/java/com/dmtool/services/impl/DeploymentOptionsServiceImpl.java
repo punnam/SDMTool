@@ -26,12 +26,14 @@ import org.springframework.stereotype.Repository;
 import com.dmtool.dao.impl.DeloymentOptionsDao;
 import com.dmtool.domain.AdmConfig;
 import com.dmtool.domain.AgentInfo;
+import com.dmtool.domain.CommandParams;
 import com.dmtool.domain.CommandTemplates;
 import com.dmtool.domain.DeploymentOptions;
 import com.dmtool.domain.EnvInfo;
 import com.dmtool.domain.Repos;
 import com.dmtool.rest.controllers.UserInfoController;
 import com.dmtool.services.AdmConfigService;
+import com.dmtool.services.CommandParamsService;
 import com.dmtool.services.CommandTemplatesService;
 import com.dmtool.services.DeploymentOptionsService;
 import com.dmtool.services.EnvService;
@@ -58,6 +60,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 	
 	@Autowired
 	private CommandTemplatesService commandTemplatesService;
+	
+	@Autowired
+	private CommandParamsService commandParamsService;
 	
 	@Override
 	public List<DeploymentOptions> getAllDeploymentOptions() {
@@ -133,7 +138,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		StringBuilder  sb = new StringBuilder();
 		try{
 		List<String> services = env_p.getDeploymentServices();
-	
+		String envName = env_p.getEnvName();
+	    String actionType = env_p.getActionType();
 		if( services == null || !(services.size() > 0)){
 			logger.error("No actions selected.");
 		}
@@ -141,11 +147,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			logger.info("Services Actions:"+services.get(i));
 			String selectedAction = services.get(i);
 			List<CommandTemplates> commandsList = commandTemplatesService.getAllCommandTemplatesByCode(selectedAction);
+			List<CommandParams> paramsList = commandParamsService.getAllCommandParamsByCode(selectedAction);
 			if(commandsList != null && commandsList.size()>0){
 				for (int j = 0; j < commandsList.size(); j++) {
 					CommandTemplates cmdTemplate = commandsList.get(j);
 					String command = cmdTemplate.getCommand();
-					String result = executeBatchFile(command);
+					String params = getParams(envName, selectedAction, paramsList, actionType);
+					String result = executeBatchFile(command+" "+params);
 					sb.append(result).append("\n");
 				}
 			}else{
@@ -159,6 +167,28 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		return sb.toString();
 	}
 	
+	private String getParams(String envName, String selectedAction, List<CommandParams> paramsList, String actionType) {
+		String commandParams = "";
+		if(selectedAction.equals("BuildNow")){
+			commandParams = buildNowCommandParams(envName, paramsList, actionType);
+		}	
+		return commandParams;
+	}
+private String buildNowCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("UserId")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("Password")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
 	private String executeCommand(String command) {
 		logger.info("Executing executeCommand method:"+command);
 		Process p;
@@ -307,7 +337,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		Process p;
 		StringBuilder  sb = new StringBuilder();
 		try {
-			String cmd="cmd /c start c:samplenote.bat"; 
+			logger.info("Executing executeBatchFile with :"+command);
 			p = Runtime.getRuntime().exec(command);
 			InputStream error = p.getErrorStream();
 			InputStream output = p.getInputStream();
@@ -316,7 +346,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			sb.append(errorString);
 			sb.append(System.lineSeparator());
 			sb.append(outputString);
-			logger.info("Executed executeBatchFile:"+command);
+			logger.info("Executed executeBatchFile with :"+command);
 			return sb.toString();
 			
 		} catch (Exception e) {

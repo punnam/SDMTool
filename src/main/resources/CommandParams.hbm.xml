@@ -1,0 +1,16 @@
+<?xml version="1.0"?> <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.dmtool.domain">
+	<class name="CommandParams" table="commandparams">
+		<id name="id" column="ID" type="java.lang.Integer">
+            <generator class="increment"></generator>
+        </id>
+		<property name="code" column="CODE" type="string" />
+		<property name="param" column="param" type="string" />	
+		<property name="order" column="command_order" type="java.lang.Integer" />
+		<property name="description" column="DESCRIPTION" type="string" />
+		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
+		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
+		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />		
+	</class>
+</hibernate-mapping>

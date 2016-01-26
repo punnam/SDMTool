@@ -36,7 +36,8 @@
 			alert($scope.checkedAdmActions);
 			var dataObj = {
 				envName : $scope.selectedItem,
-				deploymentServices : $scope.checkedAdmActions
+				deploymentServices : $scope.checkedAdmActions,
+				actionType : 'Export'
 			};
 			//alert("Executing processAdmBuildServices:");
 			$http({

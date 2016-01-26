@@ -13,6 +13,7 @@
 							http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
 							http://www.springframework.org/schema/util
 							http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
 	<!-- Enables automatic mapping of fund objects to and from JSON -->
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/**" location="/app/" />
@@ -42,9 +43,11 @@
 			</util:list>
 		</property>
 	</bean>
+
 	<!-- Converts JSON to POJO and vice versa -->
 	<bean id="jsonMessageConverter"
 		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+
 	<bean id="envDao" class="com.dmtool.dao.impl.EnvDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -55,6 +58,7 @@
 	<bean id="reposDao" class="com.dmtool.dao.impl.ReposDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+
 	<bean id="admConfigDao" class="com.dmtool.dao.impl.AdmConfigDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
@@ -70,6 +74,9 @@
 	<bean id="agentInfoDao" class="com.dmtool.dao.impl.AgentInfoDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	<bean id="commandParamsDao" class="com.dmtool.dao.impl.CommandParamsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -83,39 +90,27 @@
 				<value>Repos.hbm.xml</value>
 				<value>LicenseMgt.hbm.xml</value>
 				<value>AgentInfo.hbm.xml</value>
+				<value>CommandParams.hbm.xml</value>
 			</list>
 		</property>
-		<!--<property name="hibernateProperties"> <props> <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop> 
-			<prop key="hibernate.current_session_context_class">thread</prop> </props> 
-			</property> -->
+
 		<property name="hibernateProperties">
+
 			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.current_session_context_class">thread</prop>
 			</props>
 		</property>
+		<!-- <property name="hibernateProperties"> <props> <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop> 
+			<prop key="hibernate.current_session_context_class">thread</prop> </props> 
+			</property> -->
 	</bean>
-	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> <property 
-		name="url" value="jdbc:mysql://localhost:3306/dmtool" /> <property name="username" 
-		value="root" /> <property name="password" value="admin" /> </bean> -->
+
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="org.h2.Driver" />
-		<property name="url" value="jdbc:h2:~/dmtool" />
-		<!--<property name="url" value="jdbc:h2:tcp://localhost/~/dmtool" /> -->
-		<property name="username" value="sa" />
-		<property name="password" value="" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/dmtool" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
 	</bean>
-	<bean id="h2Server" class="org.h2.tools.Server" factory-method="createTcpServer"
-		init-method="start" destroy-method="stop" depends-on="h2WebServer">
-		<constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,9092" />
-	</bean>
-	<bean id="h2WebServer" class="org.h2.tools.Server" factory-method="createWebServer"
-		init-method="start" destroy-method="stop">
-		<constructor-arg value="-web,-webAllowOthers,-webPort,8082" />
-	</bean>
-	<jdbc:initialize-database data-source="dataSource">
-		<jdbc:script location="classpath:dmtool.sql" />
-	</jdbc:initialize-database>
 </beans>
