@@ -152,8 +152,28 @@ CREATE CACHED TABLE PUBLIC.COMMANDPARAMS(
 ALTER TABLE PUBLIC.COMMANDPARAMS ADD CONSTRAINT PUBLIC.CONSTRAINT_F PRIMARY KEY(ID);             
 
 INSERT INTO `deployment_options` VALUES (1,'StopServer','Stop Server','Option','sc $HOST_NAME Stop $SERVICE_NAME',NULL,NULL,NULL,NULL),(2,'CopySRFBS','Copy SRF/BS','Option',NULL,NULL,NULL,NULL,NULL),(3,'CopyWebTemplate','Copy Web Template','Option',NULL,NULL,NULL,NULL,NULL),(4,'CopyOtherFiles','Copy other Files (Specified in package)','Option',NULL,NULL,NULL,NULL,NULL),(5,'ImportRespository','Import Respository','Option',NULL,NULL,NULL,NULL,NULL),(6,'RenameRespository','Rename Respository','Option',NULL,NULL,NULL,NULL,NULL),(7,'ApplySchemaChanges','Apply Schema Changes','Option',NULL,NULL,NULL,NULL,NULL),(8,'StartServers','Start Servers','Option',NULL,NULL,NULL,NULL,NULL),(9,'ImportADM','Import  ADM','Option',NULL,NULL,NULL,NULL,NULL),(10,'BuildNow','Build Now','package',NULL,NULL,NULL,NULL,NULL),(11,'ScheduleDeploy','Schedule Deploy','package',NULL,NULL,NULL,NULL,NULL),(12,'MigrateSRFRepositoryNow','Migrate SRF/Repository Now','package',NULL,NULL,NULL,NULL,NULL),(13,'ADMExportImport','ADM Export/Import','package',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO COMMANDTEMPLATES (ID,CODE,COMMAND,command_order,CREATED_TIME, CREATED_USER ,UPDATED_TIME,UPDATED_USER ) VALUES (1,'BuildNow','C:\\Migration\\Auto-Build.bat',1,'2016-01-12',111,'2016-01-12', 111);
-INSERT INTO `userinfo` VALUES (1,'dmtool','test1234','Punnam','Kolluru','2016-01-13 22:16:28','2016-01-13 22:16:28',0,0);
+
+INSERT INTO PUBLIC.USERINFO(ID, USERID, PASSWORD, FIRST_NAME, LAST_NAME, CREATED_TIME, UPDATED_TIME, CREATED_USER, UPDATED_USER) VALUES
+(1, 'dmtool', 'test1234', 'Punnam', 'Kolluru', TIMESTAMP '2016-01-13 22:16:28.0', TIMESTAMP '2016-01-13 22:16:28.0', 0, 0),
+(2, 'sachin', 'Sachi!275', 'Sachin', 'Joshi', TIMESTAMP '2016-01-17 12:37:08.922', TIMESTAMP '2016-01-17 12:37:08.922', 0, 0); 
+
+
 INSERT INTO PUBLIC.COMMANDPARAMS(ID, CODE, PARAM, COMMAND_ORDER, DESCRIPTION, CREATED_TIME, UPDATED_TIME, CREATED_USER, UPDATED_USER) VALUES
 (1, 'BuildNow', 'UserId', 1, 'user name param', TIMESTAMP '2016-01-12 00:00:00.0', TIMESTAMP '2016-01-12 00:00:00.0', 111, 111),
-(2, 'BuildNow', 'Password', 2, 'password param', TIMESTAMP '2016-01-12 00:00:00.0', TIMESTAMP '2016-01-12 00:00:00.0', 111, 111); 
+(2, 'BuildNow', 'Password', 2, 'password param', TIMESTAMP '2016-01-12 00:00:00.0', TIMESTAMP '2016-01-12 00:00:00.0', 111, 111);
+
+INSERT INTO PUBLIC.COMMANDTEMPLATES(ID, CODE, COMMAND, COMMAND_ORDER, DESCRIPTION, CREATED_TIME, UPDATED_TIME, CREATED_USER, UPDATED_USER) VALUES
+(1, 'BuildNow', 'C:\\Migration\\Auto-Build.bat', 1, NULL, TIMESTAMP '2016-01-12 00:00:00.0', TIMESTAMP '2016-01-12 00:00:00.0', 111, 111),
+(2, 'StopServer', 'C:\\Migration\\StopServer.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 112),
+(3, 'StartServers', 'C:\\Migration\\StartServer.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 113),
+(4, 'CopySRFBS', 'C:\\Migration\\CopySRFBS.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 114),
+(5, 'CopyWebTemplate', 'C:\\Migration\\CopyWebTemplate', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 113),
+(6, 'CopyOtherFiles', 'C:\\Migration\\CopyOtherFiles.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 114),
+(7, 'ImportRespository', 'C:\\Migration\\Imprep.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 115),
+(8, 'RenameRespository', 'C:\\Migration\\RenameRespository.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 116),
+(9, 'ApplySchemaChanges', 'C:\\Migration\\ddlsynch.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 117),
+(10, 'ImportADM', 'C:\\Migration\\ImportADM.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 119),
+(11, 'BuildNow', 'C:\\Migration\\Auto-Build.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 120),
+(12, 'ScheduleDeploy', 'C:\\Migration\\ScheduleDeploy.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 121),
+(13, 'MigrateSRFRepositoryNow', 'C:\\Migration\\MigrateSRFRepositoryNow.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 122),
+(14, 'ADMExport', 'C:\\Migration\\ADMExport.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 123);  
