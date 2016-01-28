@@ -74,6 +74,9 @@
 	<bean id="agentInfoDao" class="com.dmtool.dao.impl.AgentInfoDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+		<bean id="commandParamsDao" class="com.dmtool.dao.impl.CommandParamsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -87,6 +90,7 @@
 				<value>Repos.hbm.xml</value>
 				<value>LicenseMgt.hbm.xml</value>
 				<value>AgentInfo.hbm.xml</value>
+				<value>CommandParams.hbm.xml</value>
 			</list>
 		</property>
 
