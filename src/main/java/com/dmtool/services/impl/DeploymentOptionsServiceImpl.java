@@ -169,9 +169,38 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 	
 	private String getParams(String envName, String selectedAction, List<CommandParams> paramsList, String actionType) {
 		String commandParams = "";
+//		StopServer hostname ServiceName  LogFilePath
+//		StartServer hostname ServiceName  LogFilePath
+//		Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
+//		Rename_CopySRF SrfSourcePath LogFilePath
+//		DDLSynch userid password ODBC logfilepath repository siebelpwd siebeldata siebelindex logfilepath
+//		Copy_BS SourceBSPath LogiflePath
+//		ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
 		if(selectedAction.equals("BuildNow")){
 			commandParams = buildNowCommandParams(envName, paramsList, actionType);
-		}	
+		}
+		if(selectedAction.equals("StopServer")){
+			commandParams = StopServerCommandParams(envName, paramsList, actionType);
+		}
+		if(selectedAction.equals("StartServer")){
+			commandParams = startServerCommandParams(envName, paramsList, actionType);
+		}
+		if(selectedAction.equals("Imrep")){
+			commandParams = imrepCommandParams(envName, paramsList, actionType);
+		}
+		if(selectedAction.equals("Rename_CopySRF")){
+			commandParams = renameCopySRFCommandParams(envName, paramsList, actionType);
+		}
+		if(selectedAction.equals("DDLSynch")){
+			commandParams = ddlSyncCommandParams(envName, paramsList, actionType);
+		}
+		if(selectedAction.equals("Copy_BS")){
+			commandParams = copyBSCommandParams(envName, paramsList, actionType);
+		}
+		if(selectedAction.equals("ExportRep")){
+			commandParams = exportRepCommandParams(envName, paramsList, actionType);
+		}
+		
 		return commandParams;
 	}
 private String buildNowCommandParams(String envName, List<CommandParams> paramsList, String actionType){
@@ -184,6 +213,172 @@ private String buildNowCommandParams(String envName, List<CommandParams> paramsL
 			sb.append(" ").append(admConfig.getUserId());
 		}
 		if(commandParam.getParam().equals("Password")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
+
+//StopServer hostname ServiceName  LogFilePath
+private String StopServerCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("hostname")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("ServiceName")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("LogFilePath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
+//StartServer hostname ServiceName  LogFilePath
+private String startServerCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		
+
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("hostname")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("ServiceName")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("LogFilePath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
+//Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
+private String imrepCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("userid")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("password")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("ODBC")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("RepositoryName")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("ImportFilePath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("LogFilePath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
+//Rename_CopySRF SrfSourcePath LogFilePath
+private String renameCopySRFCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("SrfSourcePath")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("LogFilePath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
+//DDLSynch userid password ODBC logfilepath repository siebelpwd siebeldata siebelindex logfilepath
+private String ddlSyncCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("userid")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("password")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("ODBC")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("logfilepath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("repository")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("siebelpwd")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("siebeldata")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("siebelindex")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("logfilepath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
+//Copy_BS SourceBSPath LogiflePath
+private String copyBSCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("SourceBSPath")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("LogiflePath")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+	}	
+	return sb.toString();
+}
+//ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
+private String exportRepCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	StringBuffer sb = new StringBuffer();
+	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+		CommandParams commandParam = (CommandParams) iterator.next();
+		if(commandParam.getParam().equals("userid")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("password")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("ODBC")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("RepositoryName")){
+			sb.append(" ").append(admConfig.getPassword());
+		}
+		if(commandParam.getParam().equals("EXportFilePath")){
+			sb.append(" ").append(admConfig.getUserId());
+		}
+		if(commandParam.getParam().equals("LogFilePath")){
 			sb.append(" ").append(admConfig.getPassword());
 		}
 	}	
