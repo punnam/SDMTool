@@ -178,27 +178,29 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 //		ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
 		if(selectedAction.equals("BuildNow")){
 			commandParams = buildNowCommandParams(envName, paramsList, actionType);
-		}
+		}else
 		if(selectedAction.equals("StopServer")){
 			commandParams = StopServerCommandParams(envName, paramsList, actionType);
-		}
+		}else
 		if(selectedAction.equals("StartServer")){
 			commandParams = startServerCommandParams(envName, paramsList, actionType);
-		}
+		}else
 		if(selectedAction.equals("Imrep")){
 			commandParams = imrepCommandParams(envName, paramsList, actionType);
-		}
+		}else
 		if(selectedAction.equals("Rename_CopySRF")){
 			commandParams = renameCopySRFCommandParams(envName, paramsList, actionType);
-		}
+		}else
 		if(selectedAction.equals("DDLSynch")){
 			commandParams = ddlSyncCommandParams(envName, paramsList, actionType);
-		}
+		}else
 		if(selectedAction.equals("Copy_BS")){
 			commandParams = copyBSCommandParams(envName, paramsList, actionType);
-		}
+		}else
 		if(selectedAction.equals("ExportRep")){
 			commandParams = exportRepCommandParams(envName, paramsList, actionType);
+		}else{
+			logger.error("Selected screen action did not configured in the backend:" + selectedAction);
 		}
 		
 		return commandParams;
@@ -216,7 +218,7 @@ private String buildNowCommandParams(String envName, List<CommandParams> paramsL
 			sb.append(" ").append(admConfig.getPassword());
 		}
 		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(admConfig.getPassword());
+			sb.append(" ").append(admConfig.getLogFilePath());
 		}
 	}	
 	return sb.toString();
@@ -228,12 +230,7 @@ private String StopServerCommandParams(String envName, List<CommandParams> param
 	EnvInfo envInfo = envList.get(0);
 	if(envList != null && envList.size() > 0){
 		envInfo = envList.get(0);
-	}	
-	
-	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
-	
-	
-	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	}
 	StringBuffer sb = new StringBuffer();
 	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 		CommandParams commandParam = (CommandParams) iterator.next();
@@ -244,7 +241,7 @@ private String StopServerCommandParams(String envName, List<CommandParams> param
 			sb.append(" ").append(envInfo.getServerName());
 		}
 		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(repo.getLogFilePath());
+			sb.append(" ").append(envInfo.getLogFilePath());
 		}
 	}	
 	return sb.toString();
@@ -255,12 +252,7 @@ private String startServerCommandParams(String envName, List<CommandParams> para
 	EnvInfo envInfo = envList.get(0);
 	if(envList != null && envList.size() > 0){
 		envInfo = envList.get(0);
-	}	
-	
-	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
-	
-	
-	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
+	}
 	StringBuffer sb = new StringBuffer();
 	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 		CommandParams commandParam = (CommandParams) iterator.next();
@@ -271,7 +263,7 @@ private String startServerCommandParams(String envName, List<CommandParams> para
 			sb.append(" ").append(envInfo.getServerName());
 		}
 		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(repo.getLogFilePath());
+			sb.append(" ").append(envInfo.getLogFilePath());
 		}
 	}	
 	return sb.toString();

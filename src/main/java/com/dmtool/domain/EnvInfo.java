@@ -10,7 +10,14 @@ public class EnvInfo extends AuditInfo{
 	private String service;
 	private String seibelPath;
 	private String admPath;
+	private String logFilePath;
 	
+	public String getLogFilePath() {
+		return logFilePath;
+	}
+	public void setLogFilePath(String logFilePath) {
+		this.logFilePath = logFilePath;
+	}
 	public Integer getId() {
 		return id;
 	}

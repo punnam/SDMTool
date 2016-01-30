@@ -18,6 +18,7 @@
 			$scope.serverHost = "";
 			$scope.admPath = "";
 			$scope.enterpriseName = "";
+			$scope.logFilePath = "";
 			$scope.modifyEnv = false;
 			$scope.createdTime = "";
 			$scope.updatedTime = "";
@@ -50,6 +51,7 @@
 			$scope.serverHost = envObj.serverHost;
 			$scope.admPath = envObj.admPath;
 			$scope.enterpriseName = envObj.enterpriseName;
+			$scope.logFilePath = envObj.logFilePath;
 			$scope.createdTime = envObj.createdTime;
 			$scope.updatedTime = envObj.updatedTime;
 			$scope.createdUser = envObj.createdUser;
@@ -71,6 +73,7 @@
 				serverHost : $scope.serverHost,
 				admPath : $scope.admPath,
 				enterpriseName : $scope.enterpriseName,
+				logFilePath : $scope.logFilePath,
 				createdTime : $scope.createdTime,
 				updatedTime : $scope.updatedTime,
 				createdUser : $scope.createdUser,
