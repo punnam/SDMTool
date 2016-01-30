@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+							http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+							http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+							http://www.springframework.org/schema/oxm
+							http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
+							http://www.springframework.org/schema/jdbc 
+							http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+							http://www.springframework.org/schema/util
+							http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<!-- Enables automatic mapping of fund objects to and from JSON -->
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/**" location="/app/" />
+	<!-- Setup spring to pull in @Controller, @RequestMapping, etc Configuration 
+		scans specified packages for classes configured as Spring managed beans and 
+		automatically sets up objects annotated with @Controller, @Service etc. -->
+	<context:component-scan base-package="com.dmtool.rest.controllers" />
+	<context:component-scan base-package="com.dmtool.services" />
+	<context:component-scan base-package="com.dmtool.dao.impl" />
+	<context:component-scan base-package="com.dmtool.dao" />
+	<!-- TODO -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+
+	<!-- Configures view for returning JSON to the client -->
+	<bean
+		class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+		<property name="contentType" value="text/plain" />
+	</bean>
+
+	<!-- TODO -->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<util:list id="beanList">
+				<ref bean="jsonMessageConverter" />
+			</util:list>
+		</property>
+	</bean>
+	<!-- Converts JSON to POJO and vice versa -->
+	<bean id="jsonMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+	<bean id="envDao" class="com.dmtool.dao.impl.EnvDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!-- -->
+	<bean id="deloymentOptionsDao" class="com.dmtool.dao.impl.DeloymentOptionsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="reposDao" class="com.dmtool.dao.impl.ReposDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="admConfigDao" class="com.dmtool.dao.impl.AdmConfigDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="commandTemplatesDao" class="com.dmtool.dao.impl.CommandTemplatesDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="userInfoDao" class="com.dmtool.dao.impl.UserInfoDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="licenseMgtDao" class="com.dmtool.dao.impl.LicenseMgtDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="agentInfoDao" class="com.dmtool.dao.impl.AgentInfoDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="commandParamsDao" class="com.dmtool.dao.impl.CommandParamsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+			<list>
+				<value>EnvInfo.hbm.xml</value>
+				<value>AdmConfig.hbm.xml</value>
+				<value>DeploymentOptions.hbm.xml</value>
+				<value>CommandTemplates.hbm.xml</value>
+				<value>UserInfo.hbm.xml</value>
+				<value>Repos.hbm.xml</value>
+				<value>LicenseMgt.hbm.xml</value>
+				<value>AgentInfo.hbm.xml</value>
+				<value>CommandParams.hbm.xml</value>
+				
+			</list>
+		</property>
+		<!--<property name="hibernateProperties"> <props> <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop> 
+			<prop key="hibernate.current_session_context_class">thread</prop> </props> 
+			</property> -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+				<prop key="hibernate.current_session_context_class">thread</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> <property 
+		name="url" value="jdbc:mysql://localhost:3306/dmtool" /> <property name="username" 
+		value="root" /> <property name="password" value="admin" /> </bean> -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+<!--		 <property name="url" value="jdbc:h2:~/dmtool" /> --> 
+		<property name="url" value="jdbc:h2:tcp://localhost/~/dmtool" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+<!-- 
+	<bean id="h2Server" class="org.h2.tools.Server" factory-method="createTcpServer"
+		init-method="start" destroy-method="stop" depends-on="h2WebServer">
+		<constructor-arg value="-tcp,-tcpAllowOthers,-tcpPort,9092" />
+	</bean>
+	<bean id="h2WebServer" class="org.h2.tools.Server" factory-method="createWebServer"
+		init-method="start" destroy-method="stop">
+		<constructor-arg value="-web,-webAllowOthers,-webPort,8082" />
+	</bean>
+	<jdbc:initialize-database data-source="dataSource">
+		<jdbc:script location="classpath:dmtool.sql" />
+	</jdbc:initialize-database>
+  -->
+</beans>
