@@ -71,10 +71,10 @@
 			$scope.logFilePath = repoObj.logFilePath;
 			$scope.tableDDLSync = repoObj.tableDDLSync;
 			$scope.indexDDLSync = repoObj.indexDDLSync;
-			$scope.createdTime = envObj.createdTime;
-			$scope.updatedTime = envObj.updatedTime;
-			$scope.createdUser = envObj.createdUser;
-			$scope.updatedUser = envObj.updatedUser;
+			$scope.createdTime = repoObj.createdTime;
+			$scope.updatedTime = repoObj.updatedTime;
+			$scope.createdUser = repoObj.createdUser;
+			$scope.updatedUser = repoObj.updatedUser;
 
 		};
 		$scope.reloadAllRepos = function() {
@@ -100,7 +100,7 @@
 				createdUser : $scope.createdUser,
 				updatedUser : $scope.updatedUser
 			};
-
+alert(dataObj);
 			$http({
 				data : dataObj,
 				method : 'POST',

@@ -186,7 +186,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			commandParams = startServerCommandParams(envName, paramsList, actionType);
 		}else
 		if(selectedAction.equals("Imrep")){
-			commandParams = imrepCommandParams(envName, paramsList, actionType);
+			commandParams = imrepCommandParams(envName, paramsList, "Import");
 		}else
 		if(selectedAction.equals("Rename_CopySRF")){
 			commandParams = renameCopySRFCommandParams(envName, paramsList, actionType);
@@ -198,7 +198,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 			commandParams = copyBSCommandParams(envName, paramsList, actionType);
 		}else
 		if(selectedAction.equals("ExportRep")){
-			commandParams = exportRepCommandParams(envName, paramsList, actionType);
+			commandParams = exportRepCommandParams(envName, paramsList, "Export");
 		}else{
 			logger.error("Selected screen action did not configured in the backend:" + selectedAction);
 		}
