@@ -309,6 +309,11 @@ private String renameCopySRFCommandParams(String envName, List<CommandParams> pa
 }
 //DDLSynch userid password ODBC logfilepath repository siebelpwd siebeldata siebelindex logfilepath
 private String ddlSyncCommandParams(String envName, List<CommandParams> paramsList, String actionType){
+	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+	EnvInfo envInfo = envList.get(0);
+	if(envList != null && envList.size() > 0){
+		envInfo = envList.get(0);
+	}
 	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
 	StringBuffer sb = new StringBuffer();
 	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
@@ -335,7 +340,7 @@ private String ddlSyncCommandParams(String envName, List<CommandParams> paramsLi
 			sb.append(" ").append(repo.getPassword());
 		}
 		if(commandParam.getParam().equals("siebelindex")){
-			sb.append(" ").append(repo.getPassword());
+			sb.append(" ").append(envInfo.getSeibelPath());
 		}
 	}	
 	return sb.toString();
