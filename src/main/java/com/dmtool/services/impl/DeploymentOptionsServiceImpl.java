@@ -197,7 +197,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
 		if(selectedAction.equals("Copy_BS")){
 			commandParams = copyBSCommandParams(envName, paramsList, actionType);
 		}else
-		if(selectedAction.equals("ExportRep")){
+		if(selectedAction.equals("Exprep")){
 			commandParams = exportRepCommandParams(envName, paramsList, "Export");
 		}else{
 			logger.error("Selected screen action did not configured in the backend:" + selectedAction);
@@ -281,16 +281,13 @@ private String imrepCommandParams(String envName, List<CommandParams> paramsList
 			sb.append(" ").append(repo.getPassword());
 		}
 		if(commandParam.getParam().equals("ODBC")){
-			sb.append(" ").append(repo.getPassword());
+			sb.append(" ").append(repo.getOdbc());
 		}
 		if(commandParam.getParam().equals("RepositoryName")){
-			sb.append(" ").append(repo.getPassword());
+			sb.append(" ").append(repo.getRepoName());
 		}
 		if(commandParam.getParam().equals("ImportFilePath")){
-			sb.append(" ").append(repo.getPassword());
-		}
-		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(repo.getPassword());
+			sb.append(" ").append(repo.getLogFilePath());
 		}
 	}	
 	return sb.toString();
@@ -371,16 +368,13 @@ private String exportRepCommandParams(String envName, List<CommandParams> params
 			sb.append(" ").append(repo.getPassword());
 		}
 		if(commandParam.getParam().equals("ODBC")){
-			sb.append(" ").append(repo.getPassword());
+			sb.append(" ").append(repo.getOdbc());
 		}
 		if(commandParam.getParam().equals("RepositoryName")){
-			sb.append(" ").append(repo.getPassword());
+			sb.append(" ").append(repo.getRepoName());
 		}
 		if(commandParam.getParam().equals("ImportFilePath")){
-			sb.append(" ").append(repo.getPassword());
-		}
-		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(repo.getPassword());
+			sb.append(" ").append(repo.getLogFilePath());
 		}
 	}	
 	return sb.toString();

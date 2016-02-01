@@ -106,16 +106,18 @@ INSERT INTO PUBLIC.COMMANDTEMPLATES(ID, CODE, COMMAND, COMMAND_ORDER, DESCRIPTIO
 (1, 'BuildNow', 'C:\\Migration\\Build_Now.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 112),
 (2, 'StopServer', 'C:\\Migration\\StopServer.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 112),
 (3, 'StartServers', 'C:\\Migration\\StartServer.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 113),
-(4, 'CopySRFBS', 'C:\\Migration\\CopySRFBS.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 114),
+(4, 'Copy_BS', 'C:\\Migration\\CopySRFBS.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 114),
 (5, 'CopyWebTemplate', 'C:\\Migration\\CopyWebTemplate', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 113),
 (6, 'CopyOtherFiles', 'C:\\Migration\\CopyOtherFiles.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 114),
-(7, 'ImportRespository', 'C:\\Migration\\Imprep.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 115),
+(7, 'Imrep', 'C:\\Migration\\Imprep.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 115),
 (8, 'RenameRespository', 'C:\\Migration\\RenameRespository.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 116),
 (9, 'ApplySchemaChanges', 'C:\\Migration\\ddlsynch.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 117),
 (10, 'ImportADM', 'C:\\Migration\\ImportADM.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 119),
 (12, 'ScheduleDeploy', 'C:\\Migration\\ScheduleDeploy.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 121),
 (13, 'MigrateSRFRepositoryNow', 'C:\\Migration\\MigrateSRFRepositoryNow.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 122),
-(14, 'ADMExport', 'C:\\Migration\\ADMExport.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 123);  
+(14, 'ADMExport', 'C:\\Migration\\ADMExport.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 123),
+(15, 'Exprep', 'C:\\Migration\\Exprep.bat', 1, NULL, TIMESTAMP '2016-01-17 00:00:00.0', TIMESTAMP '2016-01-17 00:00:00.0', 111, 123);  
+
 CREATE CACHED TABLE PUBLIC.EXPORT_REPOS(
     ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_7AF75200_065A_40E9_BB59_899B783FDD35) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_7AF75200_065A_40E9_BB59_899B783FDD35,
     ENV_NAME VARCHAR(45) DEFAULT NULL,
@@ -150,18 +152,19 @@ ALTER TABLE PUBLIC.DEPLOYMENT_OPTIONS ADD CONSTRAINT PUBLIC.CONSTRAINT_B2 PRIMAR
 -- 13 +/- SELECT COUNT(*) FROM PUBLIC.DEPLOYMENT_OPTIONS;     
 INSERT INTO PUBLIC.DEPLOYMENT_OPTIONS(ID, CODE, DESCRIPTION, CATEGORY, COMMAND, CREATED_TIME, UPDATED_TIME, CREATED_USER, UPDATED_USER) VALUES
 (1, 'StopServer', 'Stop Server', 'Option', 'sc $HOST_NAME Stop $SERVICE_NAME', NULL, NULL, NULL, NULL),
-(2, 'CopySRFBS', 'Copy SRF/BS', 'Option', NULL, NULL, NULL, NULL, NULL),
+(2, 'Copy_BS', 'Copy SRF/BS', 'Option', NULL, NULL, NULL, NULL, NULL),
 (3, 'CopyWebTemplate', 'Copy Web Template', 'Option', NULL, NULL, NULL, NULL, NULL),
 (4, 'CopyOtherFiles', 'Copy other Files (Specified in package)', 'Option', NULL, NULL, NULL, NULL, NULL),
-(5, 'ImportRespository', 'Import Respository', 'Option', NULL, NULL, NULL, NULL, NULL),
+(5, 'Imrep', 'Import Respository', 'Option', NULL, NULL, NULL, NULL, NULL),
 (6, 'RenameRespository', 'Rename Respository', 'Option', NULL, NULL, NULL, NULL, NULL),
-(7, 'ApplySchemaChanges', 'Apply Schema Changes', 'Option', NULL, NULL, NULL, NULL, NULL),
+(7, 'DDLSynch', 'Apply Schema Changes(DDLSynch)', 'Option', NULL, NULL, NULL, NULL, NULL),
 (8, 'StartServer', 'Start Servers', 'Option', NULL, NULL, NULL, NULL, NULL),
 (9, 'ImportADM', 'Import  ADM', 'Option', NULL, NULL, NULL, NULL, NULL),
 (10, 'BuildNow', 'Build Now', 'package', NULL, NULL, NULL, NULL, NULL),
 (11, 'ScheduleDeploy', 'Schedule Deploy', 'package', NULL, NULL, NULL, NULL, NULL),
 (12, 'MigrateSRFRepositoryNow', 'Migrate SRF/Repository Now', 'package', NULL, NULL, NULL, NULL, NULL),
-(13, 'ADMExportImport', 'ADM Export/Import', 'package', NULL, NULL, NULL, NULL, NULL);      
+(13, 'ADMExport', 'ADM Export', 'package', NULL, NULL, NULL, NULL, NULL),
+(14, 'Exprep', 'Export Repository', 'package', NULL, NULL, NULL, NULL, NULL);      
 CREATE CACHED TABLE PUBLIC.SERVER_INFO(
     ID INT DEFAULT (NEXT VALUE FOR PUBLIC.SYSTEM_SEQUENCE_9B8865FF_32A6_4B36_9BE5_31EA65FB36BD) NOT NULL NULL_TO_DEFAULT SEQUENCE PUBLIC.SYSTEM_SEQUENCE_9B8865FF_32A6_4B36_9BE5_31EA65FB36BD,
     SERVER_NAME VARCHAR(45) DEFAULT NULL,
