@@ -1,5 +1,6 @@
 package com.dmtool.rest.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -100,7 +101,7 @@ public class DeploymentOptionsController {
 			HttpServletResponse httpResponse_p, WebRequest request_p) {
 		
 		logger_c.debug("Creating Env: " + env_p.toString());
-		String output ="";
+		HashMap<String, HashMap<String, List<String>>> output = null;
 		boolean commandStatus = false;
 		try {
 			 output = deploymentOptionsService.processdeDloymentOptionsService(env_p);
@@ -121,6 +122,6 @@ public class DeploymentOptionsController {
 		/**
 		 * Return the view
 		 */
-		return new ModelAndView(jsonView_i, DATA_FIELD, commandStatus);
+		return new ModelAndView(jsonView_i, DATA_FIELD, output);
 	}
 }

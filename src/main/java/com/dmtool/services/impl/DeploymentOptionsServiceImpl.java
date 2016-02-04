@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -19,19 +19,16 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dmtool.dao.impl.DeloymentOptionsDao;
 import com.dmtool.domain.AdmConfig;
-import com.dmtool.domain.AgentInfo;
 import com.dmtool.domain.CommandParams;
 import com.dmtool.domain.CommandTemplates;
 import com.dmtool.domain.DeploymentOptions;
 import com.dmtool.domain.EnvInfo;
 import com.dmtool.domain.Repos;
-import com.dmtool.rest.controllers.UserInfoController;
 import com.dmtool.services.AdmConfigService;
 import com.dmtool.services.CommandParamsService;
 import com.dmtool.services.CommandTemplatesService;
@@ -42,354 +39,467 @@ import com.dmtool.user.actions.DeploymentOptionsActions;
 import com.dmtool.utils.DMCommandTokens;
 
 @Repository
-public class DeploymentOptionsServiceImpl implements DeploymentOptionsService{
-	private static final Logger logger = Logger.getLogger(DeploymentOptionsServiceImpl.class);
-	
+public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
+	private static final Logger logger = Logger
+			.getLogger(DeploymentOptionsServiceImpl.class);
+
 	@Autowired
 	private DeloymentOptionsDao deloymentOptionsDao;
-	
+
 	@Autowired
 	private EnvService envService;
-	
-	
+
 	@Autowired
 	private ReposService reposService;
-	
+
 	@Autowired
 	private AdmConfigService admConfigService;
-	
+
 	@Autowired
 	private CommandTemplatesService commandTemplatesService;
-	
+
 	@Autowired
 	private CommandParamsService commandParamsService;
-	
+
 	@Override
 	public List<DeploymentOptions> getAllDeploymentOptions() {
-		// TODO Auto-generated method stub	
+		// TODO Auto-generated method stub
 		return deloymentOptionsDao.getAllDeploymentOptionsByCategory("Option");
 	}
-/**
+
+	/**
+	 * @Override public String
+	 *           processdeDloymentOptionsService(DeploymentOptionsActions env_p)
+	 *           { String selectedEnvName = env_p.getEnvName(); String
+	 *           actionType = env_p.getActionType(); StringBuilder sb = new
+	 *           StringBuilder(); //REPO_CONFIG Repos repos =
+	 *           reposService.getRepoInfoByEnvNameAndActionType
+	 *           (selectedEnvName,actionType);
+	 * 
+	 *           //Need map for ADM_CONFIG#ENV_NAME AdmConfig admConfig =
+	 *           admConfigService
+	 *           .getAdmConfigByEnvNameAndActionType(selectedEnvName
+	 *           ,actionType);
+	 * 
+	 * 
+	 *           Map<String, EnvInfo> envNameServerNameEnvInfo =
+	 *           getServerNamesByEnv(selectedEnvName);
+	 * 
+	 *           System.out.println("envName:"+selectedEnvName); List<String>
+	 *           services = env_p.getDeploymentServices(); for (int i = 0; i <
+	 *           services.size(); i++) {
+	 *           System.out.println("Services Actions:"+services.get(i)); String
+	 *           selectedAction = services.get(i); List<CommandTemplates>
+	 *           commandsList =
+	 *           commandTemplatesService.getAllCommandTemplatesByCode
+	 *           (selectedAction); if(commandsList != null &&
+	 *           commandsList.size()>0){ for (int j = 0; i <
+	 *           commandsList.size(); j++) { CommandTemplates cmdTemplate =
+	 *           commandsList.get(j); String command = cmdTemplate.getCommand();
+	 *           Set<String> serverNames = envNameServerNameEnvInfo.keySet();
+	 *           Iterator<String> serverNamesIter = serverNames.iterator();
+	 *           while (serverNamesIter.hasNext()) { String key =
+	 *           serverNamesIter.next();
+	 * 
+	 *           System.out.println("***Start****ServerName:"+key);
+	 *           System.out.println("	Command before parsing:"+command);
+	 * 
+	 *           EnvInfo envInfo = envNameServerNameEnvInfo.get(key);
+	 *           VelocityContext tokenMaps = getTokenMaps(envInfo, repos,
+	 *           admConfig); String commandWithValues =
+	 *           applyTokenValuesForCommand(command, tokenMaps);
+	 * 
+	 *           String consoleOutput= ""; try { //consoleOutput =
+	 *           executeCommandWithAgent(commandWithValues); consoleOutput =
+	 *           executeCommand(commandWithValues); return consoleOutput; }
+	 *           catch (Exception e) { // TODO Auto-generated catch block
+	 *           e.printStackTrace(); return null; }
+	 * 
+	 *           } } } } //Need map for ENV_NAME#SERVER_NAME
+	 * 
+	 *           //Need map for REPO_CONFIG#ENV_NAME#IMPORT //Need map for
+	 *           REPO_CONFIG#ENV_NAME#EXPORT //Need map for
+	 *           REPO_CONFIG#ENV_NAME#SYNCDDL
+	 * 
+	 *           //Need map for ADM_CONFIG#ENV_NAME#IMPORT //Need map for
+	 *           ADM_CONFIG#ENV_NAME#EXPORT return sb.toString(); }
+	 **/
 	@Override
-	public String processdeDloymentOptionsService(DeploymentOptionsActions env_p) {
-		String selectedEnvName = env_p.getEnvName();
-		String actionType = env_p.getActionType();
-		StringBuilder  sb = new StringBuilder();
-		//REPO_CONFIG
-		Repos repos = reposService.getRepoInfoByEnvNameAndActionType(selectedEnvName,actionType);
-		
-		//Need map for ADM_CONFIG#ENV_NAME
-		AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(selectedEnvName,actionType);
+	public HashMap<String, HashMap<String, List<String>>> processdeDloymentOptionsService(DeploymentOptionsActions env_p) {
+		logger.info("Executing processdeDloymentOptionsService method:"
+				+ env_p.getDeploymentServices());
+		HashMap<String, HashMap<String, List<String>>> resultAndErrorMap = new HashMap<String, HashMap<String, List<String>>>();
+		StringBuilder sb = new StringBuilder();
+		try {
+			List<String> services = env_p.getDeploymentServices();
+			String envName = env_p.getEnvName();
+			String actionType = env_p.getActionType();
+			if (services == null || !(services.size() > 0)) {
+				logger.error("No actions selected.");
+			}
 
-		
-		Map<String, EnvInfo> envNameServerNameEnvInfo = getServerNamesByEnv(selectedEnvName);
-		
-		System.out.println("envName:"+selectedEnvName);
-		List<String> services = env_p.getDeploymentServices();
-		for (int i = 0; i < services.size(); i++) {
-			System.out.println("Services Actions:"+services.get(i));
-			String selectedAction = services.get(i);
-			List<CommandTemplates> commandsList = commandTemplatesService.getAllCommandTemplatesByCode(selectedAction);
-			if(commandsList != null && commandsList.size()>0){
-				for (int j = 0; i < commandsList.size(); j++) {
-					CommandTemplates cmdTemplate = commandsList.get(j);
-					String command = cmdTemplate.getCommand();
-					Set<String> serverNames = envNameServerNameEnvInfo.keySet();
-					Iterator<String> serverNamesIter = serverNames.iterator();
-					while (serverNamesIter.hasNext()) {
-						String key = serverNamesIter.next();
-						
-						System.out.println("***Start****ServerName:"+key);
-						System.out.println("	Command before parsing:"+command);
-						
-						EnvInfo envInfo = envNameServerNameEnvInfo.get(key);
-						VelocityContext tokenMaps = getTokenMaps(envInfo,
-								repos, admConfig);
-						String commandWithValues = applyTokenValuesForCommand(command, tokenMaps);
-						
-						String consoleOutput= "";
-						try {
-							//consoleOutput = executeCommandWithAgent(commandWithValues);
-							consoleOutput = executeCommand(commandWithValues);
-							return consoleOutput;
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							return null;
-						}
-
+			HashMap<String, List<String>> errorMap = new HashMap<String, List<String>>();
+			HashMap<String, List<String>> resultMap = new HashMap<String, List<String>>();
+			
+			for (int i = 0; i < services.size(); i++) {
+				logger.info("Services Actions:" + services.get(i));
+				String selectedAction = services.get(i);
+				List<CommandTemplates> commandsList = commandTemplatesService
+						.getAllCommandTemplatesByCode(selectedAction);
+				List<CommandParams> paramsList = commandParamsService
+						.getAllCommandParamsByCode(selectedAction);
+				if (commandsList != null && commandsList.size() > 0) {
+					for (int j = 0; j < commandsList.size(); j++) {
+						CommandTemplates cmdTemplate = commandsList.get(j);
+						String command = cmdTemplate.getCommand();
+						String params = getParams(envName, selectedAction,
+								paramsList, actionType, errorMap);
+						String result = executeBatchFile(command + params);
+						List<String> resultList = new ArrayList<String>();
+						resultList.add(result);
+						resultMap.put(selectedAction, resultList);
 					}
+				} else {
+					logger.error("Commands not found for action:"
+							+ selectedAction);
 				}
 			}
+			resultAndErrorMap.put("result", resultMap);
+			resultAndErrorMap.put("error", errorMap);
+		} catch (Exception e) {
+			logger.error("Error while processinf command.", e);
 		}
-		//Need map for ENV_NAME#SERVER_NAME
-		
-		//Need map for REPO_CONFIG#ENV_NAME#IMPORT
-		//Need map for REPO_CONFIG#ENV_NAME#EXPORT
-		//Need map for REPO_CONFIG#ENV_NAME#SYNCDDL
-		
-		//Need map for ADM_CONFIG#ENV_NAME#IMPORT
-		//Need map for ADM_CONFIG#ENV_NAME#EXPORT
-		return sb.toString();
-	}**/
-	@Override
-	public String processdeDloymentOptionsService(DeploymentOptionsActions env_p) {
-		logger.info("Executing processdeDloymentOptionsService method:"+env_p.getDeploymentServices());
-		StringBuilder  sb = new StringBuilder();
-		try{
-		List<String> services = env_p.getDeploymentServices();
-		String envName = env_p.getEnvName();
-	    String actionType = env_p.getActionType();
-		if( services == null || !(services.size() > 0)){
-			logger.error("No actions selected.");
-		}
-		for (int i = 0; i < services.size(); i++) {
-			logger.info("Services Actions:"+services.get(i));
-			String selectedAction = services.get(i);
-			List<CommandTemplates> commandsList = commandTemplatesService.getAllCommandTemplatesByCode(selectedAction);
-			List<CommandParams> paramsList = commandParamsService.getAllCommandParamsByCode(selectedAction);
-			if(commandsList != null && commandsList.size()>0){
-				for (int j = 0; j < commandsList.size(); j++) {
-					CommandTemplates cmdTemplate = commandsList.get(j);
-					String command = cmdTemplate.getCommand();
-					String params = getParams(envName, selectedAction, paramsList, actionType);
-					String result = executeBatchFile(command+params);
-					sb.append(result).append("\n");
-				}
-			}else{
-				logger.error("Commands not found for action:"+selectedAction);
-			}
-		}
-		}catch(Exception e){
-			logger.error("Error while processinf command.",e);
-		}
-		logger.info("Executed processdeDloymentOptionsService method:"+env_p.getDeploymentServices());
-		return sb.toString();
+		logger.info("Executed processdeDloymentOptionsService method:"
+				+ env_p.getDeploymentServices());
+		return resultAndErrorMap;
 	}
-	
-	private String getParams(String envName, String selectedAction, List<CommandParams> paramsList, String actionType) {
+
+	private String getParams(String envName, String selectedAction,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		String commandParams = "";
-//		StopServer hostname ServiceName  LogFilePath
-//		StartServer hostname ServiceName  LogFilePath
-//		Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
-//		Rename_CopySRF SrfSourcePath LogFilePath
-//		DDLSynch userid password ODBC logfilepath repository siebelpwd siebeldata siebelindex logfilepath
-//		Copy_BS SourceBSPath LogiflePath
-//		ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
-		if(selectedAction.equals("BuildNow")){
-			commandParams = buildNowCommandParams(envName, paramsList, actionType);
-		}else
-		if(selectedAction.equals("StopServer")){
-			commandParams = StopServerCommandParams(envName, paramsList, actionType);
-		}else
-		if(selectedAction.equals("StartServer")){
-			commandParams = startServerCommandParams(envName, paramsList, actionType);
-		}else
-		if(selectedAction.equals("Imrep")){
+		// StopServer hostname ServiceName LogFilePath
+		// StartServer hostname ServiceName LogFilePath
+		// Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
+		// Rename_CopySRF SrfSourcePath LogFilePath
+		// DDLSynch userid password ODBC logfilepath repository siebelpwd
+		// siebeldata siebelindex logfilepath
+		// Copy_BS SourceBSPath LogiflePath
+		// ExportRep userid password ODBC RepositoryName EXportFilePath
+		// LogFilePath
+		if (selectedAction.equals("BuildNow")) {
+			commandParams = buildNowCommandParams(selectedAction, envName, paramsList,
+					actionType,errorMap);
+		} else if (selectedAction.equals("StopServer")) {
+			commandParams = StopServerCommandParams(envName, paramsList,
+					actionType);
+		} else if (selectedAction.equals("StartServer")) {
+			commandParams = startServerCommandParams(envName, paramsList,
+					actionType);
+		} else if (selectedAction.equals("Imrep")) {
 			commandParams = imrepCommandParams(envName, paramsList, "Import");
-		}else
-		if(selectedAction.equals("Rename_CopySRF")){
-			commandParams = renameCopySRFCommandParams(envName, paramsList, actionType);
-		}else
-		if(selectedAction.equals("DDLSynch")){
-			commandParams = ddlSyncCommandParams(envName, paramsList, actionType);
-		}else
-		if(selectedAction.equals("Copy_BS")){
+		} else if (selectedAction.equals("Rename_CopySRF")) {
+			commandParams = renameCopySRFCommandParams(envName, paramsList,
+					actionType);
+		} else if (selectedAction.equals("DDLSynch")) {
+			commandParams = ddlSyncCommandParams(envName, paramsList,
+					actionType);
+		} else if (selectedAction.equals("Copy_BS")) {
 			commandParams = copyBSCommandParams(envName, paramsList, actionType);
-		}else
-		if(selectedAction.equals("Exprep")){
-			commandParams = exportRepCommandParams(envName, paramsList, "Export");
-		}else{
-			logger.error("Selected screen action did not configured in the backend:" + selectedAction);
+		} else if (selectedAction.equals("Exprep")) {
+			commandParams = exportRepCommandParams(envName, paramsList,
+					"Export");
+		} else {
+			logger.error("Selected screen action did not configured in the backend:"
+					+ selectedAction);
 		}
-		
+
 		return commandParams;
 	}
-private String buildNowCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
-	AdmConfig admConfig = admConfigService.getAdmConfigByEnvNameAndActionType(envName, actionType);
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("UserId")){
-			sb.append(" ").append(admConfig.getUserId());
-		}
-		if(commandParam.getParam().equals("Password")){
-			sb.append(" ").append(admConfig.getPassword());
-		}
-		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(admConfig.getLogFilePath());
-		}
-	}	
-	return sb.toString();
-}
 
-//StopServer hostname ServiceName  LogFilePath
-private String StopServerCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
-	EnvInfo envInfo = envList.get(0);
-	if(envList != null && envList.size() > 0){
-		envInfo = envList.get(0);
+	private String buildNowCommandParams(String selectedAction, String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
+		AdmConfig admConfig = admConfigService
+				.getAdmConfigByEnvNameAndActionType(envName, actionType);
+		List<String> errors = buildNowValidate(envName, paramsList, actionType);
+		StringBuffer sb = new StringBuffer();
+		if (admConfig != null && (errors == null || errors.size() == 0)) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("UserId")) {
+					sb.append(" ").append(admConfig.getUserId());
+				}
+				if (commandParam.getParam().equals("Password")) {
+					sb.append(" ").append(admConfig.getPassword());
+				}
+				if (commandParam.getParam().equals("LogFilePath")) {
+					sb.append(" ").append(admConfig.getLogFilePath());
+				}
+			}
+		} else {
+			logger.error("Error command did not constrcuted properly. ADM config is empty for "
+					+ envName + " and " + actionType);
+			errorMap.put(selectedAction, errors);
+		}
+		return sb.toString();
 	}
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("hostname")){
-			sb.append(" ").append(envInfo.getHostName());
+	@SuppressWarnings("unused")
+	private List<String> buildNowValidate(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		List<String> errors = new ArrayList<String>();
+		if(envName == null){
+			errors.add("Environment name is missing");
 		}
-		if(commandParam.getParam().equals("ServiceName")){
-			sb.append(" ").append(envInfo.getServerName());
+		if(paramsList == null){
+			errors.add("Parameters are missing");
 		}
-		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(envInfo.getLogFilePath());
+		if(actionType == null){
+			errors.add("Action Type is missing");
 		}
-	}	
-	return sb.toString();
-}
-//StartServer hostname ServiceName  LogFilePath
-private String startServerCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
-	EnvInfo envInfo = envList.get(0);
-	if(envList != null && envList.size() > 0){
-		envInfo = envList.get(0);
+		
+		AdmConfig admConfig = admConfigService
+				.getAdmConfigByEnvNameAndActionType(envName, actionType);
+		
+		if(admConfig == null){
+			errors.add("ADM Config is not found.");
+		}
+
+		if(admConfig == null){
+			errors.add("ADM Config is not found.");
+		}else{
+			if(admConfig.getUserId() == null){
+				errors.add("ADM Config is missing User Id.");
+			}
+			if(admConfig.getPassword() == null){
+				errors.add("ADM Config is missing password.");
+			}
+			if(admConfig.getLogFilePath() == null){
+				errors.add("ADM Config is missing Log file path.");
+			}
+		}
+		return errors;
 	}
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("hostname")){
-			sb.append(" ").append(envInfo.getHostName());
+
+	// StopServer hostname ServiceName LogFilePath
+	private String StopServerCommandParams(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
 		}
-		if(commandParam.getParam().equals("ServiceName")){
-			sb.append(" ").append(envInfo.getServerName());
+		StringBuffer sb = new StringBuffer();
+		if (envInfo != null) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("hostname")) {
+					sb.append(" ").append(envInfo.getHostName());
+				}
+				if (commandParam.getParam().equals("ServiceName")) {
+					sb.append(" ").append(envInfo.getServerName());
+				}
+				if (commandParam.getParam().equals("LogFilePath")) {
+					sb.append(" ").append(envInfo.getLogFilePath());
+				}
+			}
+		} else {
+			logger.error("Error command did not constrcuted properly. envInfo is empty for "
+					+ envName);
 		}
-		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(envInfo.getLogFilePath());
-		}
-	}	
-	return sb.toString();
-}
-//Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
-private String imrepCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("UserId")){
-			sb.append(" ").append(repo.getUserId());
-		}
-		if(commandParam.getParam().equals("Password")){
-			sb.append(" ").append(repo.getPassword());
-		}
-		if(commandParam.getParam().equals("ODBC")){
-			sb.append(" ").append(repo.getOdbc());
-		}
-		if(commandParam.getParam().equals("RepositoryName")){
-			sb.append(" ").append(repo.getRepoName());
-		}
-		if(commandParam.getParam().equals("ImportFilePath")){
-			sb.append(" ").append(repo.getLogFilePath());
-		}
-	}	
-	return sb.toString();
-}
-//Rename_CopySRF SrfSourcePath LogFilePath
-private String renameCopySRFCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("SrfSourcePath")){
-			sb.append(" ").append(repo.getFilePath());
-		}
-		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(repo.getLogFilePath());
-		}
-	}	
-	return sb.toString();
-}
-//DDLSynch userid password ODBC logfilepath repository siebelpwd siebeldata siebelindex logfilepath
-private String ddlSyncCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
-	EnvInfo envInfo = envList.get(0);
-	if(envList != null && envList.size() > 0){
-		envInfo = envList.get(0);
+		return sb.toString();
 	}
-	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("UserId")){
-			sb.append(" ").append(repo.getUserId());
+
+	// StartServer hostname ServiceName LogFilePath
+	private String startServerCommandParams(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
 		}
-		if(commandParam.getParam().equals("Password")){
-			sb.append(" ").append(repo.getPassword());
+		StringBuffer sb = new StringBuffer();
+		if (envInfo != null) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("hostname")) {
+					sb.append(" ").append(envInfo.getHostName());
+				}
+				if (commandParam.getParam().equals("ServiceName")) {
+					sb.append(" ").append(envInfo.getServerName());
+				}
+				if (commandParam.getParam().equals("LogFilePath")) {
+					sb.append(" ").append(envInfo.getLogFilePath());
+				}
+			}
+		} else {
+			logger.error("Error command did not constrcuted properly. envInfo is empty for "
+					+ envName);
 		}
-		if(commandParam.getParam().equals("ODBC")){
-			sb.append(" ").append(repo.getOdbc());
+		return sb.toString();
+	}
+
+	// Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
+	private String imrepCommandParams(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		StringBuffer sb = new StringBuffer();
+		if (repo != null) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("UserId")) {
+					sb.append(" ").append(repo.getUserId());
+				}
+				if (commandParam.getParam().equals("Password")) {
+					sb.append(" ").append(repo.getPassword());
+				}
+				if (commandParam.getParam().equals("ODBC")) {
+					sb.append(" ").append(repo.getOdbc());
+				}
+				if (commandParam.getParam().equals("RepositoryName")) {
+					sb.append(" ").append(repo.getRepoName());
+				}
+				if (commandParam.getParam().equals("ImportFilePath")) {
+					sb.append(" ").append(repo.getLogFilePath());
+				}
+			}
+		} else {
+			logger.error("Error command did not constrcuted properly. repository is empty for "
+					+ envName + " and " + actionType);
 		}
-		if(commandParam.getParam().equals("LogFilePath")){
-			sb.append(" ").append(repo.getLogFilePath());
+		return sb.toString();
+	}
+
+	// Rename_CopySRF SrfSourcePath LogFilePath
+	private String renameCopySRFCommandParams(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		StringBuffer sb = new StringBuffer();
+		if (repo != null) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("SrfSourcePath")) {
+					sb.append(" ").append(repo.getFilePath());
+				}
+				if (commandParam.getParam().equals("LogFilePath")) {
+					sb.append(" ").append(repo.getLogFilePath());
+				}
+			}
+		} else {
+			logger.error("Error command did not constrcuted properly. repository is empty for "
+					+ envName + " and " + actionType);
 		}
-		if(commandParam.getParam().equals("RepositoryName")){
-			sb.append(" ").append(repo.getRepoName());
+		return sb.toString();
+	}
+
+	// DDLSynch userid password ODBC logfilepath repository siebelpwd siebeldata
+	// siebelindex logfilepath
+	private String ddlSyncCommandParams(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
 		}
-		if(commandParam.getParam().equals("siebelpwd")){
-			sb.append(" ").append(repo.getPassword());
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		StringBuffer sb = new StringBuffer();
+		if (envInfo != null && envInfo != null) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("UserId")) {
+					sb.append(" ").append(repo.getUserId());
+				}
+				if (commandParam.getParam().equals("Password")) {
+					sb.append(" ").append(repo.getPassword());
+				}
+				if (commandParam.getParam().equals("ODBC")) {
+					sb.append(" ").append(repo.getOdbc());
+				}
+				if (commandParam.getParam().equals("LogFilePath")) {
+					sb.append(" ").append(repo.getLogFilePath());
+				}
+				if (commandParam.getParam().equals("RepositoryName")) {
+					sb.append(" ").append(repo.getRepoName());
+				}
+				if (commandParam.getParam().equals("siebelpwd")) {
+					sb.append(" ").append(repo.getPassword());
+				}
+				if (commandParam.getParam().equals("siebeldata")) {
+					sb.append(" ").append(repo.getPassword());
+				}
+				if (commandParam.getParam().equals("siebelindex")) {
+					sb.append(" ").append(envInfo.getSeibelPath());
+				}
+			}
+		} else {
+			logger.error("Error command did not constrcuted properly. repository or env info is empty for "
+					+ envName
+					+ " and "
+					+ actionType
+					+ "Repo:"
+					+ repo
+					+ " , Env:" + envInfo);
 		}
-		if(commandParam.getParam().equals("siebeldata")){
-			sb.append(" ").append(repo.getPassword());
+		return sb.toString();
+	}
+
+	// Copy_BS SourceBSPath LogiflePath
+	private String copyBSCommandParams(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		StringBuffer sb = new StringBuffer();
+		for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+			CommandParams commandParam = (CommandParams) iterator.next();
+			if (commandParam.getParam().equals("SourceBSPath")) {
+				sb.append(" ").append(repo.getFilePath());
+			}
+			if (commandParam.getParam().equals("LogiflePath")) {
+				sb.append(" ").append(repo.getLogFilePath());
+			}
 		}
-		if(commandParam.getParam().equals("siebelindex")){
-			sb.append(" ").append(envInfo.getSeibelPath());
+		return sb.toString();
+	}
+
+	// ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
+	private String exportRepCommandParams(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		StringBuffer sb = new StringBuffer();
+		if (repo != null) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("UserId")) {
+					sb.append(" ").append(repo.getUserId());
+				}
+				if (commandParam.getParam().equals("Password")) {
+					sb.append(" ").append(repo.getPassword());
+				}
+				if (commandParam.getParam().equals("ODBC")) {
+					sb.append(" ").append(repo.getOdbc());
+				}
+				if (commandParam.getParam().equals("RepositoryName")) {
+					sb.append(" ").append(repo.getRepoName());
+				}
+				if (commandParam.getParam().equals("ImportFilePath")) {
+					sb.append(" ").append(repo.getLogFilePath());
+				}
+			}
+		} else {
+			logger.error("Error, command did not constrcuted properly. repo is empty for "
+					+ envName + " and " + actionType);
 		}
-	}	
-	return sb.toString();
-}
-//Copy_BS SourceBSPath LogiflePath
-private String copyBSCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("SourceBSPath")){
-			sb.append(" ").append(repo.getFilePath());
-		}
-		if(commandParam.getParam().equals("LogiflePath")){
-			sb.append(" ").append(repo.getLogFilePath());
-		}
-	}	
-	return sb.toString();
-}
-//ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
-private String exportRepCommandParams(String envName, List<CommandParams> paramsList, String actionType){
-	Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
-	StringBuffer sb = new StringBuffer();
-	for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-		CommandParams commandParam = (CommandParams) iterator.next();
-		if(commandParam.getParam().equals("UserId")){
-			sb.append(" ").append(repo.getUserId());
-		}
-		if(commandParam.getParam().equals("Password")){
-			sb.append(" ").append(repo.getPassword());
-		}
-		if(commandParam.getParam().equals("ODBC")){
-			sb.append(" ").append(repo.getOdbc());
-		}
-		if(commandParam.getParam().equals("RepositoryName")){
-			sb.append(" ").append(repo.getRepoName());
-		}
-		if(commandParam.getParam().equals("ImportFilePath")){
-			sb.append(" ").append(repo.getLogFilePath());
-		}
-	}	
-	return sb.toString();
-}
+		return sb.toString();
+	}
+
 	private String executeCommand(String command) {
-		logger.info("Executing executeCommand method:"+command);
+		logger.info("Executing executeCommand method:" + command);
 		Process p;
-		StringBuilder  sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		try {
-			System.out.println("Executing the command:"+command);
+			System.out.println("Executing the command:" + command);
 			p = Runtime.getRuntime().exec(command);
 			InputStream error = p.getErrorStream();
 			InputStream output = p.getInputStream();
@@ -398,13 +508,13 @@ private String exportRepCommandParams(String envName, List<CommandParams> params
 			sb.append(errorString);
 			sb.append(System.lineSeparator());
 			sb.append(outputString);
-			logger.info("Executed executeCommand method:"+command);
+			logger.info("Executed executeCommand method:" + command);
 			return sb.toString();
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			logger.info("Executed executeCommand method:"+command, e);
+			logger.info("Executed executeCommand method:" + command, e);
 			return null;
 		}
 	}
@@ -412,85 +522,95 @@ private String exportRepCommandParams(String envName, List<CommandParams> params
 	private String applyTokenValuesForCommand(String command,
 			VelocityContext context) {
 		Velocity.init();
-		//String template = "Hello $name. Please find attached invoice"
-			//	+ " $invoiceNumber which is due on $dueDate.";
+		// String template = "Hello $name. Please find attached invoice"
+		// + " $invoiceNumber which is due on $dueDate.";
 		StringWriter writer = new StringWriter();
 		Velocity.evaluate(context, writer, "TemplateName", command);
 		return writer.toString();
 	}
 
-	private VelocityContext getTokenMaps(EnvInfo envInfo, Repos repos, AdmConfig admConfig) {
-		//Token Maps
+	private VelocityContext getTokenMaps(EnvInfo envInfo, Repos repos,
+			AdmConfig admConfig) {
+		// Token Maps
 		VelocityContext tokenMaps = new VelocityContext();
 
-		//ADM_CONFIG
-		if(admConfig != null){
-		tokenMaps.put(DMCommandTokens.ADM_CONFIG_USER_ID,admConfig.getUserId());
-		tokenMaps.put(DMCommandTokens.ADM_CONFIG_PASSWORD,admConfig.getPassword());
-		tokenMaps.put(DMCommandTokens.ADM_CONFIG_LOG_FILE_PATH,admConfig.getLogFilePath());
-		tokenMaps.put(DMCommandTokens.SEIBEL_SERVER,admConfig.getSeibelServer());
-		tokenMaps.put(DMCommandTokens.ROW_ID,admConfig.getRowId());
+		// ADM_CONFIG
+		if (admConfig != null) {
+			tokenMaps.put(DMCommandTokens.ADM_CONFIG_USER_ID,
+					admConfig.getUserId());
+			tokenMaps.put(DMCommandTokens.ADM_CONFIG_PASSWORD,
+					admConfig.getPassword());
+			tokenMaps.put(DMCommandTokens.ADM_CONFIG_LOG_FILE_PATH,
+					admConfig.getLogFilePath());
+			tokenMaps.put(DMCommandTokens.SEIBEL_SERVER,
+					admConfig.getSeibelServer());
+			tokenMaps.put(DMCommandTokens.ROW_ID, admConfig.getRowId());
 		}
-		if(repos != null){
-		//REPO
-		tokenMaps.put(DMCommandTokens.REPO_USER_ID,repos.getUserId());
-		tokenMaps.put(DMCommandTokens.REPO_PASSWORD,repos.getPassword());
-		tokenMaps.put(DMCommandTokens.ODBC,repos.getOdbc());
-		tokenMaps.put(DMCommandTokens.FILE_PATH,repos.getFilePath());
-		tokenMaps.put(DMCommandTokens.LOG_FILE_PATH,repos.getLogFilePath());
-		
-		tokenMaps.put(DMCommandTokens.REPO_NAME,repos.getRepoName());
-		tokenMaps.put(DMCommandTokens.TableDDLSync,repos.getTableDDLSync());
-		tokenMaps.put(DMCommandTokens.IndexDDLSync,repos.getIndexDDLSync());
+		if (repos != null) {
+			// REPO
+			tokenMaps.put(DMCommandTokens.REPO_USER_ID, repos.getUserId());
+			tokenMaps.put(DMCommandTokens.REPO_PASSWORD, repos.getPassword());
+			tokenMaps.put(DMCommandTokens.ODBC, repos.getOdbc());
+			tokenMaps.put(DMCommandTokens.FILE_PATH, repos.getFilePath());
+			tokenMaps
+					.put(DMCommandTokens.LOG_FILE_PATH, repos.getLogFilePath());
+
+			tokenMaps.put(DMCommandTokens.REPO_NAME, repos.getRepoName());
+			tokenMaps
+					.put(DMCommandTokens.TableDDLSync, repos.getTableDDLSync());
+			tokenMaps
+					.put(DMCommandTokens.IndexDDLSync, repos.getIndexDDLSync());
 		}
-		//ENV_INFO
-		if(envInfo != null){
-		tokenMaps.put(DMCommandTokens.SERVICE_NAME,envInfo.getService());
-		tokenMaps.put(DMCommandTokens.SEIBEL_PATH,envInfo.getSeibelPath());
-		tokenMaps.put(DMCommandTokens.ADM_PATH,envInfo.getAdmPath());
-		tokenMaps.put(DMCommandTokens.HOST_NAME,envInfo.getServerHost());
+		// ENV_INFO
+		if (envInfo != null) {
+			tokenMaps.put(DMCommandTokens.SERVICE_NAME, envInfo.getService());
+			tokenMaps.put(DMCommandTokens.SEIBEL_PATH, envInfo.getSeibelPath());
+			tokenMaps.put(DMCommandTokens.ADM_PATH, envInfo.getAdmPath());
+			tokenMaps.put(DMCommandTokens.HOST_NAME, envInfo.getServerHost());
 		}
 		return tokenMaps;
-		
+
 	}
 
 	@Override
 	public List<DeploymentOptions> getAllDeploymentPackages() {
 		return deloymentOptionsDao.getAllDeploymentOptionsByCategory("package");
 	}
-	private Map<String, EnvInfo> getServerNamesByEnv(String selectedEnvName){
-		//EnvNames
+
+	private Map<String, EnvInfo> getServerNamesByEnv(String selectedEnvName) {
+		// EnvNames
 		List<EnvInfo> envInfoList = envService.getAllEnvNames();
 		Map<String, EnvInfo> envNameServerNameEnvInfo = new HashMap<String, EnvInfo>();
-		//For each env Name find the all the servers
+		// For each env Name find the all the servers
 		for (int i = 0; i < envInfoList.size(); i++) {
 			EnvInfo envInfo = envInfoList.get(i);
-			String envName =  envInfo.getName();
-			if(selectedEnvName.equals(envName)){
-				List<EnvInfo> serversInfoForEnvList = envService.getAllEnvByEnvName(envName);
+			String envName = envInfo.getName();
+			if (selectedEnvName.equals(envName)) {
+				List<EnvInfo> serversInfoForEnvList = envService
+						.getAllEnvByEnvName(envName);
 				for (int j = 0; j < serversInfoForEnvList.size(); j++) {
 					EnvInfo envInfoForServer = serversInfoForEnvList.get(j);
 					String env = envInfoForServer.getName();
 					String hostName = envInfoForServer.getHostName();
-					String key = env+ "#" + hostName;
-					envNameServerNameEnvInfo.put(key, envInfoForServer);	
+					String key = env + "#" + hostName;
+					envNameServerNameEnvInfo.put(key, envInfoForServer);
 				}
 			}
 		}
 		return envNameServerNameEnvInfo;
 	}
-	private  String getStringFromInputStream(InputStream is) {
-		if(true){
+
+	private String getStringFromInputStream(InputStream is) {
+		if (true) {
 			return "";
-		}	
+		}
 		BufferedReader br = null;
 		StringBuilder sb = new StringBuilder();
 
-		
 		try {
 
 			br = new BufferedReader(new InputStreamReader(is));
-			String line = br.readLine();	
+			String line = br.readLine();
 			while ((line = br.readLine()) != null) {
 				sb.append(line);
 			}
@@ -510,29 +630,31 @@ private String exportRepCommandParams(String envName, List<CommandParams> params
 		return sb.toString();
 
 	}
+
 	private String executeCommandWithAgent(String command) throws IOException {
-		// in databasevalue is //   sc //$HOST_NAME stop //$SERVICE_NAME
-		String POST_URL ="http://localhost:8080/SDMToolAgent/rest/executeCommand/"; 
-		   CloseableHttpClient client = HttpClients.createDefault();
-		    HttpPost httpPost = new HttpPost(POST_URL);
-		    StringEntity entity = new StringEntity(command);
-		    httpPost.setEntity(entity);
-		    //httpPost.setHeader("Accept", "application/json");
-		    //httpPost.setHeader("Content-type", "application/json");
-		 
-		    CloseableHttpResponse response = client.execute(httpPost);
-		    System.out.println(response.getStatusLine().getStatusCode());
-		    System.out.println(response.getStatusLine().getReasonPhrase());
-		    client.close();
-		    return "executed";
- 
-    }
+		// in databasevalue is // sc //$HOST_NAME stop //$SERVICE_NAME
+		String POST_URL = "http://localhost:8080/SDMToolAgent/rest/executeCommand/";
+		CloseableHttpClient client = HttpClients.createDefault();
+		HttpPost httpPost = new HttpPost(POST_URL);
+		StringEntity entity = new StringEntity(command);
+		httpPost.setEntity(entity);
+		// httpPost.setHeader("Accept", "application/json");
+		// httpPost.setHeader("Content-type", "application/json");
+
+		CloseableHttpResponse response = client.execute(httpPost);
+		System.out.println(response.getStatusLine().getStatusCode());
+		System.out.println(response.getStatusLine().getReasonPhrase());
+		client.close();
+		return "executed";
+
+	}
+
 	private String executeBatchFile(String command) {
-		logger.info("Executing executeBatchFile:"+command);
+		logger.info("Executing executeBatchFile:" + command);
 		Process p;
-		StringBuilder  sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		try {
-			logger.info("Executing executeBatchFile with :"+command);
+			logger.info("Executing executeBatchFile with :" + command);
 			p = Runtime.getRuntime().exec(command);
 			InputStream error = p.getErrorStream();
 			InputStream output = p.getInputStream();
@@ -541,15 +663,15 @@ private String exportRepCommandParams(String envName, List<CommandParams> params
 			sb.append(errorString);
 			sb.append(System.lineSeparator());
 			sb.append(outputString);
-			logger.info("Executed executeBatchFile with :"+command);
+			logger.info("Executed executeBatchFile with :" + command);
 			return sb.toString();
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			logger.error("Executed executeBatchFile:"+command, e);
+			logger.error("Executed executeBatchFile:" + command, e);
 		}
-		logger.info("Executed executeBatchFile:"+command);
+		logger.info("Executed executeBatchFile:" + command);
 		return sb.toString();
 	}
 }
