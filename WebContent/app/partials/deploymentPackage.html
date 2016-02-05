@@ -22,6 +22,10 @@
 				Submit
 			</button>
 		</div>
-
+		<div class="checkbox" ng-repeat="(key, value) in allErrors">
+			<label> 
+				{{key}} : {{value}}
+			</label>
+		</div>
 	</form>
 </div>

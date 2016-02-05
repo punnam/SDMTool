@@ -154,10 +154,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 						String command = cmdTemplate.getCommand();
 						String params = getParams(envName, selectedAction,
 								paramsList, actionType, errorMap);
-						String result = executeBatchFile(command + params);
-						List<String> resultList = new ArrayList<String>();
-						resultList.add(result);
-						resultMap.put(selectedAction, resultList);
+						String result ="";
+						List<String> valErrors = errorMap.get(selectedAction);
+						if(valErrors != null && valErrors.size() ==0 &&  params != null && !params.trim().equals("")){
+							result = executeBatchFile(command + params);
+							List<String> resultList = new ArrayList<String>();
+							resultList.add(result);
+							resultMap.put(selectedAction, resultList);
+						}	
 					}
 				} else {
 					logger.error("Commands not found for action:"
@@ -250,7 +254,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			errors.add("Environment name is missing");
 		}
 		if(paramsList == null){
-			errors.add("Parameters are missing");
+			errors.add("Parameters list missing");
 		}
 		if(actionType == null){
 			errors.add("Action Type is missing");
@@ -259,10 +263,6 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		AdmConfig admConfig = admConfigService
 				.getAdmConfigByEnvNameAndActionType(envName, actionType);
 		
-		if(admConfig == null){
-			errors.add("ADM Config is not found.");
-		}
-
 		if(admConfig == null){
 			errors.add("ADM Config is not found.");
 		}else{

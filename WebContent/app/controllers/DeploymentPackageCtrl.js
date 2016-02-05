@@ -45,12 +45,11 @@
 				method : 'POST',
 				url : 'rest/deploymentOptions/processDeploymentOptions/'
 			}).then(function successCallback(response) {
-				var success = response.data.data;
-				if (success==true) {
-					alert("Command executed successfully.");
-				}else{
-					alert("Command failed.");
-				}
+				var resultData = response.data.data;
+				var errors = resultData.error;
+				var commandExecResults = resultData.result;
+				$scope.allErrors = errors;
+				$scope.commandExecResults = commandExecResults;
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
