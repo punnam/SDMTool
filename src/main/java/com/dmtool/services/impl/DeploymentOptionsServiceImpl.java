@@ -202,24 +202,24 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			commandParams = buildNowCommandParams(selectedAction, envName, paramsList,
 					actionType,errorMap);
 		} else if (selectedAction.equals("StopServer")) {
-			commandParams = stopServerCommandParams(envName, paramsList,
-					actionType);
+			commandParams = stopServerCommandParams(selectedAction,envName, paramsList,
+					actionType,errorMap);
 		} else if (selectedAction.equals("StartServer")) {
-			commandParams = startServerCommandParams(envName, paramsList,
-					actionType);
+			commandParams = startServerCommandParams(selectedAction,envName, paramsList,
+					actionType,errorMap);
 		} else if (selectedAction.equals("Imrep")) {
-			commandParams = imrepCommandParams(envName, paramsList, "Import");
+			commandParams = imrepCommandParams(selectedAction,envName, paramsList, "Import",errorMap);
 		} else if (selectedAction.equals("Rename_CopySRF")) {
-			commandParams = renameCopySRFCommandParams(envName, paramsList,
-					actionType);
+			commandParams = renameCopySRFCommandParams(selectedAction,envName, paramsList,
+					actionType,errorMap);
 		} else if (selectedAction.equals("DDLSynch")) {
-			commandParams = ddlSyncCommandParams(envName, paramsList,
-					actionType);
+			commandParams = ddlSyncCommandParams(selectedAction,envName, paramsList,
+					actionType,errorMap);
 		} else if (selectedAction.equals("Copy_BS")) {
-			commandParams = copyBSCommandParams(envName, paramsList, actionType);
+			commandParams = copyBSCommandParams(selectedAction,envName, paramsList, actionType,errorMap);
 		} else if (selectedAction.equals("Exprep")) {
-			commandParams = exportRepCommandParams(envName, paramsList,
-					"Export");
+			commandParams = exportRepCommandParams(selectedAction,envName, paramsList,
+					"Export",errorMap);
 		} else {
 			logger.error("Selected screen action did not configured in the backend:"
 					+ selectedAction);
@@ -474,8 +474,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		return errors;
 	}
 	// StopServer hostname ServiceName LogFilePath
-	private String stopServerCommandParams(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	private String stopServerCommandParams(String selectedAction, String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
@@ -483,7 +483,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		}
 		List<String> errors = stopServerCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		if (envInfo != null) {
+		if (envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				if (commandParam.getParam().equals("hostname")) {
@@ -496,16 +496,21 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				}
 			}
-		} else {
-			logger.error("Error command did not constrcuted properly. envInfo is empty for "
-					+ envName);
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
 		}
 		return sb.toString();
 	}
 
 	// StartServer hostname ServiceName LogFilePath
-	public String startServerCommandParams(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	public String startServerCommandParams(String selectedAction,String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		List<String> errors = startServerCommandValidate(envName, paramsList, actionType);
 		EnvInfo envInfo = null;
@@ -513,7 +518,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			envInfo = envList.get(0);
 		}
 		StringBuffer sb = new StringBuffer();
-		if (envInfo != null) {
+		if (envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				if (commandParam.getParam().equals("hostname")) {
@@ -526,21 +531,26 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				}
 			}
-		} else {
-			logger.error("Error command did not constrcuted properly. envInfo is empty for "
-					+ envName);
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
 		}
 		return sb.toString();
 	}
 
 	// Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
-	private String imrepCommandParams(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	private String imrepCommandParams(String selectedAction,String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		List<String> errors = imrepCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		if (repo != null) {
+		if (repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				if (commandParam.getParam().equals("UserId")) {
@@ -559,21 +569,26 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getLogFilePath());
 				}
 			}
-		} else {
-			logger.error("Error command did not constrcuted properly. repository is empty for "
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config is empty for "
 					+ envName + " and " + actionType);
+			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
 		}
 		return sb.toString();
 	}
 
 	// Rename_CopySRF SrfSourcePath LogFilePath
-	private String renameCopySRFCommandParams(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	private String renameCopySRFCommandParams(String selectedAction,String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		List<String> errors = renameCopySRFCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		if (repo != null) {
+		if (repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				if (commandParam.getParam().equals("SrfSourcePath")) {
@@ -583,17 +598,22 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getLogFilePath());
 				}
 			}
-		} else {
-			logger.error("Error command did not constrcuted properly. repository is empty for "
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config is empty for "
 					+ envName + " and " + actionType);
+			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
 		}
 		return sb.toString();
 	}
 
 	// DDLSynch userid password ODBC logfilepath repository siebelpwd siebeldata
 	// siebelindex logfilepath
-	private String ddlSyncCommandParams(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	private String ddlSyncCommandParams(String selectedAction,String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		List<String> errors = ddlSyncCommandValidate(envName, paramsList, actionType);
 		EnvInfo envInfo = null;
@@ -603,7 +623,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		StringBuffer sb = new StringBuffer();
-		if (envInfo != null && envInfo != null) {
+		if (envInfo != null && repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				if (commandParam.getParam().equals("UserId")) {
@@ -631,14 +651,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getSeibelPath());
 				}
 			}
-		} else {
-			logger.error("Error command did not constrcuted properly. repository or env info is empty for "
-					+ envName
-					+ " and "
-					+ actionType
-					+ "Repo:"
-					+ repo
-					+ " , Env:" + envInfo);
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
 		}
 		return sb.toString();
 	}
@@ -697,20 +717,30 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		return errors;
 	}
 	// Copy_BS SourceBSPath LogiflePath
-	private String copyBSCommandParams(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	private String copyBSCommandParams(String selectedAction,String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		List<String> errors = copyBSCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
-			CommandParams commandParam = (CommandParams) iterator.next();
-			if (commandParam.getParam().equals("SourceBSPath")) {
-				sb.append(" ").append(repo.getFilePath());
+		if (repo != null && (errors == null || errors.size() == 0)) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				if (commandParam.getParam().equals("SourceBSPath")) {
+					sb.append(" ").append(repo.getFilePath());
+				}
+				if (commandParam.getParam().equals("LogiflePath")) {
+					sb.append(" ").append(repo.getLogFilePath());
+				}
 			}
-			if (commandParam.getParam().equals("LogiflePath")) {
-				sb.append(" ").append(repo.getLogFilePath());
-			}
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
 		}
 		return sb.toString();
 	}
@@ -744,13 +774,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		return errors;
 	}
 	// ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
-	private String exportRepCommandParams(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	private String exportRepCommandParams(String selectedAction,String envName,
+			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		List<String> errors = exportRepCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		if (repo != null) {
+		if (repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				if (commandParam.getParam().equals("UserId")) {
@@ -769,9 +799,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getLogFilePath());
 				}
 			}
-		} else {
-			logger.error("Error, command did not constrcuted properly. repo is empty for "
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config is empty for "
 					+ envName + " and " + actionType);
+			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+					+ envName + " and " + actionType);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
 		}
 		return sb.toString();
 	}
