@@ -22,10 +22,22 @@
 				Submit
 			</button>
 		</div>
-		<div class="checkbox" ng-repeat="(key, value) in allErrors">
-			<label> 
-				{{key}} : {{value}}
-			</label>
-		</div>
+		
+<table>
+  <tr ng-repeat="(key, value) in allErrors">
+    <td ng-if="$odd" style="background-color:#f1f1f1">
+    {{key}}</td>
+    <td ng-if="$even">
+    {{key}}</td>
+    <td ng-if="$odd" style="background-color:#f1f1f1">
+    {{value}}</td>
+    <td ng-if="$even">
+    {{value}}</td>
+  </tr>
+</table>
+		
+		
+		
+
 	</form>
 </div>

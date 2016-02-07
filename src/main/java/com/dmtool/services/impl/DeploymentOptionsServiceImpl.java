@@ -151,9 +151,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 						.getAllCommandParamsByCode(selectedAction);
 				if (commandsList != null && commandsList.size() > 0) {
 					cmdTemplate = commandsList.get(0);
-				} else {
-					logger.error("Command not found for action:"+ selectedAction);
-				}
+
 
 				String command = cmdTemplate.getCommand();
 				String params = null;
@@ -174,7 +172,17 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					resultList.add(result);
 					resultMap.put(selectedAction, resultList);
 					errorMap.put(selectedAction, valErrors);
-				}	
+				}
+				} else {
+					logger.error("Command not found for action:"+ selectedAction);
+					List<String> resultList = new ArrayList<String>();
+					resultList.add("");
+					resultMap.put(selectedAction, resultList);
+					
+					List<String> valErrors = new ArrayList<String>();
+					valErrors.add("Command is not configured action:"+ selectedAction);
+					errorMap.put(selectedAction, valErrors);
+				}
 			}
 			resultAndErrorMap.put("result", resultMap);
 			resultAndErrorMap.put("error", errorMap);
@@ -373,13 +381,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if(actionType == null){
 			errors.add("Action Type is missing");
 		}
-		String userId = repo.getUserId();
-		String password = repo.getPassword();
-		String odbc = repo.getOdbc();
-		String repoName = repo.getRepoName();
-		String logFilePath = repo.getLogFilePath();
+
 		
 		if (repo != null) {
+			String userId = repo.getUserId();
+			String password = repo.getPassword();
+			String odbc = repo.getOdbc();
+			String repoName = repo.getRepoName();
+			String logFilePath = repo.getLogFilePath();
 			if (userId == null) {
 				errors.add("User Id is missing in Repository Config");
 			}
