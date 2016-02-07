@@ -146,27 +146,35 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				String selectedAction = services.get(i);
 				List<CommandTemplates> commandsList = commandTemplatesService
 						.getAllCommandTemplatesByCode(selectedAction);
+				CommandTemplates cmdTemplate = null;
 				List<CommandParams> paramsList = commandParamsService
 						.getAllCommandParamsByCode(selectedAction);
 				if (commandsList != null && commandsList.size() > 0) {
-					for (int j = 0; j < commandsList.size(); j++) {
-						CommandTemplates cmdTemplate = commandsList.get(j);
-						String command = cmdTemplate.getCommand();
-						String params = getParams(envName, selectedAction,
-								paramsList, actionType, errorMap);
-						String result ="";
-						List<String> valErrors = errorMap.get(selectedAction);
-						if((valErrors == null || valErrors.size() ==0) &&  params != null && !params.trim().equals("")){
-							result = executeBatchFile(command + params);
-							List<String> resultList = new ArrayList<String>();
-							resultList.add(result);
-							resultMap.put(selectedAction, resultList);
-						}	
-					}
+					cmdTemplate = commandsList.get(0);
 				} else {
-					logger.error("Commands not found for action:"
-							+ selectedAction);
+					logger.error("Command not found for action:"+ selectedAction);
 				}
+
+				String command = cmdTemplate.getCommand();
+				String params = null;
+				if(paramsList != null && paramsList.size() >0 ){
+					params = getParams(envName, selectedAction,
+						paramsList, actionType, errorMap);
+				}
+				String result ="";
+				List<String> valErrors = errorMap.get(selectedAction);
+				if((valErrors == null || valErrors.size() ==0)){
+					valErrors = new ArrayList<String>();
+					if(params != null && !params.trim().equals("")){
+						result = executeBatchFile(command + params,valErrors);
+					}else{
+						result = executeBatchFile(command,valErrors);
+					}	
+					List<String> resultList = new ArrayList<String>();
+					resultList.add(result);
+					resultMap.put(selectedAction, resultList);
+					errorMap.put(selectedAction, valErrors);
+				}	
 			}
 			resultAndErrorMap.put("result", resultMap);
 			resultAndErrorMap.put("error", errorMap);
@@ -194,7 +202,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			commandParams = buildNowCommandParams(selectedAction, envName, paramsList,
 					actionType,errorMap);
 		} else if (selectedAction.equals("StopServer")) {
-			commandParams = StopServerCommandParams(envName, paramsList,
+			commandParams = stopServerCommandParams(envName, paramsList,
 					actionType);
 		} else if (selectedAction.equals("StartServer")) {
 			commandParams = startServerCommandParams(envName, paramsList,
@@ -466,13 +474,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		return errors;
 	}
 	// StopServer hostname ServiceName LogFilePath
-	private String StopServerCommandParams(String envName,
+	private String stopServerCommandParams(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 		}
+		List<String> errors = stopServerCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
 		if (envInfo != null) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
@@ -498,6 +507,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	public String startServerCommandParams(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		List<String> errors = startServerCommandValidate(envName, paramsList, actionType);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
@@ -528,6 +538,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			List<CommandParams> paramsList, String actionType) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
+		List<String> errors = imrepCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
 		if (repo != null) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
@@ -560,6 +571,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			List<CommandParams> paramsList, String actionType) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
+		List<String> errors = renameCopySRFCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
 		if (repo != null) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
@@ -583,6 +595,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	private String ddlSyncCommandParams(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		List<String> errors = ddlSyncCommandValidate(envName, paramsList, actionType);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
@@ -629,12 +642,66 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		}
 		return sb.toString();
 	}
-
+	private List<String> ddlSyncCommandValidate(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		List<String> errors = new ArrayList<String>();
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		if(envName == null){
+			errors.add("Environment name is missing.");
+		}
+		if(paramsList == null){
+			errors.add("Parameters list missing.");
+		}
+		if(actionType == null){
+			errors.add("Action Type is missing.");
+		} 
+		if (repo != null) {
+			String userId = repo.getUserId();
+			String password = repo.getPassword();
+			String odbc = repo.getOdbc();
+			String repoName = repo.getRepoName();
+			String logFilePath = repo.getLogFilePath();
+			String siebelpwd = repo.getFilePath();
+			String seibelIndex = envInfo.getSeibelPath();
+			if(userId == null){
+				errors.add("User Id is missing in Repository Config");
+			}
+			if(password == null){
+				errors.add("password is missing in Repository Config");
+			}
+			if(odbc == null){
+				errors.add("odbc is missing in Repository Config");
+			}
+			if(repoName == null){
+				errors.add("Repo Name is missing in Repository Config");
+			}
+			if(logFilePath == null){
+				errors.add("LogFile Path is missing in Repository Config");
+			}
+			if(siebelpwd == null){
+				errors.add("Siebelpwd is missing in Repository Config");
+			}
+			if(seibelIndex == null){
+				errors.add("SeibelIndex is missing in Repository Config");
+			}
+		} else {
+			logger.error("Repository Config is missing for env:"+ envName);
+			errors.add("Repository Config is missing for env:"+ envName);
+		}
+		return errors;
+	}
 	// Copy_BS SourceBSPath LogiflePath
 	private String copyBSCommandParams(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
+		List<String> errors = copyBSCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
 		for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 			CommandParams commandParam = (CommandParams) iterator.next();
@@ -647,12 +714,41 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		}
 		return sb.toString();
 	}
-
+	private List<String> copyBSCommandValidate(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		List<String> errors = new ArrayList<String>();
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		if(envName == null){
+			errors.add("Environment name is missing.");
+		}
+		if(paramsList == null){
+			errors.add("Parameters list missing.");
+		}
+		if(actionType == null){
+			errors.add("Action Type is missing.");
+		} 
+		if (repo != null) {
+			String sourceBSPath = repo.getFilePath();
+			String logFilePath = repo.getLogFilePath();
+			if(sourceBSPath == null){
+				errors.add("sourceBSPath is missing in Repository Config");
+			}
+			if(logFilePath == null){
+				errors.add("LogFile Path is missing in Repository Config");
+			}
+		} else {
+			logger.error("Repository Config is missing for env:"+ envName);
+			errors.add("Repository Config is missing for env:"+ envName);
+		}
+		return errors;
+	}
 	// ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
 	private String exportRepCommandParams(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
+		List<String> errors = exportRepCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
 		if (repo != null) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
@@ -835,7 +931,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 
 	}
 
-	private String executeBatchFile(String command) {
+	private String executeBatchFile(String command, List<String> valErrors) {
 		logger.info("Executing executeBatchFile:" + command);
 		Process p;
 		StringBuilder sb = new StringBuilder();
@@ -854,6 +950,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			valErrors.add(e.getMessage());	
 			e.printStackTrace();
 			logger.error("Executed executeBatchFile:" + command, e);
 		}

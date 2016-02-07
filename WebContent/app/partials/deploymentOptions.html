@@ -34,9 +34,14 @@
 			</label>
 		</div>
 		<div>
-			<button class="btn btn-primary" type="button" ng-click="processAdmBuildServices()">
+			<button class="btn btn-primary" type="button" ng-click="processDeploymentOptionsServices()">
 				Submit
 			</button>
+		</div>
+		<div class="checkbox" ng-repeat="(key, value) in allErrors">
+			<label> 
+				{{key}} : {{value}}
+			</label>
 		</div>
 	</form>
 </div>

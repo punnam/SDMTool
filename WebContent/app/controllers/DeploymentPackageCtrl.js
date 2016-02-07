@@ -31,9 +31,9 @@
 		};
 
 		$scope.processDeploymentPackageServices = function() {
-			alert("processSelectActionsServices()");
-			alert($scope.selectedItem);
-			alert($scope.checkedAdmActions);
+			//alert("processSelectActionsServices()");
+			//alert($scope.selectedItem);
+			//alert($scope.checkedAdmActions);
 			var dataObj = {
 				envName : $scope.selectedItem,
 				deploymentServices : $scope.checkedAdmActions,

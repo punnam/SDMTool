@@ -17,7 +17,7 @@
 		})();
 		$scope.id = 1;
 		$scope.logIn = function() {
-			alert("in LoginController");
+			//alert("in LoginController");
 			var dataObj = {
 					id: $scope.id,
 				userId : $scope.username,
@@ -33,7 +33,7 @@
 				if (loggedIn==true) {
 					//FlashService.Success('Registration successful', true);
 					//vm.dataLoading=true;
-alert("Punnam-login -success");					
+//alert("Punnam-login -success");					
 					$rootScope.showlogIn = false;
 					$rootScope.showlogout = true;
 					AuthenticationService.SetCredentials($scope.username, $scope.password);
@@ -76,10 +76,10 @@ alert("Punnam-login -success");
 			}).then(function successCallback(response) {
 		
 				var loggedIn = response.data.data;
-				alert("Success block:"+loggedIn);
+				//alert("Success block:"+loggedIn);
 				if (loggedIn==true) {
 					//FlashService.Success('Registration successful', true);
-					alert("Success fwd to /index.html");
+					//alert("Success fwd to /index.html");
 					//vm.dataLoading=true;
 					AuthenticationService.SetCredentials($scope.username, $scope.password);
 					$location.path('/');

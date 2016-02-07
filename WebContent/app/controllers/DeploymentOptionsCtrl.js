@@ -35,7 +35,7 @@
 			////alert("After:"+$scope.checkedAdmActions);
 		};
 
-		$scope.processAdmBuildServices = function() {
+		$scope.processDeploymentOptionsServices = function() {
 			////alert("processAdmBuildServices");
 			////alert($scope.selectedItem);
 			////alert($scope.allAdmBuildservices);
@@ -50,10 +50,12 @@
 				method : 'POST',
 				url : 'rest/deploymentOptions/processDeploymentOptions/'
 			}).then(function successCallback(response) {
-				// this callback will be called asynchronously
-				// when the response is available
-				//$scope.allEnvs.push(dataObj);
-				//clearFields();
+				var resultData = response.data.data;
+				var errors = resultData.error;
+				var commandExecResults = resultData.result;
+				$scope.allErrors = errors;
+				$scope.commandExecResults = commandExecResults;
+
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
