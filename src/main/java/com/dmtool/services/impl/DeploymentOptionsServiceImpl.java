@@ -156,7 +156,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 								paramsList, actionType, errorMap);
 						String result ="";
 						List<String> valErrors = errorMap.get(selectedAction);
-						if(valErrors != null && valErrors.size() ==0 &&  params != null && !params.trim().equals("")){
+						if((valErrors == null || valErrors.size() ==0) &&  params != null && !params.trim().equals("")){
 							result = executeBatchFile(command + params);
 							List<String> resultList = new ArrayList<String>();
 							resultList.add(result);
@@ -242,8 +242,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		} else {
 			logger.error("Error command did not constrcuted properly. ADM config is empty for "
 					+ envName + " and " + actionType);
-			errorMap.put(selectedAction, errors);
+			errors.add("Error command did not constrcuted properly. ADM config is empty for "
+					+ envName + " and " + actionType);
 		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
+		}
+		
 		return sb.toString();
 	}
 	@SuppressWarnings("unused")
@@ -278,7 +283,188 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		}
 		return errors;
 	}
+	private List<String> stopServerCommandValidate(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		EnvInfo envInfo = null;
+		List<String> errors = new ArrayList<String>();
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		if(envName == null){
+			errors.add("Environment name is missing");
+		}
+		if(paramsList == null){
+			errors.add("Parameters list missing");
+		}
+		if(actionType == null){
+			errors.add("Action Type is missing");
+		}
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+			String hostName = envInfo.getHostName();
+			String serverName = envInfo.getServerName();
+			String filePath = envInfo.getLogFilePath();
+			if (hostName != null) {
+				errors.add("HostName is missing in environment info:"+envName+" "+hostName);
+			}
+			if (serverName != null) {
+				errors.add("Server Name is missing in environment info:"+envName+" "+serverName);
+			}
+			if (filePath != null) {
+				errors.add("File path is missing in environment info:"+envName+" "+filePath);
+			}
+		}else{
+			errors.add("Environment info missing. Please verify selected environment:"+envName);
+			logger.error("Environment info missing. Please verify selected environment:"+envName);
+		}		
+		return errors;
+	}
+	public List<String> startServerCommandValidate(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		EnvInfo envInfo = null;
+		List<String> errors = new ArrayList<String>();
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		
+		if(envName == null){
+			errors.add("Environment name is missing");
+		}
+		if(paramsList == null){
+			errors.add("Parameters list missing");
+		}
+		if(actionType == null){
+			errors.add("Action Type is missing");
+		}
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+			if (envInfo.getHostName() != null) {
+				errors.add("Action Type is missing");
+			}
+			if (envInfo.getServerName() != null) {
+				errors.add("Action Type is missing");
+			}
+			if (envInfo.getLogFilePath() != null) {
+				errors.add("Action Type is missing");
+			}
+		} else {
+			logger.error("EnvInfo is missing for " + envName);
+			errors.add("EnvInfo is missing.");
+		}
+		return errors;
+	}
+	private List<String> imrepCommandValidate(String envName,
+			List<CommandParams> paramsList, String actionType) {
 
+		List<String> errors = new ArrayList<String>();
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		
+		if(envName == null){
+			errors.add("Environment name is missing");
+		}
+		if(paramsList == null){
+			errors.add("Parameters list missing");
+		}
+		if(actionType == null){
+			errors.add("Action Type is missing");
+		}
+		String userId = repo.getUserId();
+		String password = repo.getPassword();
+		String odbc = repo.getOdbc();
+		String repoName = repo.getRepoName();
+		String logFilePath = repo.getLogFilePath();
+		
+		if (repo != null) {
+			if (userId == null) {
+				errors.add("User Id is missing in Repository Config");
+			}
+			if (password == null) {
+				errors.add("Password is missing in Repository Config");
+			}
+			if (odbc == null) {
+				errors.add("Odbc is missing in Repository Config");
+			}
+			if (repoName == null) {
+				errors.add("Repo Name is missing in Repository Config");
+			}
+			if (logFilePath == null) {
+				errors.add("Log File Path is missing in Repository Config");
+			}
+		} else {
+			logger.error("Repository is empty for "+ envName + " and " + actionType);
+			errors.add("Repository Config is missing.");
+		}
+		return errors;
+	}
+	private List<String> renameCopySRFCommandValidate(String envName,
+		List<CommandParams> paramsList, String actionType) {
+		List<String> errors = new ArrayList<String>();
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		if(envName == null){
+			errors.add("Environment name is missing");
+		}
+		if(paramsList == null){
+			errors.add("Parameters list missing");
+		}
+		if(actionType == null){
+			errors.add("Action Type is missing");
+		}
+		if (repo != null) {
+			String filePath = repo.getFilePath();
+			String logFilePath = repo.getLogFilePath();
+			
+			if(filePath == null){
+				errors.add("File path is missing in Repository Config");
+			}
+			if(logFilePath == null){
+				errors.add("Log file path is missing in Repository Config");
+			}
+		} else {
+			logger.error("Repository is empty for "
+					+ envName + " and " + actionType);
+			errors.add("Repository Config is missing.");
+		}
+		return errors;
+	}
+	private List<String> exportRepCommandValidate(String envName,
+			List<CommandParams> paramsList, String actionType) {
+		List<String> errors = new ArrayList<String>();
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
+		if(envName == null){
+			errors.add("Environment name is missing.");
+		}
+		if(paramsList == null){
+			errors.add("Parameters list missing.");
+		}
+		if(actionType == null){
+			errors.add("Action Type is missing.");
+		} 
+		if (repo != null) {
+			String userId = repo.getUserId();
+			String password = repo.getPassword();
+			String odbc = repo.getOdbc();
+			String repoName = repo.getRepoName();
+			String logFilePath = repo.getLogFilePath();
+			if(userId == null){
+				errors.add("User Id is missing in Repository Config");
+			}
+			if(password == null){
+				errors.add("password is missing in Repository Config");
+			}
+			if(odbc == null){
+				errors.add("odbc is missing in Repository Config");
+			}
+			if(repoName == null){
+				errors.add("Repo Name is missing in Repository Config");
+			}
+			if(logFilePath == null){
+				errors.add("LogFile Path is missing in Repository Config");
+			}
+		} else {
+			logger.error("Repository Config is missing for env:"+ envName);
+			errors.add("Repository Config is missing for env:"+ envName);
+		}
+		return errors;
+	}
 	// StopServer hostname ServiceName LogFilePath
 	private String StopServerCommandParams(String envName,
 			List<CommandParams> paramsList, String actionType) {
@@ -309,7 +495,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	}
 
 	// StartServer hostname ServiceName LogFilePath
-	private String startServerCommandParams(String envName,
+	public String startServerCommandParams(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
