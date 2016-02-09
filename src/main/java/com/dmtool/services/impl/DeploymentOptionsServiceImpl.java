@@ -220,7 +220,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		} else if (selectedAction.equals("Rename_CopySRF")) {
 			commandParams = renameCopySRFCommandParams(selectedAction,envName, paramsList,
 					actionType,errorMap);
-		} else if (selectedAction.equals("DDLSynch")) {
+		} else if (selectedAction.equals("ApplySchemaChanges")) {
 			commandParams = ddlSyncCommandParams(selectedAction,envName, paramsList,
 					actionType,errorMap);
 		} else if (selectedAction.equals("Copy_BS")) {
