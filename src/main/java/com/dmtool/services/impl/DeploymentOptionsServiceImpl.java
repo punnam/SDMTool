@@ -221,8 +221,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			commandParams = renameCopySRFCommandParams(selectedAction,envName, paramsList,
 					actionType,errorMap);
 		} else if (selectedAction.equals("ApplySchemaChanges")) {
-			commandParams = ddlSyncCommandParams(selectedAction,envName, paramsList,
-					actionType,errorMap);
+			commandParams = ddlSyncCommandParams(selectedAction,envName, paramsList, "DDLSync",errorMap);
 		} else if (selectedAction.equals("Copy_BS")) {
 			commandParams = copyBSCommandParams(selectedAction,envName, paramsList, actionType,errorMap);
 		} else if (selectedAction.equals("Exprep")) {
@@ -334,7 +333,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		return errors;
 	}
 	public List<String> startServerCommandValidate(String envName,
-			List<CommandParams> paramsList, String actionType) {
+			List<CommandParams> paramsList) {
 		EnvInfo envInfo = null;
 		List<String> errors = new ArrayList<String>();
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
@@ -345,19 +344,16 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if(paramsList == null){
 			errors.add("Parameters list missing");
 		}
-		if(actionType == null){
-			errors.add("Action Type is missing");
-		}
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
-			if (envInfo.getHostName() != null) {
-				errors.add("Action Type is missing");
+			if (envInfo.getHostName() == null) {
+				errors.add("Host Name is missing in ENV setup");
 			}
-			if (envInfo.getServerName() != null) {
-				errors.add("Action Type is missing");
+			if (envInfo.getServerName() == null) {
+				errors.add("Server Name is missing in ENV setup");
 			}
-			if (envInfo.getLogFilePath() != null) {
-				errors.add("Action Type is missing");
+			if (envInfo.getLogFilePath() == null) {
+				errors.add("LogFile is missing in ENV setup");
 			}
 		} else {
 			logger.error("EnvInfo is missing for " + envName);
@@ -521,7 +517,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	public String startServerCommandParams(String selectedAction,String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
-		List<String> errors = startServerCommandValidate(envName, paramsList, actionType);
+		List<String> errors = startServerCommandValidate(envName, paramsList);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
@@ -629,8 +625,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 		}
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
 		StringBuffer sb = new StringBuffer();
 		if (envInfo != null && repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {

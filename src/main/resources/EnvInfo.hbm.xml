@@ -5,6 +5,7 @@
             <generator class="increment"></generator>
         </id>
 		<property name="name" column="NAME" type="string" />
+		<property name="desc" column="DESC" type="string" />
 		<property name="hostName" column="HOST_NAME" type="string" />
 		<property name="enterpriseName" column="ENTERPRISE_NAME" type="string" />
 		<property name="serverHost" column="SERVER_HOST" type="string" />

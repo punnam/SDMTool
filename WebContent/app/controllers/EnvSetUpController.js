@@ -10,6 +10,7 @@
 		});
 		var clearFields = function() {
 			$scope.name = "";
+			$scope.desc = "";
 			$scope.id = "";
 			$scope.hostName = "";
 			$scope.service = "";
@@ -43,6 +44,7 @@
 		};
 		$scope.modifyEnvInfo = function(envObj) {
 			$scope.name = envObj.name;
+			$scope.desc = envObj.desc;
 			$scope.id = envObj.id;
 			$scope.hostName = envObj.hostName;
 			$scope.service = envObj.service;
@@ -65,6 +67,7 @@
 		$scope.addEnvInfo = function() {
 			var dataObj = {
 				name : $scope.name,
+				desc:$scope.name,
 				id : $scope.id,
 				hostName : $scope.hostName,
 				service : $scope.service,

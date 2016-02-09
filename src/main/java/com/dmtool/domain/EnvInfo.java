@@ -11,6 +11,7 @@ public class EnvInfo extends AuditInfo{
 	private String seibelPath;
 	private String admPath;
 	private String logFilePath;
+	private String desc;
 	
 	public String getLogFilePath() {
 		return logFilePath;
@@ -51,6 +52,12 @@ public class EnvInfo extends AuditInfo{
 	public String getService() {
 		return service;
 	}
+	public String getDesc() {
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 	public void setService(String service) {
 		this.service = service;
 	}
@@ -72,5 +79,4 @@ public class EnvInfo extends AuditInfo{
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
 	}
-	
 }

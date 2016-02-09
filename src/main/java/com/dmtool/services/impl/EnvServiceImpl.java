@@ -75,6 +75,10 @@ public class EnvServiceImpl implements EnvService{
 		List<EnvInfo> envInfoList =  envDao.getAllEnvNames();
 		List<EnvInfo> envInfoUniqueList =  new ArrayList<EnvInfo>();
 		List<String> envNamesTemp = new ArrayList<String>();
+		EnvInfo envInfoFroSelectEnv = new EnvInfo();
+		envInfoFroSelectEnv.setName("");
+		envInfoFroSelectEnv.setDesc("Select Environment");
+		envInfoUniqueList.add(envInfoFroSelectEnv);
 		for (Iterator<EnvInfo> iterator = envInfoList.iterator(); iterator.hasNext();) {
 			EnvInfo envInfo = iterator.next();
 			if(envNamesTemp.contains(envInfo.getName())){
