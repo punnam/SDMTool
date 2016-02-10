@@ -244,13 +244,12 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (admConfig != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("UserId")) {
+				String param = commandParam.getParam();
+				if (param.equals("UserId")) {
 					sb.append(" ").append(admConfig.getUserId());
-				}
-				if (commandParam.getParam().equals("Password")) {
+				} else if (param.equals("Password")) {
 					sb.append(" ").append(admConfig.getPassword());
-				}
-				if (commandParam.getParam().equals("LogFilePath")) {
+				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(admConfig.getLogFilePath());
 				}
 			}
@@ -317,13 +316,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String hostName = envInfo.getHostName();
 			String serverName = envInfo.getServerName();
 			String filePath = envInfo.getLogFilePath();
-			if (hostName != null) {
+			if (hostName == null) {
 				errors.add("HostName is missing in environment info:"+envName+" "+hostName);
 			}
-			if (serverName != null) {
+			if (serverName == null) {
 				errors.add("Server Name is missing in environment info:"+envName+" "+serverName);
 			}
-			if (filePath != null) {
+			if (filePath == null) {
 				errors.add("File path is missing in environment info:"+envName+" "+filePath);
 			}
 		}else{
@@ -457,6 +456,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String odbc = repo.getOdbc();
 			String repoName = repo.getRepoName();
 			String logFilePath = repo.getLogFilePath();
+			String exportFilePath = repo.getFilePath();
 			if(userId == null){
 				errors.add("User Id is missing in Repository Config");
 			}
@@ -472,6 +472,10 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			if(logFilePath == null){
 				errors.add("LogFile Path is missing in Repository Config");
 			}
+			if(exportFilePath == null){
+				errors.add("ExportFilePath Path is missing in Repository Config");
+			}
+			
 		} else {
 			logger.error("Repository Config is missing for env:"+ envName);
 			errors.add("Repository Config is missing for env:"+ envName);
@@ -491,13 +495,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("hostname")) {
+				String param = commandParam.getParam();
+				if (param.equals("hostname")) {
 					sb.append(" ").append(envInfo.getHostName());
 				}
-				if (commandParam.getParam().equals("ServiceName")) {
+				if (param.equals("ServiceName")) {
 					sb.append(" ").append(envInfo.getServerName());
 				}
-				if (commandParam.getParam().equals("LogFilePath")) {
+				if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				}
 			}
@@ -526,13 +531,12 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("hostname")) {
+				String param = commandParam.getParam();
+				if (param.equals("hostname")) {
 					sb.append(" ").append(envInfo.getHostName());
-				}
-				if (commandParam.getParam().equals("ServiceName")) {
+				} else if (param.equals("ServiceName")) {
 					sb.append(" ").append(envInfo.getServerName());
-				}
-				if (commandParam.getParam().equals("LogFilePath")) {
+				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				}
 			}
@@ -558,19 +562,16 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("UserId")) {
+				String param = commandParam.getParam();
+				if (param.equals("UserId")) {
 					sb.append(" ").append(repo.getUserId());
-				}
-				if (commandParam.getParam().equals("Password")) {
+				} else if (param.equals("Password")) {
 					sb.append(" ").append(repo.getPassword());
-				}
-				if (commandParam.getParam().equals("ODBC")) {
+				} else if (param.equals("ODBC")) {
 					sb.append(" ").append(repo.getOdbc());
-				}
-				if (commandParam.getParam().equals("RepositoryName")) {
+				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
-				}
-				if (commandParam.getParam().equals("ImportFilePath")) {
+				} else if (param.equals("ImportFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
 				}
 			}
@@ -596,10 +597,10 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("SrfSourcePath")) {
+				String param = commandParam.getParam();
+				if (param.equals("SrfSourcePath")) {
 					sb.append(" ").append(repo.getFilePath());
-				}
-				if (commandParam.getParam().equals("LogFilePath")) {
+				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
 				}
 			}
@@ -630,28 +631,22 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envInfo != null && repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("UserId")) {
+				String param = commandParam.getParam();
+				if (param.equals("UserId")) {
 					sb.append(" ").append(repo.getUserId());
-				}
-				if (commandParam.getParam().equals("Password")) {
+				} else if (param.equals("Password")) {
 					sb.append(" ").append(repo.getPassword());
-				}
-				if (commandParam.getParam().equals("ODBC")) {
+				} else if (param.equals("ODBC")) {
 					sb.append(" ").append(repo.getOdbc());
-				}
-				if (commandParam.getParam().equals("LogFilePath")) {
+				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
-				}
-				if (commandParam.getParam().equals("RepositoryName")) {
+				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
-				}
-				if (commandParam.getParam().equals("siebelpwd")) {
+				} else if (param.equals("siebelpwd")) {
 					sb.append(" ").append(repo.getPassword());
-				}
-				if (commandParam.getParam().equals("siebeldata")) {
+				} else if (param.equals("siebeldata")) {
 					sb.append(" ").append(repo.getPassword());
-				}
-				if (commandParam.getParam().equals("siebelindex")) {
+				} else if (param.equals("siebelindex")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
 				}
 			}
@@ -723,25 +718,28 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	// Copy_BS SourceBSPath LogiflePath
 	private String copyBSCommandParams(String selectedAction,String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
 		List<String> errors = copyBSCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		if (repo != null && (errors == null || errors.size() == 0)) {
+		if (envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("SourceBSPath")) {
-					sb.append(" ").append(repo.getFilePath());
-				}
-				if (commandParam.getParam().equals("LogiflePath")) {
-					sb.append(" ").append(repo.getLogFilePath());
+				String param = commandParam.getParam();
+				if (param.equals("SourceBSPath")) {
+					sb.append(" ").append(envInfo.getAdmPath());
+				} else if (param.equals("LogiflePath")) {
+					sb.append(" ").append(envInfo.getSeibelPath());
 				}
 			}
 		}else {
-			logger.error("Error command did not constrcuted properly. Repo config is empty for "
-					+ envName + " and " + actionType);
-			errors.add("Error command did not constrcuted properly. Repo config is empty for "
-					+ envName + " and " + actionType);
+			logger.error("Error command did not constrcuted properly.Env Info is empty for "
+					+ envName);
+			errors.add("Error command did not constrcuted properly. Env Info is empty for "
+					+ envName);
 		}
 		if(errors != null && errors.size()>0){
 			errorMap.put(selectedAction, errors);	
@@ -751,8 +749,11 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	private List<String> copyBSCommandValidate(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		List<String> errors = new ArrayList<String>();
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
 		if(envName == null){
 			errors.add("Environment name is missing.");
 		}
@@ -762,17 +763,17 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if(actionType == null){
 			errors.add("Action Type is missing.");
 		} 
-		if (repo != null) {
-			String sourceBSPath = repo.getFilePath();
-			String logFilePath = repo.getLogFilePath();
-			if(sourceBSPath == null){
-				errors.add("sourceBSPath is missing in Repository Config");
+		if (envInfo != null) {
+			String admPath = envInfo.getAdmPath();
+			String seibelPath = envInfo.getSeibelPath();
+			if(admPath == null){
+				errors.add("admPath is missing in Env Config");
 			}
-			if(logFilePath == null){
-				errors.add("LogFile Path is missing in Repository Config");
+			if(seibelPath == null){
+				errors.add("seibelPath Path is missing in Env Config");
 			}
 		} else {
-			logger.error("Repository Config is missing for env:"+ envName);
+			logger.error("ENV info. Config is missing for env:"+ envName);
 			errors.add("Repository Config is missing for env:"+ envName);
 		}
 		return errors;
@@ -787,19 +788,18 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
-				if (commandParam.getParam().equals("UserId")) {
+				String param = commandParam.getParam();
+				if (param.equals("UserId")) {
 					sb.append(" ").append(repo.getUserId());
-				}
-				if (commandParam.getParam().equals("Password")) {
+				} else if (param.equals("Password")) {
 					sb.append(" ").append(repo.getPassword());
-				}
-				if (commandParam.getParam().equals("ODBC")) {
+				} else if (param.equals("ODBC")) {
 					sb.append(" ").append(repo.getOdbc());
-				}
-				if (commandParam.getParam().equals("RepositoryName")) {
+				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
-				}
-				if (commandParam.getParam().equals("ImportFilePath")) {
+				} else if (param.equals("ImportFilePath")) {
+					sb.append(" ").append(repo.getFilePath());
+				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
 				}
 			}
