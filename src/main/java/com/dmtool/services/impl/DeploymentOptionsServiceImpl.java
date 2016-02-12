@@ -383,6 +383,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String password = repo.getPassword();
 			String odbc = repo.getOdbc();
 			String repoName = repo.getRepoName();
+			String exportFilePath = repo.getFilePath();
 			String logFilePath = repo.getLogFilePath();
 			if (userId == null) {
 				errors.add("User Id is missing in Repository Config");
@@ -398,6 +399,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			}
 			if (logFilePath == null) {
 				errors.add("Log File Path is missing in Repository Config");
+			}
+			if(exportFilePath == null){
+				errors.add("ExportFilePath Path is missing in Repository Config");
 			}
 		} else {
 			logger.error("Repository is empty for "+ envName + " and " + actionType);
@@ -572,6 +576,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
 				} else if (param.equals("ImportFilePath")) {
+					sb.append(" ").append(repo.getFilePath());
+				}else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
 				}
 			}
@@ -798,6 +804,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
 				} else if (param.equals("ImportFilePath")) {
+					sb.append(" ").append(repo.getFilePath());
+				} else if (param.equals("ExportFilePath")) {
 					sb.append(" ").append(repo.getFilePath());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
