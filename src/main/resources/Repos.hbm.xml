@@ -8,6 +8,8 @@
 		<property name="envName" column="ENV_NAME" type="string" />
 		<property name="userId" column="USER_ID" type="string" />
 		<property name="password" column="PASSWORD" type="string" />
+		<property name="tableOwner" column="TABLE_OWNER" type="string" />
+		<property name="tableOwnerPassword" column="TABLE_OWNER_PASSWORD" type="string" />
 		<property name="odbc" column="ODBC" type="string" />
 		<property name="filePath" column="FILE_PATH" type="string" />
 		<property name="repoType" column="REPO_TYPE" type="string" />
@@ -18,7 +20,6 @@
 		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
 		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
 		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
-		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />		
-		
+		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />	
 	</class>
 </hibernate-mapping>

@@ -12,8 +12,22 @@ public class Repos  extends AuditInfo{
 	private String logFilePath;
 	private String tableDDLSync;
 	private String indexDDLSync;
+	private String tableOwner;
+	private String tableOwnerPassword;
 	public Integer getId() {
 		return id;
+	}
+	public String getTableOwner() {
+		return tableOwner;
+	}
+	public void setTableOwner(String tableOwner) {
+		this.tableOwner = tableOwner;
+	}
+	public String getTableOwnerPassword() {
+		return tableOwnerPassword;
+	}
+	public void setTableOwnerPassword(String tableOwnerPassword) {
+		this.tableOwnerPassword = tableOwnerPassword;
 	}
 	public void setId(Integer id) {
 		this.id = id;

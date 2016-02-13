@@ -30,6 +30,8 @@
 			$scope.envName = "";
 			$scope.userId = "";
 			$scope.password = "";
+			$scope.tableOwner = "";
+			$scope.tableOwnerPassword = "";			
 			$scope.odbc = "";
 			$scope.filePath = "";
 			$scope.repoType = "";
@@ -64,6 +66,8 @@
 			$scope.envName = repoObj.envName;
 			$scope.userId = repoObj.userId;
 			$scope.password = repoObj.password;
+			$scope.tableOwner = repoObj.tableOwner;
+			$scope.tableOwnerPassword = repoObj.tableOwnerPassword;
 			$scope.odbc = repoObj.odbc;
 			$scope.filePath = repoObj.filePath;
 			$scope.repoType = repoObj.repoType;
@@ -88,6 +92,8 @@
 				envName : $scope.envName,
 				userId : $scope.userId,
 				password : $scope.password,
+				tableOwner : $scope.tableOwner,
+				tableOwnerPassword : $scope.tableOwnerPassword,
 				odbc : $scope.odbc,
 				filePath : $scope.filePath,
 				repoType : $scope.repoType,

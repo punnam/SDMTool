@@ -203,7 +203,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		// Rename_CopySRF SrfSourcePath LogFilePath
 		// DDLSynch userid password ODBC logfilepath repository siebelpwd
 		// siebeldata siebelindex logfilepath
-		// Copy_BS SourceBSPath LogiflePath
+		// CopySRFBS SourceBSPath LogiflePath
 		// ExportRep userid password ODBC RepositoryName EXportFilePath
 		// LogFilePath
 		if (selectedAction.equals("BuildNow")) {
@@ -222,8 +222,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					actionType,errorMap);
 		} else if (selectedAction.equals("ApplySchemaChanges")) {
 			commandParams = ddlSyncCommandParams(selectedAction,envName, paramsList, "DDLSync",errorMap);
-		} else if (selectedAction.equals("Copy_BS")) {
-			commandParams = copyBSCommandParams(selectedAction,envName, paramsList, actionType,errorMap);
+		} else if (selectedAction.equals("CopySRFBS")) {
+			commandParams = copySRFBSCommandParams(selectedAction,envName, paramsList, actionType,errorMap);
 		} else if (selectedAction.equals("Exprep")) {
 			commandParams = exportRepCommandParams(selectedAction,envName, paramsList,
 					"Export",errorMap);
@@ -642,18 +642,22 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getUserId());
 				} else if (param.equals("Password")) {
 					sb.append(" ").append(repo.getPassword());
+				} else if (param.equals("TableOwner")) {
+					sb.append(" ").append(repo.getTableOwner());
+				} else if (param.equals("TableOwnerPassword")) {
+					sb.append(" ").append(repo.getTableOwnerPassword());
 				} else if (param.equals("ODBC")) {
 					sb.append(" ").append(repo.getOdbc());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
 				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
-				} else if (param.equals("siebelpwd")) {
-					sb.append(" ").append(repo.getPassword());
-				} else if (param.equals("siebeldata")) {
-					sb.append(" ").append(repo.getPassword());
-				} else if (param.equals("siebelindex")) {
+				} else if (param.equals("siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
+				} else if (param.equals("siebeldata")) {
+					sb.append(" ").append(repo.getTableDDLSync());
+				} else if (param.equals("siebelindex")) {
+					sb.append(" ").append(repo.getIndexDDLSync());
 				}
 			}
 		}else {
@@ -689,6 +693,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (repo != null) {
 			String userId = repo.getUserId();
 			String password = repo.getPassword();
+			String tableOwner = repo.getTableOwner();
+			String tableOwnerPassword = repo.getTableOwnerPassword();
 			String odbc = repo.getOdbc();
 			String repoName = repo.getRepoName();
 			String logFilePath = repo.getLogFilePath();
@@ -699,6 +705,12 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			}
 			if(password == null){
 				errors.add("password is missing in Repository Config");
+			}
+			if(tableOwner == null){
+				errors.add("Table Owner is missing in Repository Config");
+			}
+			if(tableOwnerPassword == null){
+				errors.add("Table Owner Password is missing in Repository Config");
 			}
 			if(odbc == null){
 				errors.add("odbc is missing in Repository Config");
@@ -721,24 +733,24 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		}
 		return errors;
 	}
-	// Copy_BS SourceBSPath LogiflePath
-	private String copyBSCommandParams(String selectedAction,String envName,
+	// CopySRFBS SourceBSPath LogiflePath
+	private String copySRFBSCommandParams(String selectedAction,String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 		}
-		List<String> errors = copyBSCommandValidate(envName, paramsList, actionType);
+		List<String> errors = copySRFBSCommandValidate(envName, paramsList);
 		StringBuffer sb = new StringBuffer();
 		if (envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				String param = commandParam.getParam();
-				if (param.equals("SourceBSPath")) {
-					sb.append(" ").append(envInfo.getAdmPath());
-				} else if (param.equals("LogiflePath")) {
+				if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
+				} else if (param.equals("LogFilePath")) {
+					sb.append(" ").append(envInfo.getLogFilePath());
 				}
 			}
 		}else {
@@ -752,8 +764,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		}
 		return sb.toString();
 	}
-	private List<String> copyBSCommandValidate(String envName,
-			List<CommandParams> paramsList, String actionType) {
+	private List<String> copySRFBSCommandValidate(String envName,
+			List<CommandParams> paramsList) {
 		List<String> errors = new ArrayList<String>();
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
@@ -766,21 +778,18 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if(paramsList == null){
 			errors.add("Parameters list missing.");
 		}
-		if(actionType == null){
-			errors.add("Action Type is missing.");
-		} 
 		if (envInfo != null) {
-			String admPath = envInfo.getAdmPath();
+			String logFilePath = envInfo.getLogFilePath();
 			String seibelPath = envInfo.getSeibelPath();
-			if(admPath == null){
-				errors.add("admPath is missing in Env Config");
+			if(logFilePath == null){
+				errors.add("logFilePath is missing in Env Config");
 			}
 			if(seibelPath == null){
 				errors.add("seibelPath Path is missing in Env Config");
 			}
 		} else {
 			logger.error("ENV info. Config is missing for env:"+ envName);
-			errors.add("Repository Config is missing for env:"+ envName);
+			errors.add("ENV info. Config is missing for env:"+ envName);
 		}
 		return errors;
 	}
