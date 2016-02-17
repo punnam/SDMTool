@@ -13,7 +13,7 @@
 		<property name="service" column="SERVICE" type="string" />
 		<property name="seibelPath" column="SEIBEL_PATH" type="string" />
 		<property name="logFilePath" column="LOG_FILE_PATH" type="string" />
-		<property name="admPath" column="ADM_PATH" type="string" />
+		<property name="sourcePath" column="SOURCE_PATH" type="string" />
 		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
 		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
 		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />

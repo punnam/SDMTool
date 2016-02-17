@@ -240,8 +240,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		AdmConfig admConfig = admConfigService
 				.getAdmConfigByEnvNameAndActionType(envName, actionType);
 		List<String> errors = buildNowValidate(envName, paramsList, actionType);
+		EnvInfo envInfo = null;
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
 		StringBuffer sb = new StringBuffer();
-		if (admConfig != null && (errors == null || errors.size() == 0)) {
+		if (admConfig != null && envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				String param = commandParam.getParam();
@@ -251,12 +256,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(admConfig.getPassword());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(admConfig.getLogFilePath());
+				} else if (param.equals("Siebelpath")) {
+					sb.append(" ").append(envInfo.getSeibelPath());
 				}
 			}
 		} else {
-			logger.error("Error command did not constrcuted properly. ADM config is empty for "
+			logger.error("Error command did not constrcuted properly. ADM config or envInfo is empty for "
 					+ envName + " and " + actionType);
-			errors.add("Error command did not constrcuted properly. ADM config is empty for "
+			errors.add("Error command did not constrcuted properly. ADM config or envInfo is empty for "
 					+ envName + " and " + actionType);
 		}
 		if(errors != null && errors.size()>0){
@@ -269,6 +276,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	private List<String> buildNowValidate(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		List<String> errors = new ArrayList<String>();
+		
 		if(envName == null){
 			errors.add("Environment name is missing");
 		}
@@ -282,9 +290,17 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		AdmConfig admConfig = admConfigService
 				.getAdmConfigByEnvNameAndActionType(envName, actionType);
 		
+		EnvInfo envInfo = null;
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
+		
 		if(admConfig == null){
 			errors.add("ADM Config is not found.");
-		}else{
+		}else if(envInfo == null){
+			errors.add("Env Info is not found.");
+		} else{
 			if(admConfig.getUserId() == null){
 				errors.add("ADM Config is missing User Id.");
 			}
@@ -293,6 +309,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			}
 			if(admConfig.getLogFilePath() == null){
 				errors.add("ADM Config is missing Log file path.");
+			}
+			if(envInfo.getSeibelPath() == null){
+				errors.add("Siebelpath is missing Log file path.");
 			}
 		}
 		return errors;
@@ -314,13 +333,13 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 			String hostName = envInfo.getHostName();
-			String serverName = envInfo.getServerName();
+			String serviceName = envInfo.getService();
 			String filePath = envInfo.getLogFilePath();
 			if (hostName == null) {
 				errors.add("HostName is missing in environment info:"+envName+" "+hostName);
 			}
-			if (serverName == null) {
-				errors.add("Server Name is missing in environment info:"+envName+" "+serverName);
+			if (serviceName == null) {
+				errors.add("Service Name is missing in environment info:"+envName+" "+serviceName);
 			}
 			if (filePath == null) {
 				errors.add("File path is missing in environment info:"+envName+" "+filePath);
@@ -348,8 +367,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			if (envInfo.getHostName() == null) {
 				errors.add("Host Name is missing in ENV setup");
 			}
-			if (envInfo.getServerName() == null) {
-				errors.add("Server Name is missing in ENV setup");
+			if (envInfo.getService() == null) {
+				errors.add("Service Name is missing in ENV setup");
 			}
 			if (envInfo.getLogFilePath() == null) {
 				errors.add("LogFile is missing in ENV setup");
@@ -364,6 +383,11 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			List<CommandParams> paramsList, String actionType) {
 
 		List<String> errors = new ArrayList<String>();
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		
@@ -378,13 +402,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		}
 
 		
-		if (repo != null) {
+		if (repo != null && envInfo != null) {
 			String userId = repo.getUserId();
 			String password = repo.getPassword();
 			String odbc = repo.getOdbc();
 			String repoName = repo.getRepoName();
 			String exportFilePath = repo.getFilePath();
 			String logFilePath = repo.getLogFilePath();
+			String Siebelpath = envInfo.getSeibelPath();
 			if (userId == null) {
 				errors.add("User Id is missing in Repository Config");
 			}
@@ -402,6 +427,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			}
 			if(exportFilePath == null){
 				errors.add("ExportFilePath Path is missing in Repository Config");
+			}
+			if(Siebelpath == null){
+				errors.add("Siebelpath  is missing in Env. Info.");
 			}
 		} else {
 			logger.error("Repository is empty for "+ envName + " and " + actionType);
@@ -445,6 +473,11 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		List<String> errors = new ArrayList<String>();
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
 		if(envName == null){
 			errors.add("Environment name is missing.");
 		}
@@ -461,6 +494,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String repoName = repo.getRepoName();
 			String logFilePath = repo.getLogFilePath();
 			String exportFilePath = repo.getFilePath();
+			String Siebelpath = envInfo.getSeibelPath();
 			if(userId == null){
 				errors.add("User Id is missing in Repository Config");
 			}
@@ -478,6 +512,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			}
 			if(exportFilePath == null){
 				errors.add("ExportFilePath Path is missing in Repository Config");
+			}
+			if(Siebelpath == null){
+				errors.add("Siebelpath Path is missing in Env. Info.");
 			}
 			
 		} else {
@@ -504,7 +541,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getHostName());
 				}
 				if (param.equals("ServiceName")) {
-					sb.append(" ").append(envInfo.getServerName());
+					sb.append(" ").append(envInfo.getService());
 				}
 				if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
@@ -539,7 +576,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				if (param.equals("hostname")) {
 					sb.append(" ").append(envInfo.getHostName());
 				} else if (param.equals("ServiceName")) {
-					sb.append(" ").append(envInfo.getServerName());
+					sb.append(" ").append(envInfo.getService());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				}
@@ -559,11 +596,16 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	// Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
 	private String imrepCommandParams(String selectedAction,String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		List<String> errors = imrepCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		if (repo != null && (errors == null || errors.size() == 0)) {
+		if (repo != null && envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				String param = commandParam.getParam();
@@ -579,12 +621,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getFilePath());
 				}else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
+				}else if (param.equals("Siebelpath")) {
+					sb.append(" ").append(envInfo.getSeibelPath());
 				}
 			}
 		}else {
-			logger.error("Error command did not constrcuted properly. Repo config is empty for "
+			logger.error("Error command did not constrcuted properly. Repo config or Env info is empty for "
 					+ envName + " and " + actionType);
-			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+			errors.add("Error command did not constrcuted properly. Repo config or Env is empty for "
 					+ envName + " and " + actionType);
 		}
 		if(errors != null && errors.size()>0){
@@ -751,6 +795,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getSeibelPath());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
+				} else if (param.equals("SourcePath")) {
+					sb.append(" ").append(envInfo.getSourcePath());
 				}
 			}
 		}else {
@@ -781,11 +827,15 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envInfo != null) {
 			String logFilePath = envInfo.getLogFilePath();
 			String seibelPath = envInfo.getSeibelPath();
+			String sourcePath = envInfo.getSourcePath();
 			if(logFilePath == null){
 				errors.add("logFilePath is missing in Env Config");
 			}
 			if(seibelPath == null){
 				errors.add("seibelPath Path is missing in Env Config");
+			}
+			if(sourcePath == null){
+				errors.add("sourcePath is missing in Env Config");
 			}
 		} else {
 			logger.error("ENV info. Config is missing for env:"+ envName);
@@ -798,9 +848,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
 		List<String> errors = exportRepCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
-		if (repo != null && (errors == null || errors.size() == 0)) {
+		if (repo != null && envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				String param = commandParam.getParam();
@@ -818,12 +873,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getFilePath());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(repo.getLogFilePath());
+				} else if (param.equals("Siebelpath")) {
+					sb.append(" ").append(envInfo.getSeibelPath());
 				}
 			}
 		}else {
-			logger.error("Error command did not constrcuted properly. Repo config is empty for "
+			logger.error("Error command did not constrcuted properly. Repo config or env Info is empty for "
 					+ envName + " and " + actionType);
-			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+			errors.add("Error command did not constrcuted properly. Repo config or env info is empty for "
 					+ envName + " and " + actionType);
 		}
 		if(errors != null && errors.size()>0){
@@ -903,7 +960,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envInfo != null) {
 			tokenMaps.put(DMCommandTokens.SERVICE_NAME, envInfo.getService());
 			tokenMaps.put(DMCommandTokens.SEIBEL_PATH, envInfo.getSeibelPath());
-			tokenMaps.put(DMCommandTokens.ADM_PATH, envInfo.getAdmPath());
+			tokenMaps.put(DMCommandTokens.ADM_PATH, envInfo.getSourcePath());
 			tokenMaps.put(DMCommandTokens.HOST_NAME, envInfo.getServerHost());
 		}
 		return tokenMaps;

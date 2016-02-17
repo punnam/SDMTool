@@ -14,15 +14,12 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse" ng-controller="NavController">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#/login"  ng-show='showlogIn'>LogIn</a>
+
+                <li><a href="#/environmentSetup">Environment</a>
                 </li>
-                <li><a href="#/logout"  ng-show='showlogout' ng-click="logOut()">Logout</a>
+                <li><a href="#/repos">Repository Configuration</a>
                 </li>
-                <li><a href="#/environmentSetup">Env. Setup</a>
-                </li>
-                <li><a href="#/repos">Repository Config</a>
-                </li>
-                <li><a href="#/admConfig">ADM Config</a>
+                <li><a href="#/admConfig">ADM Configuration</a>
                 </li>
                 <li><a href="#/deploymentPackage">Deployment Package</a>
                 </li>                
@@ -32,7 +29,10 @@
                 <li><a href="#/commandEditor">Command Editor</a>
                 </li>
                  -->
-                
+                <li><a href="#/login"  ng-show='showlogIn'>LogIn</a>
+                </li>
+                <li><a href="#/logout"  ng-show='showlogout' ng-click="logOut()">Logout</a>
+                </li>                
             </ul>
         </div>
         <!-- /.navbar-collapse -->

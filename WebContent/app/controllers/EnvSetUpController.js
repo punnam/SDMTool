@@ -17,7 +17,7 @@
 			$scope.serverName = "";
 			$scope.seibelPath = "";
 			$scope.serverHost = "";
-			$scope.admPath = "";
+			$scope.sourcePath = "";
 			$scope.enterpriseName = "";
 			$scope.logFilePath = "";
 			$scope.modifyEnv = false;
@@ -51,7 +51,7 @@
 			$scope.serverName = envObj.serverName;
 			$scope.seibelPath = envObj.seibelPath;
 			$scope.serverHost = envObj.serverHost;
-			$scope.admPath = envObj.admPath;
+			$scope.sourcePath = envObj.sourcePath;
 			$scope.enterpriseName = envObj.enterpriseName;
 			$scope.logFilePath = envObj.logFilePath;
 			$scope.createdTime = envObj.createdTime;
@@ -74,7 +74,7 @@
 				serverName : $scope.serverName,
 				seibelPath : $scope.seibelPath,
 				serverHost : $scope.serverHost,
-				admPath : $scope.admPath,
+				sourcePath : $scope.sourcePath,
 				enterpriseName : $scope.enterpriseName,
 				logFilePath : $scope.logFilePath,
 				createdTime : $scope.createdTime,
