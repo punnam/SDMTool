@@ -28,21 +28,7 @@
 				</ul>
 			</div>
 		</div>
-		<div class="form-group  col-sm-6 col-md-6">
-			<label class="control-label col-sm-6 col-md-6" for="email">User
-				Id :</label>
-			<div class="col-sm-6 col-md-6">
-				<input type="text" class="form-control" placeholder="Enter User Id"
-					name="name" ng-model="userId" />
-			</div>
-		</div>
-		<div class="form-group  col-sm-6  col-md-6">
-			<label class="control-label col-sm-6 col-md-6" for="email">Password:</label>
-			<div class="col-sm-6 col-md-6">
-				<input type="text" class="form-control" placeholder="Enter Password"
-					name="hostName" ng-model="password" />
-			</div>
-		</div>
+
 		<div class="form-group   col-sm-6 col-md-6">
 			<label class="control-label   col-sm-6 col-md-6" for="email">Seibel Server:</label>
 			<div class="  col-sm-6 col-md-6">
@@ -51,19 +37,11 @@
 			</div>
 		</div>
 		<div class="form-group  col-sm-6 col-md-6">
-			<label class="control-label   col-sm-6 col-md-6" for="email">Row Id:</label>
+			<label class="control-label   col-sm-6 col-md-6" for="email">Session Id:</label>
 			<div class="col-sm-6 col-md-6">
 				<input type="text" class="form-control"
-					placeholder="Enter Repository Name" name="rowId"
-					ng-model="rowId" />
-			</div>
-		</div>
-		<div class="form-group  col-sm-6 col-md-6">
-			<label class="control-label  col-sm-6 col-md-6" for="email">Log
-				File Path:</label>
-			<div class="  col-sm-6 col-md-6">
-				<input type="text" class="form-control"
-					placeholder="Enter Log File Path" name="service" ng-model="logFilePath" />
+					placeholder="Enter Repository Name" name="sessionId"
+					ng-model="sessionId" />
 			</div>
 		</div>
 			<div class="form-group">
@@ -84,11 +62,8 @@
 				<th>ID</th>
 				<th>Environment Name</th>
 				<th>Import/Export</th>
-				<th>User Id</th>
-				<th>Password</th>
 				<th>Seibel Server</th>
-				<th>Row Id</th>
-				<th>Log File Path</th>
+				<th>Session Id</th>
 			</tr>
 		</thead>
 		<tbody ng-repeat="admConfig in allAdmConfigs">
@@ -96,11 +71,8 @@
 				<td>{{admConfig.id}}</td>
 				<td>{{admConfig.envName}}</td>
 				<td>{{admConfig.admConfigType}}</td>
-				<td>{{admConfig.userId}}</td>
-				<td>{{admConfig.password}}</td>
 				<td>{{admConfig.seibelServer}}</td>
-				<td>{{admConfig.rowId}}</td>
-				<td>{{admConfig.logFilePath}}</td>
+				<td>{{admConfig.sessionId}}</td>
 				<td>
 					<button type="button" class="btn btn-default"
 						aria-label="Left Align" ng-click="modifyAdmConfig(admConfig)">

@@ -43,6 +43,7 @@
 			$scope.updatedTime = "";
 			$scope.createdUser = "";
 			$scope.updatedUser = "";
+			$scope.modifyEnv = false;
 
 		}
 		$scope.deleteRepos = function(repoObj) {

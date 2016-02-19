@@ -6,11 +6,8 @@
 		</id>
 		<property name="envName" column="ENV_NAME" type="string" />
 		<property name="admConfigType" column="Config_Type" type="string" />
-		<property name="userId" column="USER_ID" type="string" />
-		<property name="password" column="PASSWORD" type="string" />
 		<property name="seibelServer" column="SEIBEL_SERVER" type="string" />
-		<property name="rowId" column="ROW_ID" type="string" />
-		<property name="logFilePath" column="LOG_FILE_PATH" type="string" />
+		<property name="sessionId" column="SESSION_ID" type="string" />
 		<property name="createdTime" column="CREATED_TIME" type="timestamp" />
 		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
 		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />

@@ -31,15 +31,13 @@
     		$scope.id = "";
     		$scope.envName = "";
     		$scope.admConfigType="";
-    		$scope.userId = "";
-    		$scope.password = "";
     		$scope.seibelServer = "";
-    		$scope.rowId = "";
-    		$scope.logFilePath = "";
+    		$scope.sessionId = "";
     		$scope.createdTime = "";
     		$scope.updatedTime = "";
     		$scope.createdUser = "";
     		$scope.updatedUser = "";
+    		$scope.modifyEnv = false;
     	}
     	$scope.deleteAdmConfig = function(admConfig) {
     		$http({
@@ -64,15 +62,12 @@
     		$scope.id = admConfig.id;
     		$scope.envName = admConfig.envName;
     		$scope.admConfigType=admConfig.admConfigType;
-    		$scope.userId = admConfig.userId;
-    		$scope.password = admConfig.password;
     		$scope.seibelServer = admConfig.seibelServer;
-    		$scope.rowId = admConfig.rowId;
-    		$scope.logFilePath = admConfig.logFilePath;
-    		$scope.createdTime = envObj.createdTime;
-    		$scope.updatedTime = envObj.updatedTime;
-    		$scope.createdUser = envObj.createdUser;
-    		$scope.updatedUser = envObj.updatedUser;
+    		$scope.sessionId = admConfig.sessionId;
+    		$scope.createdTime = admConfig.createdTime;
+    		$scope.updatedTime = admConfig.updatedTime;
+    		$scope.createdUser = admConfig.createdUser;
+    		$scope.updatedUser = admConfig.updatedUser;
     	};
     	$scope.reloadAllAdmConfigs = function() {
     		$http.get("rest/admConfig/getAllAdmConfig/").success(function(response) {
@@ -83,11 +78,8 @@
     		var dataObj = {
     			id:$scope.id,
     			envName : $scope.envName,
-    			userId : $scope.userId,
-    			password : $scope.password,
     			seibelServer : $scope.seibelServer,
-    			rowId : $scope.rowId,
-    			logFilePath : $scope.logFilePath,
+    			sessionId : $scope.sessionId,
     			admConfigType:$scope.admConfigType,
     			createdTime : $scope.createdTime,
     			updatedTime : $scope.updatedTime,

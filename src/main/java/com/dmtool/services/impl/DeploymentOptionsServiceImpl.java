@@ -237,8 +237,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 
 	private String buildNowCommandParams(String selectedAction, String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
-		AdmConfig admConfig = admConfigService
-				.getAdmConfigByEnvNameAndActionType(envName, actionType);
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
 		List<String> errors = buildNowValidate(envName, paramsList, actionType);
 		EnvInfo envInfo = null;
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
@@ -246,24 +246,24 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			envInfo = envList.get(0);
 		}
 		StringBuffer sb = new StringBuffer();
-		if (admConfig != null && envInfo != null && (errors == null || errors.size() == 0)) {
+		if (repo != null && envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				String param = commandParam.getParam();
 				if (param.equals("UserId")) {
-					sb.append(" ").append(admConfig.getUserId());
+					sb.append(" ").append(repo.getUserId());
 				} else if (param.equals("Password")) {
-					sb.append(" ").append(admConfig.getPassword());
+					sb.append(" ").append(repo.getPassword());
 				} else if (param.equals("LogFilePath")) {
-					sb.append(" ").append(admConfig.getLogFilePath());
+					sb.append(" ").append(repo.getLogFilePath());
 				} else if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
 				}
 			}
 		} else {
-			logger.error("Error command did not constrcuted properly. ADM config or envInfo is empty for "
+			logger.error("Error command did not constrcuted properly. Repository or envInfo is empty for "
 					+ envName + " and " + actionType);
-			errors.add("Error command did not constrcuted properly. ADM config or envInfo is empty for "
+			errors.add("Error command did not constrcuted properly. Repository or envInfo is empty for "
 					+ envName + " and " + actionType);
 		}
 		if(errors != null && errors.size()>0){
@@ -287,8 +287,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			errors.add("Action Type is missing");
 		}
 		
-		AdmConfig admConfig = admConfigService
-				.getAdmConfigByEnvNameAndActionType(envName, actionType);
+		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
+				actionType);
 		
 		EnvInfo envInfo = null;
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
@@ -296,18 +296,18 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			envInfo = envList.get(0);
 		}
 		
-		if(admConfig == null){
-			errors.add("ADM Config is not found.");
+		if(repo == null){
+			errors.add("Repository Info is not found.");
 		}else if(envInfo == null){
 			errors.add("Env Info is not found.");
 		} else{
-			if(admConfig.getUserId() == null){
-				errors.add("ADM Config is missing User Id.");
+			if(repo.getUserId() == null){
+				errors.add("Repository Info is missing User Id.");
 			}
-			if(admConfig.getPassword() == null){
-				errors.add("ADM Config is missing password.");
+			if(repo.getPassword() == null){
+				errors.add("Repository Info is missing password.");
 			}
-			if(admConfig.getLogFilePath() == null){
+			if(repo.getLogFilePath() == null){
 				errors.add("ADM Config is missing Log file path.");
 			}
 			if(envInfo.getSeibelPath() == null){
@@ -495,6 +495,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String logFilePath = repo.getLogFilePath();
 			String exportFilePath = repo.getFilePath();
 			String Siebelpath = envInfo.getSeibelPath();
+			String gateway = envInfo.getHostName();
 			if(userId == null){
 				errors.add("User Id is missing in Repository Config");
 			}
@@ -931,15 +932,12 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 
 		// ADM_CONFIG
 		if (admConfig != null) {
-			tokenMaps.put(DMCommandTokens.ADM_CONFIG_USER_ID,
-					admConfig.getUserId());
-			tokenMaps.put(DMCommandTokens.ADM_CONFIG_PASSWORD,
-					admConfig.getPassword());
-			tokenMaps.put(DMCommandTokens.ADM_CONFIG_LOG_FILE_PATH,
-					admConfig.getLogFilePath());
+//			tokenMaps.put(DMCommandTokens.ADM_CONFIG_USER_ID,admConfig.getUserId());
+//			tokenMaps.put(DMCommandTokens.ADM_CONFIG_PASSWORD,admConfig.getPassword());
+//			tokenMaps.put(DMCommandTokens.ADM_CONFIG_LOG_FILE_PATH,admConfig.getLogFilePath());
 			tokenMaps.put(DMCommandTokens.SEIBEL_SERVER,
 					admConfig.getSeibelServer());
-			tokenMaps.put(DMCommandTokens.ROW_ID, admConfig.getRowId());
+			tokenMaps.put(DMCommandTokens.ROW_ID, admConfig.getSessionId());
 		}
 		if (repos != null) {
 			// REPO
