@@ -26,23 +26,23 @@
 
 			$scope.envName = "Select Environment";
 			$scope.repoType = "Select Improt/Export";
-			$scope.id = "";
-			$scope.envName = "";
-			$scope.userId = "";
-			$scope.password = "";
-			$scope.tableOwner = "";
-			$scope.tableOwnerPassword = "";			
-			$scope.odbc = "";
-			$scope.filePath = "";
-			$scope.repoType = "";
-			$scope.repoName = "";
-			$scope.logFilePath = "";
-			$scope.tableDDLSync = "";
-			$scope.indexDDLSync = "";
-			$scope.createdTime = "";
-			$scope.updatedTime = "";
-			$scope.createdUser = "";
-			$scope.updatedUser = "";
+			$scope.id = null;
+			$scope.envName = null;
+			$scope.userId = null;
+			$scope.password = null;
+			$scope.tableOwner = null;
+			$scope.tableOwnerPassword = null;			
+			$scope.odbc = null;
+			$scope.filePath = null;
+			$scope.repoType = null;
+			$scope.repoName = null;
+			$scope.logFilePath = null;
+			$scope.tableDDLSync = null;
+			$scope.indexDDLSync = null;
+			$scope.createdTime = null;
+			$scope.updatedTime = null;
+			$scope.createdUser = null;
+			$scope.updatedUser = null;
 			$scope.modifyEnv = false;
 
 		}

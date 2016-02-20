@@ -24,19 +24,19 @@
     		$scope.allAdmConfigs = response.data;
     	});
 
-    	var clearFields = function() {
+    	$scope.clearFields = function() {
 
     		$scope.envName = "Select Environment";
     		$scope.repoType = "Select Improt/Export";
-    		$scope.id = "";
-    		$scope.envName = "";
-    		$scope.admConfigType="";
-    		$scope.seibelServer = "";
-    		$scope.sessionId = "";
-    		$scope.createdTime = "";
-    		$scope.updatedTime = "";
-    		$scope.createdUser = "";
-    		$scope.updatedUser = "";
+    		$scope.id = null;
+    		$scope.envName = null;
+    		$scope.admConfigType=null;
+    		$scope.seibelServer = null;
+    		$scope.sessionId = null;
+    		$scope.createdTime = null;
+    		$scope.updatedTime = null;
+    		$scope.createdUser = null;
+    		$scope.updatedUser = null;
     		$scope.modifyEnv = false;
     	}
     	$scope.deleteAdmConfig = function(admConfig) {
@@ -86,7 +86,7 @@
     			createdUser : $scope.createdUser,
     			updatedUser : $scope.updatedUser
     		};
-    		
+    		alert(angular.toJson(dataObj, true));
     		$http({
     			data : dataObj,
     			method : 'POST',
@@ -95,7 +95,7 @@
     			// this callback will be called asynchronously
     			// when the response is available
     			$scope.reloadAllAdmConfigs();
-    			clearFields();
+    			$scope.clearFields();
     		}, function errorCallback(response) {
     			// called asynchronously if an error occurs
     			// or server returns response with an error status.

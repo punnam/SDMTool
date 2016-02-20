@@ -9,22 +9,22 @@
 			$scope.allEnvs = response.data;
 		});
 		var clearFields = function() {
-			$scope.name = "";
-			$scope.desc = "";
-			$scope.id = "";
-			$scope.hostName = "";
-			$scope.service = "";
-			$scope.serverName = "";
-			$scope.seibelPath = "";
-			$scope.serverHost = "";
-			$scope.sourcePath = "";
-			$scope.enterpriseName = "";
-			$scope.logFilePath = "";
+			$scope.name = null;
+			$scope.desc = null;
+			$scope.id = null;
+			$scope.hostName = null;
+			$scope.service = null;
+			$scope.serverName = null;
+			$scope.seibelPath = null;
+			$scope.serverHost = null;
+			$scope.sourcePath = null;
+			$scope.enterpriseName = null;
+			$scope.logFilePath = null;
 			$scope.modifyEnv = false;
-			$scope.createdTime = "";
-			$scope.updatedTime = "";
-			$scope.createdUser = "";
-			$scope.updatedUser = "";
+			$scope.createdTime = null;
+			$scope.updatedTime = null;
+			$scope.createdUser = null;
+			$scope.updatedUser = null;
 		}
 		$scope.deleteEnvInfo = function(envObj) {
 			$http({
