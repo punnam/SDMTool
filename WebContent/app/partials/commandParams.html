@@ -1,0 +1,92 @@
+<div class="container" ng-controller="commParamsCtrl">
+	<div class="container">
+		<h2>Add Environment Information</h2>
+		<form class="form-horizontal" role="form">
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button"
+					data-toggle="dropdown">
+					{{selectedItem}} <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li ng-repeat="commTempl in allCommTemplates"><a
+						ng-click="dropboxitemselected(commTempl)" ng-model="selectedItem">{{commTempl.description}}</a></li>	
+				</ul>
+			</div>    
+   
+			<div class="form-group  col-sm-6 col-md-6">
+				<label class="control-label col-sm-6 col-md-6" for="email">Code:</label>
+				<div class="col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter Command Code" name="code" ng-model="code" />
+				</div>
+			</div>
+			<div class="form-group  col-sm-6  col-md-6">
+				<label class="control-label col-sm-6 col-md-6" for="email">Param:</label>
+				<div class="col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter Param" name="param"
+						ng-model="param" />
+				</div>
+			</div>
+			<div class="form-group   col-sm-6 col-md-6">
+				<label class="control-label   col-sm-6 col-md-6" for="email">Order:</label>
+				<div class="  col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter Order" name="order"
+						ng-model="order" />
+				</div>
+			</div>
+			<div class="form-group   col-sm-6 col-md-6">
+				<label class="control-label   col-sm-6 col-md-6" for="email">Description:</label>
+				<div class="  col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter Description" name="description"
+						ng-model="description" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default"
+						ng-click="addEnvInfo()">
+						<span ng-show="id">Update</span> <span ng-show="!id">Save</span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="container">
+		<h2>Command Template Information</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Code</th>
+					<th>Parameter</th>
+					<th>Order</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody ng-repeat="commParams in allCommParams">
+				<tr>
+					<td>{{commParams.id}}</td>
+					<td>{{commParams.code}}</td>
+					<td>{{commParams.param}}</td>
+					<td>{{commParams.order}}</td>
+					<td>{{commParams.description}}</td>
+					<td>
+						<button type="button" class="btn btn-default"
+							aria-label="Left Align" ng-click="modifyCommParam(commParams)">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</button>
+					</td>
+					<td>
+						<button type="button" class="btn btn-default"
+							aria-label="Left Align" ng-click="deleteCommParam(commParams)">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

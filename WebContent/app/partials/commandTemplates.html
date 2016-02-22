@@ -1,0 +1,88 @@
+<div class="container" ng-controller="commTemplCtrl">
+	<div class="container">
+		<h2>Add Environment Information</h2>
+		<form class="form-horizontal" role="form">
+			<div class="form-group  col-sm-6 col-md-6">
+				<label class="control-label col-sm-6 col-md-6" for="email">Code:</label>
+				<div class="col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter Command Code" name="code" ng-model="code" />
+				</div>
+			</div>
+			<div class="form-group  col-sm-6  col-md-6">
+				<label class="control-label col-sm-6 col-md-6" for="email">Description:</label>
+				<div class="col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter Description" name="description"
+						ng-model="description" />
+				</div>
+			</div>
+			<div class="form-group   col-sm-6 col-md-6">
+				<label class="control-label   col-sm-6 col-md-6" for="email">Command:</label>
+				<div class="  col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter Command" name="command"
+						ng-model="command" />
+				</div>
+			</div>
+			<div class="form-group  col-sm-6 col-md-6">
+				<label class="control-label   col-sm-6 col-md-6" for="email">UI Screen Location:</label>
+				<div class="col-sm-6 col-md-6">
+					<input type="text" class="form-control"
+						placeholder="Enter UI Screen Location" name="uiScreenLocation"
+						ng-model="uiScreenLocation" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default"
+						ng-click="addEnvInfo()">
+						<span ng-show="id">Update</span> <span ng-show="!id">Save</span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="container">
+		<h2>Command Template Information</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Code</th>
+					<th>Command</th>
+					<th>Description</th>
+					<th>UI Screen Location</th>
+				</tr>
+			</thead>
+			<tbody ng-repeat="commTempl in allCommTemplates">
+				<tr>
+					<td>{{commTempl.id}}</td>
+					<td>
+						<button type="button" class="btn btn-default"
+							aria-label="Left Align" ng-click="showCommandParams(commTempl)">
+							<span>{{commTempl.code}}</span>
+						</button>
+
+					</td>
+					<td>{{commTempl.command}}</td>
+					<td>{{commTempl.description}}</td>
+					<td>{{commTempl.uiScreenLocation}}</td>
+					<td>
+						<button type="button" class="btn btn-default"
+							aria-label="Left Align" ng-click="modifyCommTempl(commTempl)">
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</button>
+
+					</td>
+					<td>
+						<button type="button" class="btn btn-default"
+							aria-label="Left Align" ng-click="deleteCommTempl(commTempl)">
+							<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
