@@ -12,5 +12,6 @@
 		<property name="updatedTime" column="UPDATED_TIME" type="timestamp" />
 		<property name="createdUser" column="CREATED_USER" type="java.lang.Integer" />
 		<property name="updatedUser" column="UPDATED_USER" type="java.lang.Integer" />		
+		<property name="uiScreenLocation" column="UI_SCREEN_LOCATION" type="string" />	
 	</class>
 </hibernate-mapping>

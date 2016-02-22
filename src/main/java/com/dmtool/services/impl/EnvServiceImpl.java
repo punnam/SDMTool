@@ -96,4 +96,9 @@ public class EnvServiceImpl implements EnvService{
 		// TODO Auto-generated method stub
 		return envDao.getAllEnvByEnvName(envName);
 	}
+	@Override
+	public EnvInfo getEnvById(Integer id) {
+		// TODO Auto-generated method stub
+		return envDao.getEnvById(id);
+	}
 }

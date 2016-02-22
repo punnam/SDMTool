@@ -16,6 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
+import com.dmtool.domain.CommandTemplates;
 import com.dmtool.domain.DeploymentOptions;
 import com.dmtool.services.DeploymentOptionsService;
 import com.dmtool.services.EnvService;
@@ -67,7 +68,7 @@ public class DeploymentOptionsController {
 	
 	@RequestMapping(value = "/rest/deploymentOptions/getAllDeploymentOptions/", method = RequestMethod.GET)
 	public ModelAndView getAllDeploymentOptions() {
-		List<DeploymentOptions> deploymentOptionServices = null;
+		List<CommandTemplates> deploymentOptionServices = null;
 
 		try {
 			deploymentOptionServices = deploymentOptionsService.getAllDeploymentOptions();
@@ -83,7 +84,7 @@ public class DeploymentOptionsController {
 
 	@RequestMapping(value = "/rest/deploymentOptions/getAllDeploymentPackages/", method = RequestMethod.GET)
 	public ModelAndView getAllDeploymentPackages() {
-		List<DeploymentOptions> deploymentOptionServices = null;
+		List<CommandTemplates> deploymentOptionServices = null;
 
 		try {
 			deploymentOptionServices = deploymentOptionsService.getAllDeploymentPackages();
@@ -117,7 +118,7 @@ public class DeploymentOptionsController {
 		httpResponse_p.setStatus(HttpStatus.CREATED.value());
 
 		/* set location of created resource */
-		httpResponse_p.setHeader("Location", request_p.getContextPath() + "/rest/deploymentOptions/processDeploymentOptions/" + env_p.getEnvName());
+		httpResponse_p.setHeader("Location", request_p.getContextPath() + "/rest/deploymentOptions/processDeploymentOptions/" + env_p.getId());
 
 		/**
 		 * Return the view

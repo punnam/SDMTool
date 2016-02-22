@@ -11,8 +11,9 @@
 			$scope.allEnvs = response.data;
 		});
 		$scope.selectedItem = "Select Environment";
-		$scope.dropboxitemselected = function(item) {
-			$scope.selectedItem = item;
+		$scope.dropboxitemselected = function(name, id) {
+			$scope.selectedItem = name;
+			//$scope.selectedItemDesc = name
 		}
 		$scope.repoType = "Select Repo Type";
 		$scope.dropboxRepoTypeSelected = function(item) {

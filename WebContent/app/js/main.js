@@ -50,10 +50,17 @@ app.config([ '$routeProvider', '$locationProvider', function($routeProvider,$loc
         controller: 'forgotPassController',
         templateUrl: 'partials/forgotPassword.html',
         controllerAs: 'vm'
+    }).when('/commTempl', {
+        controller: 'commTemplCtrl',
+        templateUrl: 'partials/commandTemplates.html',
+        controllerAs: 'vm'
+    }).when('/commParams', {
+        controller: 'commParamsCtrl',
+        templateUrl: 'partials/commandParams.html',
+        controllerAs: 'vm'
     })
-	
-	
-	// else 404
+    
+    // else 404
 	.otherwise("/404", {
 		templateUrl : "partials/404.html",
 		controller : "PageCtrl"

@@ -34,6 +34,12 @@ public class EnvDao extends HibernateDaoSupport{
 	    return envInfoList;
 	}
 	
+	public EnvInfo getEnvById(Integer id) {
+	       @SuppressWarnings("unchecked")
+	       EnvInfo envInfo = (EnvInfo)getHibernateTemplate().get(EnvInfo.class, id);
+	       return envInfo;
+	}
+	
 	public void deleteEnvInfoById(EnvInfo env_p) {
 		//EnvInfo envInfo = getEnvInfoById(envId);
 		getHibernateTemplate().delete(env_p);

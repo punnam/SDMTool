@@ -45,7 +45,10 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 
 	@Autowired
 	private DeloymentOptionsDao deloymentOptionsDao;
-
+	
+	@Autowired
+	private CommandTemplatesService compTemplService;
+	
 	@Autowired
 	private EnvService envService;
 
@@ -61,11 +64,6 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	@Autowired
 	private CommandParamsService commandParamsService;
 
-	@Override
-	public List<DeploymentOptions> getAllDeploymentOptions() {
-		// TODO Auto-generated method stub
-		return deloymentOptionsDao.getAllDeploymentOptionsByCategory("Option");
-	}
 
 	/**
 	 * @Override public String
@@ -132,56 +130,77 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		StringBuilder sb = new StringBuilder();
 		try {
 			List<String> services = env_p.getDeploymentServices();
-			String envName = env_p.getEnvName();
-			String actionType = env_p.getActionType();
-			if (services == null || !(services.size() > 0)) {
-				logger.error("No actions selected.");
+			String envId = null;
+			Integer envIdInt = env_p.getId();
+			if(envIdInt != null){
+				envId = envIdInt.toString();//env_p.getEnvName();
 			}
+			envId = env_p.getEnvName();
+			String actionType = env_p.getActionType();
 
 			HashMap<String, List<String>> errorMap = new HashMap<String, List<String>>();
 			HashMap<String, List<String>> resultMap = new HashMap<String, List<String>>();
-			
-			for (int i = 0; i < services.size(); i++) {
-				logger.info("Services Actions:" + services.get(i));
-				String selectedAction = services.get(i);
-				List<CommandTemplates> commandsList = commandTemplatesService
-						.getAllCommandTemplatesByCode(selectedAction);
-				CommandTemplates cmdTemplate = null;
-				List<CommandParams> paramsList = commandParamsService
-						.getAllCommandParamsByCode(selectedAction);
-				if (commandsList != null && commandsList.size() > 0) {
-					cmdTemplate = commandsList.get(0);
 
+			if (envId == null || services == null || !(services.size() > 0)) {
+				logger.error("No actions selected.");
+				List<String> errors = new ArrayList<String>();
+				errors.add("Environment or Actions not selected. Please select the Environment and Action or Command.");
+				errorMap.put("Errors", errors);
+			} else {
+				for (int i = 0; i < services.size(); i++) {
+					logger.info("Services Actions:" + services.get(i));
+					String selectedAction = services.get(i);
+					List<CommandTemplates> commandsList = commandTemplatesService
+							.getAllCommandTemplatesByCode(selectedAction);
+					CommandTemplates cmdTemplate = null;
 
-				String command = cmdTemplate.getCommand();
-				String params = null;
-				if(paramsList != null && paramsList.size() >0 ){
-					params = getParams(envName, selectedAction,
-						paramsList, actionType, errorMap);
-				}
-				String result ="";
-				List<String> valErrors = errorMap.get(selectedAction);
-				if((valErrors == null || valErrors.size() ==0)){
-					valErrors = new ArrayList<String>();
-					if(params != null && !params.trim().equals("")){
-						result = executeBatchFile(command + params,valErrors);
-					}else{
-						result = executeBatchFile(command,valErrors);
-					}	
-					List<String> resultList = new ArrayList<String>();
-					resultList.add(result);
-					resultMap.put(selectedAction, resultList);
-					errorMap.put(selectedAction, valErrors);
-				}
-				} else {
-					logger.error("Command not found for action:"+ selectedAction);
-					List<String> resultList = new ArrayList<String>();
-					resultList.add("");
-					resultMap.put(selectedAction, resultList);
-					
-					List<String> valErrors = new ArrayList<String>();
-					valErrors.add("Command is not configured action:"+ selectedAction);
-					errorMap.put(selectedAction, valErrors);
+					if (commandsList != null && commandsList.size() > 0) {
+						CommandParams commandParams = new CommandParams();
+						commandParams.setCode(selectedAction);
+						List<CommandParams> paramsList = commandParamsService
+								.getAllCommandParamsByCode(commandParams);
+						cmdTemplate = commandsList.get(0);
+
+						String command = cmdTemplate.getCommand();
+						String params = null;
+						if (paramsList != null && paramsList.size() > 0) {
+							params = getParams(envId, selectedAction,
+									paramsList, actionType, errorMap);
+
+							String result = "";
+							List<String> valErrors = errorMap
+									.get(selectedAction);
+							if ((valErrors == null || valErrors.size() == 0)) {
+								valErrors = new ArrayList<String>();
+								if (params != null && !params.trim().equals("")) {
+									result = executeBatchFile(command + params,
+											valErrors);
+								} else {
+									result = executeBatchFile(command,
+											valErrors);
+								}
+								List<String> resultList = new ArrayList<String>();
+								resultList.add(result);
+								resultMap.put(selectedAction, resultList);
+								errorMap.put(selectedAction, valErrors);
+							}
+						}else{
+							logger.error("Parameters not found for action:" + selectedAction);
+							List<String> paramErrors = new ArrayList<String>();
+							paramErrors.add("Parameters not found for action:" + selectedAction);
+							errorMap.put("Parameter Error", paramErrors);
+						}
+					} else {
+						logger.error("Command not found for action:"+ selectedAction);
+						List<String> resultList = new ArrayList<String>();
+						resultList.add("");
+						resultMap.put(selectedAction, resultList);
+
+						List<String> valErrors = new ArrayList<String>();
+						valErrors.add("Command is not configured action:"
+								+ selectedAction);
+						errorMap.put(selectedAction, valErrors);
+					}
 				}
 			}
 			resultAndErrorMap.put("result", resultMap);
@@ -597,11 +616,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	// Imrep userid password ODBC RepositoryName ImportFilePath LogFilePath
 	private String imrepCommandParams(String selectedAction,String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
+		EnvInfo envInfo = envService.getEnvById(Integer.getInteger(envName));
+		/**
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 		}
+		**/
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		List<String> errors = imrepCommandValidate(envName, paramsList, actionType);
@@ -965,11 +987,26 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 
 	}
 
+//	@Override
+//	public List<DeploymentOptions> getAllDeploymentPackages() {
+//		//return deloymentOptionsDao.getAllDeploymentOptionsByCategory("package");
+//		compTemplService.getAllCommTemplByUIScreenLocation("package");
+//	}
 	@Override
-	public List<DeploymentOptions> getAllDeploymentPackages() {
-		return deloymentOptionsDao.getAllDeploymentOptionsByCategory("package");
+	public List<CommandTemplates> getAllDeploymentPackages() {
+		//return deloymentOptionsDao.getAllDeploymentOptionsByCategory("package");
+		return compTemplService.getAllCommTemplByUIScreenLocation("package");
 	}
-
+//	@Override
+//	public List<DeploymentOptions> getAllDeploymentOptions() {
+//		// TODO Auto-generated method stub
+//		return deloymentOptionsDao.getAllDeploymentOptionsByCategory("Option");
+//	}
+	@Override
+	public List<CommandTemplates> getAllDeploymentOptions() {
+		// TODO Auto-generated method stub
+		return compTemplService.getAllCommTemplByUIScreenLocation("Option");
+	}
 	private Map<String, EnvInfo> getServerNamesByEnv(String selectedEnvName) {
 		// EnvNames
 		List<EnvInfo> envInfoList = envService.getAllEnvNames();

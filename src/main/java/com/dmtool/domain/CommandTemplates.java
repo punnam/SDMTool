@@ -6,6 +6,7 @@ public class CommandTemplates  extends AuditInfo{
 	private String description;
 	private int commandOrder;
 	private String command;
+	private String uiScreenLocation;
 	public Integer getId() {
 		return id;
 	}
@@ -35,6 +36,12 @@ public class CommandTemplates  extends AuditInfo{
 	}
 	public void setCommand(String command) {
 		this.command = command;
+	}
+	public String getUiScreenLocation() {
+		return uiScreenLocation;
+	}
+	public void setUiScreenLocation(String uiScreenLocation) {
+		this.uiScreenLocation = uiScreenLocation;
 	}
 
 

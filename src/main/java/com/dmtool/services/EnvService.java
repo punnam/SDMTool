@@ -18,5 +18,6 @@ public interface EnvService {
 	public List<EnvInfo> getAllEnvNames();
 
 	List<EnvInfo> getAllEnvByEnvName(String envName);
+	public EnvInfo getEnvById(Integer id);
 	
 }
