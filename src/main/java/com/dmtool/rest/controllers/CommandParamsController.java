@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,10 +17,7 @@ import org.springframework.web.servlet.View;
 
 import com.dmtool.domain.CommandParams;
 import com.dmtool.domain.CommandTemplates;
-import com.dmtool.domain.EnvInfo;
 import com.dmtool.services.CommandParamsService;
-import com.dmtool.services.CommandTemplatesService;
-import com.dmtool.services.EnvService;
 
 /**
  * FundsController class will expose a series of RESTful endpoints
@@ -79,5 +75,58 @@ public class CommandParamsController extends RootController{
 	 */
 	public void setJsonView(View view) {
 		jsonView_i = view;
+	}
+	
+	@RequestMapping(value = { "/rest/creatCommParam/" }, method = { RequestMethod.POST })
+	public ModelAndView creatCommParam(@RequestBody CommandParams commandParams,
+			HttpServletResponse httpResponse_p, WebRequest request_p) {
+		CommandParams commandParam =null;
+		logger_c.debug("Create/Modify command Template: " + commandParams.toString());
+
+		try {
+			commandParam = commParamService.createCommParams(commandParams, CREATED_USER_ID);
+		} catch (Exception e) {
+			String sMessage = "Error creating new comm Template. [%1$s]";
+			return createErrorResponse(String.format(sMessage, e.toString()));
+		}
+
+		/* set HTTP response code */
+		httpResponse_p.setStatus(HttpStatus.CREATED.value());
+
+		/* set location of created resource */
+		httpResponse_p.setHeader("Location", request_p.getContextPath() + "/rest/creatCommParam/" + commandParams.getId());
+
+		/**
+		 * Return the view
+		 */
+		return new ModelAndView(jsonView_i, DATA_FIELD, commandParam);
+	}
+	/**
+	 * Gets a fund by fund id.
+	 *
+	 * @param fundId_p
+	 *            the fund id_p
+	 * @return the fund
+	 */
+	@RequestMapping(value = "/rest/deleteCommParam/", method = RequestMethod.POST)
+	public ModelAndView deleteCommParam(@RequestBody  CommandParams commParams) {
+		
+		/* validate fund Id parameter */
+		if (commParams == null) {
+			String sMessage = "Error invoking deleteCommParam - Invalid CommParam parameter";
+			return createErrorResponse(sMessage);
+		}
+
+		try {
+			//int envId = Integer.parseInt(id_p);
+			commParamService.deleteCommParamById(commParams);
+		} catch (Exception e) {
+			e.printStackTrace();
+			String sMessage = "Error invoking deleteCommParam. [%1$s]";
+			return createErrorResponse(String.format(sMessage, e.toString()));
+		}
+
+		logger_c.debug("Returing CommandParams: " + commParams.toString());
+		return new ModelAndView(jsonView_i, DATA_FIELD, commParams);
 	}
 }

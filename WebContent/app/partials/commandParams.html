@@ -17,7 +17,7 @@
 				<label class="control-label col-sm-6 col-md-6" for="email">Code:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Command Code" name="code" ng-model="code" />
+						placeholder="Enter Command Code" name="code" ng-model="code" ng-readonly="true"/>
 				</div>
 			</div>
 			<div class="form-group  col-sm-6  col-md-6">
@@ -47,7 +47,7 @@
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" class="btn btn-default"
-						ng-click="addEnvInfo()">
+						ng-click="addCommParamInfo()">
 						<span ng-show="id">Update</span> <span ng-show="!id">Save</span>
 					</button>
 				</div>

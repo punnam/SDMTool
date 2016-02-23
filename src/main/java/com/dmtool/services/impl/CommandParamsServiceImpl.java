@@ -42,6 +42,6 @@ public class CommandParamsServiceImpl implements CommandParamsService {
 	}
 	@Override
 	public void deleteCommParamById(CommandParams commParams) {
-		commandParamsDao.deleteCommParamById(commTempl);
+		commandParamsDao.deleteCommParamById(commParams);
 	}
 }

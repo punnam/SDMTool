@@ -18,11 +18,12 @@ public class CommandParamsDao extends HibernateDaoSupport{
 	}
 
 	public CommandParams createCommandDao(CommandParams commParams) {
-		// TODO Auto-generated method stub
-		return null;
-	}	@Override
-	public void deleteCommTemplById(CommandParams commParams) {
-		commandTemplatesDao.deleteCommTemplById(commTempl);
+		getHibernateTemplate().saveOrUpdate(commParams);
+		return commParams;
+	}	
+	
+	public void deleteCommParamById(CommandParams commParams) {
+		getHibernateTemplate().delete(commParams);
 	}
 	
 	

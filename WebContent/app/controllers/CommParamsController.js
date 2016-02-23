@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('app').controller('commParamsCtrl', commParamsCtrl);
-	envSetupCtrl.$inject = [ '$scope', '$http', '$filter' ];
+	commParamsCtrl.$inject = [ '$scope', '$http', '$filter' ];
 
 	function commParamsCtrl($scope, $http, $filter) {
 		$http.get("rest/getAllCommTemplates/").success(function(response) {
@@ -11,7 +11,8 @@
 		$scope.dropboxitemselected = function(commTempl) {
 			alert(commTempl.code);
 			$scope.selectedItem = commTempl.description;
-			$scope.getCommParamByCode(commTempl);		
+			$scope.getCommParamByCode(commTempl);
+			$scope.code=commTempl.code;
 		}
 		var clearFields = function() {
 			$scope.id = null;
@@ -24,16 +25,16 @@
 			$scope.createdUser = null;
 			$scope.updatedUser = null;
 		}
-		$scope.deleteCommTempl = function(commTempl) {
+		$scope.deleteCommParam = function(commParam) {
 			$http({
-				data : commTempl,
+				data : commParam,
 				method : 'POST',
-				url : 'rest/deleteCommTempl/'
+				url : 'rest/deleteCommParam/'
 			}).then(function successCallback(response) {
 				// this callback will be called asynchronously
 				// when the response is available
 				//$scope.allEnvs = $filter('filter')($scope.allEnvs, {id:envObj.id});
-				$scope.reloadAllCommTempls();
+				$scope.reloadAllCommParam(commParam);
 				clearFields();
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
@@ -49,8 +50,9 @@
 				method : 'POST',
 				url : 'rest/admin/getAllCommParamsByCode/'
 			}).then(function successCallback(response) {
-
 				$scope.allCommParams = response.data.data;
+				clearFields();
+				$scope.code=commTempl.code;
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
@@ -59,6 +61,7 @@
 		$scope.modifyCommParam = function(commParam) {
 			$scope.id = commParam.id;
 			$scope.code = commParam.code;
+			
 			$scope.param = commParam.param;
 			$scope.order = commParam.order;
 			$scope.description = commParam.description;
@@ -72,11 +75,15 @@
 				$scope.allCommTemplates = response.data;
 			});
 		};
+		$scope.reloadAllCommParam = function(dataObj) {
+			$scope.getCommParamByCode(dataObj);
+		};
 		$scope.addCommParamInfo = function() {
+			alert("addCommParamInfo");
 			var dataObj = {
 				id : $scope.id,
 				code : $scope.code,
-				param:$scope.command,
+				param:$scope.param,
 				order:$scope.order,
 				description:$scope.description,
 				createdTime : $scope.createdTime,
@@ -84,13 +91,13 @@
 				createdUser : $scope.createdUser,
 				updatedUser : $scope.updatedUser	
 			};
-
+			alert(angular.toJson(dataObj, true));
 			$http({
 				data : dataObj,
 				method : 'POST',
 				url : 'rest/creatCommParam/'
 			}).then(function successCallback(response) {
-				$scope.reloadAllCommParam();
+				$scope.reloadAllCommParam(dataObj);
 				clearFields();
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
