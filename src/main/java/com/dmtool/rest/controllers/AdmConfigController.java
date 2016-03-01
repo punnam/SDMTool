@@ -17,12 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
 import com.dmtool.domain.AdmConfig;
-import com.dmtool.domain.EnvInfo;
-import com.dmtool.domain.Repos;
 import com.dmtool.services.AdmConfigService;
 import com.dmtool.services.EnvService;
-import com.dmtool.services.ReposService;
-import com.dmtool.user.actions.AdmServicesActions;
 
 /**
  * FundsController class will expose a series of RESTful endpoints

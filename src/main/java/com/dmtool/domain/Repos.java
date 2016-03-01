@@ -6,10 +6,8 @@ public class Repos  extends AuditInfo{
 	private String userId;
 	private String password;
 	private String odbc;
-	private String filePath;
 	private String repoType;
 	private String repoName;
-	private String logFilePath;
 	private String tableDDLSync;
 	private String indexDDLSync;
 	private String tableOwner;
@@ -56,12 +54,6 @@ public class Repos  extends AuditInfo{
 	public void setOdbc(String odbc) {
 		this.odbc = odbc;
 	}
-	public String getFilePath() {
-		return filePath;
-	}
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
 	public String getRepoType() {
 		return repoType;
 	}
@@ -73,12 +65,6 @@ public class Repos  extends AuditInfo{
 	}
 	public void setRepoName(String repoName) {
 		this.repoName = repoName;
-	}
-	public String getLogFilePath() {
-		return logFilePath;
-	}
-	public void setLogFilePath(String logFilePath) {
-		this.logFilePath = logFilePath;
 	}
 	public String getTableDDLSync() {
 		return tableDDLSync;

@@ -63,11 +63,10 @@
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6">
-				<label class="control-label   col-sm-6 col-md-6" for="email">Source
-					Path:</label>
+				<label class="control-label   col-sm-6 col-md-6" for="email">Migration Path:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter ADM Path" name="admPath" ng-model="sourcePath" />
+						placeholder="Enter Migration Path" name="migrationPath" ng-model="migrationPath" />
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6">
@@ -101,7 +100,7 @@
 					<th>Server Name</th>
 					<th>Service</th>
 					<th>Seibel Path</th>
-					<th>ADM Path</th>
+					<th>Migration Path</th>
 					<th>Log File Path</th>
 				</tr>
 			</thead>
@@ -115,7 +114,7 @@
 					<td>{{env.serverName}}</td>
 					<td>{{env.service}}</td>
 					<td>{{env.seibelPath}}</td>
-					<td>{{env.admPath}}</td>
+					<td>{{env.migrationPath}}</td>
 					<td>{{env.logFilePath}}</td>
 					<td>
 						<button type="button" class="btn btn-default"

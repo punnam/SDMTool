@@ -9,7 +9,13 @@ public class EnvInfo extends AuditInfo{
 	private String serverName;
 	private String service;
 	private String seibelPath;
-	private String sourcePath;
+	private String migrationPath;
+	public String getMigrationPath() {
+		return migrationPath;
+	}
+	public void setMigrationPath(String migrationPath) {
+		this.migrationPath = migrationPath;
+	}
 	private String logFilePath;
 	private String desc;
 	
@@ -72,11 +78,5 @@ public class EnvInfo extends AuditInfo{
 	}
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
-	}
-	public String getSourcePath() {
-		return sourcePath;
-	}
-	public void setSourcePath(String sourcePath) {
-		this.sourcePath = sourcePath;
 	}
 }

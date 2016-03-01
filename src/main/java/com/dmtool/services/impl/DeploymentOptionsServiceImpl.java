@@ -274,7 +274,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				} else if (param.equals("Password")) {
 					sb.append(" ").append(repo.getPassword());
 				} else if (param.equals("LogFilePath")) {
-					sb.append(" ").append(repo.getLogFilePath());
+					sb.append(" ").append(envInfo.getLogFilePath());
 				} else if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
 				}
@@ -326,8 +326,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			if(repo.getPassword() == null){
 				errors.add("Repository Info is missing password.");
 			}
-			if(repo.getLogFilePath() == null){
-				errors.add("ADM Config is missing Log file path.");
+			if(envInfo.getLogFilePath() == null){
+				errors.add("Env. Info. is missing Log file path.");
 			}
 			if(envInfo.getSeibelPath() == null){
 				errors.add("Siebelpath is missing Log file path.");
@@ -353,15 +353,15 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			envInfo = envList.get(0);
 			String hostName = envInfo.getHostName();
 			String serviceName = envInfo.getService();
-			String filePath = envInfo.getLogFilePath();
+			String logFilePath = envInfo.getLogFilePath();
 			if (hostName == null) {
 				errors.add("HostName is missing in environment info:"+envName+" "+hostName);
 			}
 			if (serviceName == null) {
 				errors.add("Service Name is missing in environment info:"+envName+" "+serviceName);
 			}
-			if (filePath == null) {
-				errors.add("File path is missing in environment info:"+envName+" "+filePath);
+			if (logFilePath == null) {
+				errors.add("LogFile path is missing in environment info:"+envName+" "+logFilePath);
 			}
 		}else{
 			errors.add("Environment info missing. Please verify selected environment:"+envName);
@@ -426,8 +426,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String password = repo.getPassword();
 			String odbc = repo.getOdbc();
 			String repoName = repo.getRepoName();
-			String exportFilePath = repo.getFilePath();
-			String logFilePath = repo.getLogFilePath();
+			String migrationFilePath = envInfo.getMigrationPath();
+			String logFilePath = envInfo.getLogFilePath();
 			String Siebelpath = envInfo.getSeibelPath();
 			if (userId == null) {
 				errors.add("User Id is missing in Repository Config");
@@ -442,10 +442,10 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				errors.add("Repo Name is missing in Repository Config");
 			}
 			if (logFilePath == null) {
-				errors.add("Log File Path is missing in Repository Config");
+				errors.add("Log File Path is missing in Env. Info. Config");
 			}
-			if(exportFilePath == null){
-				errors.add("ExportFilePath Path is missing in Repository Config");
+			if(migrationFilePath == null){
+				errors.add("migrationFilePath Path is missing in Env. info Config");
 			}
 			if(Siebelpath == null){
 				errors.add("Siebelpath  is missing in Env. Info.");
@@ -461,6 +461,11 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		List<String> errors = new ArrayList<String>();
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}		
 		if(envName == null){
 			errors.add("Environment name is missing");
 		}
@@ -470,18 +475,18 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if(actionType == null){
 			errors.add("Action Type is missing");
 		}
-		if (repo != null) {
-			String filePath = repo.getFilePath();
-			String logFilePath = repo.getLogFilePath();
+		if (repo != null && envInfo != null) {
+			String migrationPath = envInfo.getMigrationPath();
+			String logFilePath = envInfo.getLogFilePath();
 			
-			if(filePath == null){
-				errors.add("File path is missing in Repository Config");
+			if(migrationPath == null){
+				errors.add("Migration Path is missing in Env. Info. Config");
 			}
 			if(logFilePath == null){
-				errors.add("Log file path is missing in Repository Config");
+				errors.add("Log file path is missing in Env. Info. Config");
 			}
 		} else {
-			logger.error("Repository is empty for "
+			logger.error("Repository or Env. info is empty for "
 					+ envName + " and " + actionType);
 			errors.add("Repository Config is missing.");
 		}
@@ -511,8 +516,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String password = repo.getPassword();
 			String odbc = repo.getOdbc();
 			String repoName = repo.getRepoName();
-			String logFilePath = repo.getLogFilePath();
-			String exportFilePath = repo.getFilePath();
+			String logFilePath = envInfo.getLogFilePath();
+			String migrationPath = envInfo.getMigrationPath();
 			String Siebelpath = envInfo.getSeibelPath();
 			String gateway = envInfo.getHostName();
 			if(userId == null){
@@ -528,10 +533,10 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				errors.add("Repo Name is missing in Repository Config");
 			}
 			if(logFilePath == null){
-				errors.add("LogFile Path is missing in Repository Config");
+				errors.add("LogFile Path is missing in Env. Info. Config");
 			}
-			if(exportFilePath == null){
-				errors.add("ExportFilePath Path is missing in Repository Config");
+			if(migrationPath == null){
+				errors.add("MigrationPath Path is missing in Env. Info. Config");
 			}
 			if(Siebelpath == null){
 				errors.add("Siebelpath Path is missing in Env. Info.");
@@ -568,9 +573,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				}
 			}
 		}else {
-			logger.error("Error command did not constrcuted properly. Repo config is empty for "
+			logger.error("Error command did not constrcuted properly.  Env. Info. is empty for "
 					+ envName + " and " + actionType);
-			errors.add("Error command did not constrcuted properly. Repo config is empty for "
+			errors.add("Error command did not constrcuted properly.  Env. Info. is empty for "
 					+ envName + " and " + actionType);
 		}
 		if(errors != null && errors.size()>0){
@@ -641,9 +646,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
 				} else if (param.equals("ImportFilePath")) {
-					sb.append(" ").append(repo.getFilePath());
+					sb.append(" ").append(envInfo.getMigrationPath());
 				}else if (param.equals("LogFilePath")) {
-					sb.append(" ").append(repo.getLogFilePath());
+					sb.append(" ").append(envInfo.getLogFilePath());
 				}else if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
 				}
@@ -666,15 +671,20 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
 				actionType);
 		List<String> errors = renameCopySRFCommandValidate(envName, paramsList, actionType);
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}		
 		StringBuffer sb = new StringBuffer();
-		if (repo != null && (errors == null || errors.size() == 0)) {
+		if (repo != null && envInfo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
 				CommandParams commandParam = (CommandParams) iterator.next();
 				String param = commandParam.getParam();
 				if (param.equals("SrfSourcePath")) {
-					sb.append(" ").append(repo.getFilePath());
+					sb.append(" ").append(envInfo.getMigrationPath());
 				} else if (param.equals("LogFilePath")) {
-					sb.append(" ").append(repo.getLogFilePath());
+					sb.append(" ").append(envInfo.getLogFilePath());
 				}
 			}
 		}else {
@@ -716,7 +726,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				} else if (param.equals("ODBC")) {
 					sb.append(" ").append(repo.getOdbc());
 				} else if (param.equals("LogFilePath")) {
-					sb.append(" ").append(repo.getLogFilePath());
+					sb.append(" ").append(envInfo.getLogFilePath());
 				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
 				} else if (param.equals("siebelpath")) {
@@ -764,9 +774,10 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String tableOwnerPassword = repo.getTableOwnerPassword();
 			String odbc = repo.getOdbc();
 			String repoName = repo.getRepoName();
-			String logFilePath = repo.getLogFilePath();
-			String siebelpwd = repo.getFilePath();
-			String seibelIndex = envInfo.getSeibelPath();
+			String logFilePath = envInfo.getLogFilePath();
+			String siebelpwd = repo.getTableOwnerPassword();
+			String siebelIndex = repo.getIndexDDLSync();
+			String siebelpath = envInfo.getSeibelPath();
 			if(userId == null){
 				errors.add("User Id is missing in Repository Config");
 			}
@@ -786,13 +797,16 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				errors.add("Repo Name is missing in Repository Config");
 			}
 			if(logFilePath == null){
-				errors.add("LogFile Path is missing in Repository Config");
+				errors.add("LogFile Path is missing in Env. info.");
 			}
 			if(siebelpwd == null){
 				errors.add("Siebelpwd is missing in Repository Config");
 			}
-			if(seibelIndex == null){
+			if(siebelIndex == null){
 				errors.add("SeibelIndex is missing in Repository Config");
+			}
+			if(siebelpath == null){
+				errors.add("siebelpath is missing in Env. Info. Config");
 			}
 		} else {
 			logger.error("Repository Config is missing for env:"+ envName);
@@ -819,7 +833,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				} else if (param.equals("SourcePath")) {
-					sb.append(" ").append(envInfo.getSourcePath());
+					sb.append(" ").append(envInfo.getMigrationPath());
 				}
 			}
 		}else {
@@ -850,15 +864,15 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envInfo != null) {
 			String logFilePath = envInfo.getLogFilePath();
 			String seibelPath = envInfo.getSeibelPath();
-			String sourcePath = envInfo.getSourcePath();
+			String migrationPath = envInfo.getMigrationPath();
 			if(logFilePath == null){
 				errors.add("logFilePath is missing in Env Config");
 			}
 			if(seibelPath == null){
 				errors.add("seibelPath Path is missing in Env Config");
 			}
-			if(sourcePath == null){
-				errors.add("sourcePath is missing in Env Config");
+			if(migrationPath == null){
+				errors.add("migrationPath is missing in Env Config");
 			}
 		} else {
 			logger.error("ENV info. Config is missing for env:"+ envName);
@@ -891,11 +905,11 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
 				} else if (param.equals("ImportFilePath")) {
-					sb.append(" ").append(repo.getFilePath());
+					sb.append(" ").append(envInfo.getMigrationPath());
 				} else if (param.equals("ExportFilePath")) {
-					sb.append(" ").append(repo.getFilePath());
+					sb.append(" ").append(envInfo.getMigrationPath());
 				} else if (param.equals("LogFilePath")) {
-					sb.append(" ").append(repo.getLogFilePath());
+					sb.append(" ").append(envInfo.getLogFilePath());
 				} else if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
 				}
@@ -966,9 +980,9 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			tokenMaps.put(DMCommandTokens.REPO_USER_ID, repos.getUserId());
 			tokenMaps.put(DMCommandTokens.REPO_PASSWORD, repos.getPassword());
 			tokenMaps.put(DMCommandTokens.ODBC, repos.getOdbc());
-			tokenMaps.put(DMCommandTokens.FILE_PATH, repos.getFilePath());
+			tokenMaps.put(DMCommandTokens.FILE_PATH, envInfo.getMigrationPath());
 			tokenMaps
-					.put(DMCommandTokens.LOG_FILE_PATH, repos.getLogFilePath());
+					.put(DMCommandTokens.LOG_FILE_PATH, envInfo.getLogFilePath());
 
 			tokenMaps.put(DMCommandTokens.REPO_NAME, repos.getRepoName());
 			tokenMaps
@@ -980,7 +994,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envInfo != null) {
 			tokenMaps.put(DMCommandTokens.SERVICE_NAME, envInfo.getService());
 			tokenMaps.put(DMCommandTokens.SEIBEL_PATH, envInfo.getSeibelPath());
-			tokenMaps.put(DMCommandTokens.ADM_PATH, envInfo.getSourcePath());
+			tokenMaps.put(DMCommandTokens.ADM_PATH, envInfo.getMigrationPath());
 			tokenMaps.put(DMCommandTokens.HOST_NAME, envInfo.getServerHost());
 		}
 		return tokenMaps;

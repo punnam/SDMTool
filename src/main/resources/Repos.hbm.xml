@@ -11,10 +11,8 @@
 		<property name="tableOwner" column="TABLE_OWNER" type="string" />
 		<property name="tableOwnerPassword" column="TABLE_OWNER_PASSWORD" type="string" />
 		<property name="odbc" column="ODBC" type="string" />
-		<property name="filePath" column="FILE_PATH" type="string" />
 		<property name="repoType" column="REPO_TYPE" type="string" />
 		<property name="repoName" column="REPO_NAME" type="string" />
-		<property name="logFilePath" column="LOG_FILE_PATH" type="string" />
 		<property name="tableDDLSync" column="TableDDLSync" type="string" />
 		<property name="indexDDLSync" column="IndexDDLSync" type="string" />
 		<property name="createdTime" column="CREATED_TIME" type="timestamp" />

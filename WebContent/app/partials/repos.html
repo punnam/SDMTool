@@ -79,24 +79,6 @@
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6">
-				<label class="control-label   col-sm-6 col-md-6" for="email">Export
-					File Path:</label>
-				<div class="  col-sm-6 col-md-6">
-					<input type="text" class="form-control"
-						placeholder="Enter Export File Path" name="serverName"
-						ng-model="filePath" />
-				</div>
-			</div>
-			<div class="form-group  col-sm-6 col-md-6">
-				<label class="control-label  col-sm-6 col-md-6" for="email">Log
-					File Path:</label>
-				<div class="  col-sm-6 col-md-6">
-					<input type="text" class="form-control"
-						placeholder="Enter Log File Path" name="service"
-						ng-model="logFilePath" />
-				</div>
-			</div>
-			<div class="form-group  col-sm-6 col-md-6">
 				<label class="control-label  col-sm-6 col-md-6" for="email">Table
 					Space for DDLSynch:</label>
 				<div class="  col-sm-6 col-md-6">
@@ -137,9 +119,7 @@
 					<th>Table Owner</th>
 					<th>Table Owner Password</th>
 					<th>ODBC</th>
-					<th>File Path</th>
 					<th>Repository Name</th>
-					<th>Log File Path</th>
 					<th>Table DDl Sync</th>
 					<th>Index DDl Sync</th>
 				</tr>
@@ -154,9 +134,7 @@
 					<td>{{repos.tableOwner}}</td>
 					<td>{{repos.tableOwnerPassword}}</td>					
 					<td>{{repos.odbc}}</td>
-					<td>{{repos.filePath}}</td>
 					<td>{{repos.repoName}}</td>
-					<td>{{repos.logFilePath}}</td>
 					<td>{{repos.tableDDLSync}}</td>
 					<td>{{repos.indexDDLSync}}</td>
 					<td>
