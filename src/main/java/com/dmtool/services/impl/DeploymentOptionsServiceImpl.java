@@ -64,64 +64,6 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	@Autowired
 	private CommandParamsService commandParamsService;
 
-
-	/**
-	 * @Override public String
-	 *           processdeDloymentOptionsService(DeploymentOptionsActions env_p)
-	 *           { String selectedEnvName = env_p.getEnvName(); String
-	 *           actionType = env_p.getActionType(); StringBuilder sb = new
-	 *           StringBuilder(); //REPO_CONFIG Repos repos =
-	 *           reposService.getRepoInfoByEnvNameAndActionType
-	 *           (selectedEnvName,actionType);
-	 * 
-	 *           //Need map for ADM_CONFIG#ENV_NAME AdmConfig admConfig =
-	 *           admConfigService
-	 *           .getAdmConfigByEnvNameAndActionType(selectedEnvName
-	 *           ,actionType);
-	 * 
-	 * 
-	 *           Map<String, EnvInfo> envNameServerNameEnvInfo =
-	 *           getServerNamesByEnv(selectedEnvName);
-	 * 
-	 *           System.out.println("envName:"+selectedEnvName); List<String>
-	 *           services = env_p.getDeploymentServices(); for (int i = 0; i <
-	 *           services.size(); i++) {
-	 *           System.out.println("Services Actions:"+services.get(i)); String
-	 *           selectedAction = services.get(i); List<CommandTemplates>
-	 *           commandsList =
-	 *           commandTemplatesService.getAllCommandTemplatesByCode
-	 *           (selectedAction); if(commandsList != null &&
-	 *           commandsList.size()>0){ for (int j = 0; i <
-	 *           commandsList.size(); j++) { CommandTemplates cmdTemplate =
-	 *           commandsList.get(j); String command = cmdTemplate.getCommand();
-	 *           Set<String> serverNames = envNameServerNameEnvInfo.keySet();
-	 *           Iterator<String> serverNamesIter = serverNames.iterator();
-	 *           while (serverNamesIter.hasNext()) { String key =
-	 *           serverNamesIter.next();
-	 * 
-	 *           System.out.println("***Start****ServerName:"+key);
-	 *           System.out.println("	Command before parsing:"+command);
-	 * 
-	 *           EnvInfo envInfo = envNameServerNameEnvInfo.get(key);
-	 *           VelocityContext tokenMaps = getTokenMaps(envInfo, repos,
-	 *           admConfig); String commandWithValues =
-	 *           applyTokenValuesForCommand(command, tokenMaps);
-	 * 
-	 *           String consoleOutput= ""; try { //consoleOutput =
-	 *           executeCommandWithAgent(commandWithValues); consoleOutput =
-	 *           executeCommand(commandWithValues); return consoleOutput; }
-	 *           catch (Exception e) { // TODO Auto-generated catch block
-	 *           e.printStackTrace(); return null; }
-	 * 
-	 *           } } } } //Need map for ENV_NAME#SERVER_NAME
-	 * 
-	 *           //Need map for REPO_CONFIG#ENV_NAME#IMPORT //Need map for
-	 *           REPO_CONFIG#ENV_NAME#EXPORT //Need map for
-	 *           REPO_CONFIG#ENV_NAME#SYNCDDL
-	 * 
-	 *           //Need map for ADM_CONFIG#ENV_NAME#IMPORT //Need map for
-	 *           ADM_CONFIG#ENV_NAME#EXPORT return sb.toString(); }
-	 **/
 	@Override
 	public HashMap<String, HashMap<String, List<String>>> processdeDloymentOptionsService(DeploymentOptionsActions env_p) {
 		logger.info("Executing processdeDloymentOptionsService method:"
@@ -246,7 +188,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		} else if (selectedAction.equals("Exprep")) {
 			commandParams = exportRepCommandParams(selectedAction,envName, paramsList,
 					"Export",errorMap);
-		} else {
+		} else if (selectedAction.equals("ADMExport")) {
+			commandParams = admExportCommandParams(selectedAction,envName, paramsList,
+					"Export",errorMap);
+		} else if (selectedAction.equals("ADMImport")) {
+			commandParams = admImportCommandParams(selectedAction,envName, paramsList,
+					"Export",errorMap);
+		} 
+		else {
 			logger.error("Selected screen action did not configured in the backend:"
 					+ selectedAction);
 		}
@@ -254,10 +203,221 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		return commandParams;
 	}
 
+	private String admImportCommandParams(String selectedAction, String envName, List<CommandParams> paramsList,
+			String string, HashMap<String, List<String>> errorMap) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
+		AdmConfig admConfig = admConfigService.getAdmConfigByEnvName(envName);
+		List<String> errors = admImportCommandValidate(envName, paramsList);
+		StringBuffer sb = new StringBuffer();
+		if (repo != null && envInfo != null && admConfig != null && (errors == null || errors.size() == 0)) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				String param = commandParam.getParam();
+				if (param.equals("Siebelpath")) {
+					sb.append(" ").append(envInfo.getSeibelPath());
+				} else if (param.equals("UserId")) {
+					sb.append(" ").append(repo.getUserId());
+				}else if (param.equals("Password")) {
+					sb.append(" ").append(repo.getPassword());
+				}else if (param.equals("GatewayName")) {
+					sb.append(" ").append(envInfo.getHostName());
+				}else if (param.equals("EnterpriseName")) {
+					sb.append(" ").append(envInfo.getEnterpriseName());
+				} else if (param.equals("SiebelServer")) {
+					sb.append(" ").append(admConfig.getSeibelServer());
+				} else if (param.equals("SessionId	")) {
+					sb.append(" ").append(admConfig.getSessionId());
+				} else if (param.equals("LogFilePath")) {
+					sb.append(" ").append(envInfo.getLogFilePath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
+				}  
+			}
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config or Env info or Adm Config are empty for "
+					+ envName);
+			errors.add("Error command did not constrcuted properly. Repo config or Env info or Adm Config are empty for "
+					+ envName);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
+		}
+		return sb.toString();
+	}
+
+	private String admExportCommandParams(String selectedAction, String envName, List<CommandParams> paramsList,
+			String string, HashMap<String, List<String>> errorMap) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
+		AdmConfig admConfig = admConfigService.getAdmConfigByEnvName(envName);
+		List<String> errors = admExportCommandValidate(envName, paramsList);
+		StringBuffer sb = new StringBuffer();
+		if (repo != null && envInfo != null && admConfig != null && (errors == null || errors.size() == 0)) {
+			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
+				CommandParams commandParam = (CommandParams) iterator.next();
+				String param = commandParam.getParam();
+				if (param.equals("Siebelpath")) {
+					sb.append(" ").append(envInfo.getSeibelPath());
+				} else if (param.equals("UserId")) {
+					sb.append(" ").append(repo.getUserId());
+				}else if (param.equals("Password")) {
+					sb.append(" ").append(repo.getPassword());
+				}else if (param.equals("GatewayName")) {
+					sb.append(" ").append(envInfo.getHostName());
+				}else if (param.equals("EnterpriseName")) {
+					sb.append(" ").append(envInfo.getEnterpriseName());
+				} else if (param.equals("SiebelServer")) {
+					sb.append(" ").append(admConfig.getSeibelServer());
+				} else if (param.equals("SessionId	")) {
+					sb.append(" ").append(admConfig.getSessionId());
+				} else if (param.equals("LogFilePath")) {
+					sb.append(" ").append(envInfo.getLogFilePath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
+				}  
+			}
+		}else {
+			logger.error("Error command did not constrcuted properly. Repo config or Env info or Adm Config are empty for "
+					+ envName);
+			errors.add("Error command did not constrcuted properly. Repo config or Env info or Adm Config are empty for "
+					+ envName);
+		}
+		if(errors != null && errors.size()>0){
+			errorMap.put(selectedAction, errors);	
+		}
+		return sb.toString();
+	}
+
+	private List<String> admExportCommandValidate(String envName, List<CommandParams> paramsList) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
+		AdmConfig admConfig = admConfigService.getAdmConfigByEnvName(envName);
+		List<String> errors = admExportCommandValidate(envName, paramsList);
+			String seibelPath = envInfo.getSeibelPath();
+			String userId = repo.getUserId();
+			String password = repo.getPassword();
+			String hostName = envInfo.getHostName();
+			String enterpriseName = envInfo.getEnterpriseName();
+			String siebelServer = admConfig.getSeibelServer();
+			String sessionId = admConfig.getSessionId();
+			String logFilePath = envInfo.getLogFilePath();
+			
+			if(envName == null){
+				errors.add("Environment name is missing");
+			}
+			if(paramsList == null){
+				errors.add("Parameters list missing");
+			}
+						
+			if(repo == null){
+				errors.add("Repository Info is not found.");
+			}else if(envInfo == null){
+				errors.add("Env Info is not found.");
+			}else if(admConfig == null){
+				errors.add("AdmConfig Info is not found.");
+			} else{
+				if(seibelPath == null){
+					errors.add("SeibelPath  is missing in ENV Info.");
+				}
+				if(userId == null){
+					errors.add("UserId  is missing in Repo config.");
+				}
+				if(password == null){
+					errors.add("password is missing in Repo config.");
+				}
+				if(hostName == null){
+					errors.add("host name is missing in Env Info.");
+				}
+				if(enterpriseName == null){
+					errors.add("Enterprise Name is missing in Env. Info.");
+				}
+				if(siebelServer == null){
+					errors.add("Siebel Server is missing in ADM Config");
+				}
+				if(sessionId == null){
+					errors.add("Session Id is missing in ADM Config.");
+				}
+				if(logFilePath == null){
+					errors.add("Env. Info. is missing Log file path.");
+				}
+			}
+			return errors;
+	}
+	private List<String> admImportCommandValidate(String envName, List<CommandParams> paramsList) {
+		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
+		EnvInfo envInfo = null;
+		if (envList != null && envList.size() > 0) {
+			envInfo = envList.get(0);
+		}
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
+		AdmConfig admConfig = admConfigService.getAdmConfigByEnvName(envName);
+		List<String> errors = admExportCommandValidate(envName, paramsList);
+			String seibelPath = envInfo.getSeibelPath();
+			String userId = repo.getUserId();
+			String password = repo.getPassword();
+			String hostName = envInfo.getHostName();
+			String enterpriseName = envInfo.getEnterpriseName();
+			String siebelServer = admConfig.getSeibelServer();
+			String sessionId = admConfig.getSessionId();
+			String logFilePath = envInfo.getLogFilePath();
+			
+			if(envName == null){
+				errors.add("Environment name is missing");
+			}
+			if(paramsList == null){
+				errors.add("Parameters list missing");
+			}
+						
+			if(repo == null){
+				errors.add("Repository Info is not found.");
+			}else if(envInfo == null){
+				errors.add("Env Info is not found.");
+			}else if(admConfig == null){
+				errors.add("AdmConfig Info is not found.");
+			} else{
+				if(seibelPath == null){
+					errors.add("SeibelPath  is missing in ENV Info.");
+				}
+				if(userId == null){
+					errors.add("UserId  is missing in Repo config.");
+				}
+				if(password == null){
+					errors.add("password is missing in Repo config.");
+				}
+				if(hostName == null){
+					errors.add("host name is missing in Env Info.");
+				}
+				if(enterpriseName == null){
+					errors.add("Enterprise Name is missing in Env. Info.");
+				}
+				if(siebelServer == null){
+					errors.add("Siebel Server is missing in ADM Config");
+				}
+				if(sessionId == null){
+					errors.add("Session Id is missing in ADM Config.");
+				}
+				if(logFilePath == null){
+					errors.add("Env. Info. is missing Log file path.");
+				}
+			}
+			return errors;
+	}
 	private String buildNowCommandParams(String selectedAction, String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		List<String> errors = buildNowValidate(envName, paramsList, actionType);
 		EnvInfo envInfo = null;
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
@@ -277,6 +437,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				} else if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		} else {
@@ -306,8 +468,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			errors.add("Action Type is missing");
 		}
 		
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		
 		EnvInfo envInfo = null;
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
@@ -407,8 +568,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 		}
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		
 		if(envName == null){
 			errors.add("Environment name is missing");
@@ -459,8 +619,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	private List<String> renameCopySRFCommandValidate(String envName,
 		List<CommandParams> paramsList, String actionType) {
 		List<String> errors = new ArrayList<String>();
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
@@ -495,8 +654,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	private List<String> exportRepCommandValidate(String envName,
 			List<CommandParams> paramsList, String actionType) {
 		List<String> errors = new ArrayList<String>();
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
@@ -519,7 +677,6 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			String logFilePath = envInfo.getLogFilePath();
 			String migrationPath = envInfo.getMigrationPath();
 			String Siebelpath = envInfo.getSeibelPath();
-			String gateway = envInfo.getHostName();
 			if(userId == null){
 				errors.add("User Id is missing in Repository Config");
 			}
@@ -564,12 +721,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 				String param = commandParam.getParam();
 				if (param.equals("hostname")) {
 					sb.append(" ").append(envInfo.getHostName());
-				}
+				}else
 				if (param.equals("ServiceName")) {
 					sb.append(" ").append(envInfo.getService());
-				}
+				}else
 				if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		}else {
@@ -604,6 +763,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getService());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		}else {
@@ -629,8 +790,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 			envInfo = envList.get(0);
 		}
 		**/
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		List<String> errors = imrepCommandValidate(envName, paramsList, actionType);
 		StringBuffer sb = new StringBuffer();
 		if (repo != null && envInfo != null && (errors == null || errors.size() == 0)) {
@@ -651,6 +811,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				}else if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		}else {
@@ -668,8 +830,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	// Rename_CopySRF SrfSourcePath LogFilePath
 	private String renameCopySRFCommandParams(String selectedAction,String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		List<String> errors = renameCopySRFCommandValidate(envName, paramsList, actionType);
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
@@ -685,6 +846,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getMigrationPath());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		}else {
@@ -709,7 +872,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 		}
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName, actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		StringBuffer sb = new StringBuffer();
 		if (envInfo != null && repo != null && (errors == null || errors.size() == 0)) {
 			for (Iterator iterator = paramsList.iterator(); iterator.hasNext();) {
@@ -735,6 +898,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getTableDDLSync());
 				} else if (param.equals("siebelindex")) {
 					sb.append(" ").append(repo.getIndexDDLSync());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		}else {
@@ -756,8 +921,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 		if (envList != null && envList.size() > 0) {
 			envInfo = envList.get(0);
 		}
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		if(envName == null){
 			errors.add("Environment name is missing.");
 		}
@@ -834,6 +998,8 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				} else if (param.equals("SourcePath")) {
 					sb.append(" ").append(envInfo.getMigrationPath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		}else {
@@ -883,8 +1049,7 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 	// ExportRep userid password ODBC RepositoryName EXportFilePath LogFilePath
 	private String exportRepCommandParams(String selectedAction,String envName,
 			List<CommandParams> paramsList, String actionType, HashMap<String, List<String>> errorMap) {
-		Repos repo = reposService.getRepoInfoByEnvNameAndActionType(envName,
-				actionType);
+		Repos repo = reposService.getRepoInfoByEnvName(envName);
 		List<EnvInfo> envList = envService.getAllEnvByEnvName(envName);
 		EnvInfo envInfo = null;
 		if (envList != null && envList.size() > 0) {
@@ -904,14 +1069,14 @@ public class DeploymentOptionsServiceImpl implements DeploymentOptionsService {
 					sb.append(" ").append(repo.getOdbc());
 				} else if (param.equals("RepositoryName")) {
 					sb.append(" ").append(repo.getRepoName());
-				} else if (param.equals("ImportFilePath")) {
-					sb.append(" ").append(envInfo.getMigrationPath());
-				} else if (param.equals("ExportFilePath")) {
+				} else if (param.equals("MigrationFilePath")) {
 					sb.append(" ").append(envInfo.getMigrationPath());
 				} else if (param.equals("LogFilePath")) {
 					sb.append(" ").append(envInfo.getLogFilePath());
 				} else if (param.equals("Siebelpath")) {
 					sb.append(" ").append(envInfo.getSeibelPath());
+				}else{
+					errors.add("command parameter is configured. Verify configuration:"+ param);
 				}
 			}
 		}else {

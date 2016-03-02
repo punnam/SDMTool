@@ -15,6 +15,6 @@ public interface ReposService {
 
 	void modifyRepos(Repos repo);
 
-	Repos getRepoInfoByEnvNameAndActionType(String selectedEnvName, String actionType);
+	Repos getRepoInfoByEnvName(String selectedEnvName);
 
 }

@@ -44,9 +44,9 @@ public class AdmConfigDao extends HibernateDaoSupport{
 	}
 
 
-	public List<AdmConfig> getAdmConfigByEnvNameAndActionType(
-			String selectedEnvName, String admConfigType) {
-		List<AdmConfig> admConfigs = getHibernateTemplate().find("from AdmConfig r where r.envName=? and r.admConfigType=?", selectedEnvName,admConfigType);
+	public List<AdmConfig> getAdmConfigByEnvName(
+			String selectedEnvName) {
+		List<AdmConfig> admConfigs = getHibernateTemplate().find("from AdmConfig r where r.envName=?", selectedEnvName);
 	    return admConfigs;
 
 	}

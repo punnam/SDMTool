@@ -10,6 +10,5 @@ public interface AdmConfigService {
 	public void deleteAdmConfig(AdmConfig admConfig);
 	public AdmConfig createAdmConfig(AdmConfig admConfig, int userId);
 	public void modifyAdmConfig(AdmConfig admConfig);
-	public AdmConfig getAdmConfigByEnvNameAndActionType(
-			String selectedEnvName, String actionType);
+	public AdmConfig getAdmConfigByEnvName(String selectedEnvName);
 }

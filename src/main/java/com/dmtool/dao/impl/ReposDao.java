@@ -43,9 +43,9 @@ public class ReposDao extends HibernateDaoSupport{
 
 
 	public List<Repos> getRepoInfoByEnvNameAndActionType(
-			String selectedEnvName, String actionType) {
+			String selectedEnvName) {
 		@SuppressWarnings("unchecked")
-		List<Repos> repos = getHibernateTemplate().find("from Repos r where r.envName = ? and r.repoType = ?", new Object[]{selectedEnvName,actionType});
+		List<Repos> repos = getHibernateTemplate().find("from Repos r where r.envName = ?", new Object[]{selectedEnvName});
 	    return repos;
 
 	}

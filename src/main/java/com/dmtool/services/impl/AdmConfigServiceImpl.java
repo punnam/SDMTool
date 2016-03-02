@@ -57,10 +57,10 @@ public class AdmConfigServiceImpl  implements AdmConfigService{
 	}
 
 	@Override
-	public AdmConfig getAdmConfigByEnvNameAndActionType(
-			String selectedEnvName, String actionType) {
+	public AdmConfig getAdmConfigByEnvName(
+			String selectedEnvName) {
 		// TODO Auto-generated method stub
-		List<AdmConfig> admConfigList = admConfigDao.getAdmConfigByEnvNameAndActionType(selectedEnvName,actionType);
+		List<AdmConfig> admConfigList = admConfigDao.getAdmConfigByEnvName(selectedEnvName);
 		
 		if(admConfigList != null && admConfigList.size() > 0){
 			return admConfigList.get(0);

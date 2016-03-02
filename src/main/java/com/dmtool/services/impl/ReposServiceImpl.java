@@ -60,11 +60,11 @@ public class ReposServiceImpl implements ReposService{
 	}
 
 	@Override
-	public Repos getRepoInfoByEnvNameAndActionType(
-			String selectedEnvName, String actionType) {
+	public Repos getRepoInfoByEnvName(
+			String selectedEnvName) {
 		// TODO Auto-generated method stub
 		List<Repos> reposList = reposDao.getRepoInfoByEnvNameAndActionType(
-				selectedEnvName, actionType);
+				selectedEnvName);
 		if(reposList != null && reposList.size() > 0){
 			return reposList.get(0);
 		}
