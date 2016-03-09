@@ -42,7 +42,6 @@
 			////alert($scope.allAdmBuildservices);
 			var dataObj = {
 				envName : $scope.selectedItem,
-				actionType : $scope.repoType,
 				deploymentServices : $scope.checkedAdmActions
 			};
 			////alert("Executing processAdmBuildServices:");
@@ -56,7 +55,7 @@
 				var commandExecResults = resultData.result;
 				$scope.allErrors = errors;
 				$scope.commandExecResults = commandExecResults;
-
+				$scope.selectedItem = "Select Environment";
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.

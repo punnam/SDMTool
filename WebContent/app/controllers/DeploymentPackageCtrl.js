@@ -34,10 +34,12 @@
 			//alert("processSelectActionsServices()");
 			//alert($scope.selectedItem);
 			//alert($scope.checkedAdmActions);
+			if($scope.selectedItem == "Select Environment"){
+				$scope.selectedItem = null;
+			}
 			var dataObj = {
 				envName : $scope.selectedItem,
-				deploymentServices : $scope.checkedAdmActions,
-				actionType : 'Export'
+				deploymentServices : $scope.checkedAdmActions
 			};
 			//alert("Executing processAdmBuildServices:");
 			$http({
@@ -50,6 +52,8 @@
 				var commandExecResults = resultData.result;
 				$scope.allErrors = errors;
 				$scope.commandExecResults = commandExecResults;
+				$scope.selectedItem = "Select Environment";
+				//$scope.checkedAdmActions = [];
 			}, function errorCallback(response) {
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
