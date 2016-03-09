@@ -13,7 +13,7 @@
 		$scope.logOut = function() {
 			(function initController() {
 				//reset login status
-				alert('hitting auth')
+				//alert('hitting auth')
 				AuthenticationService.ClearCredentials();
 			})();
 			/**

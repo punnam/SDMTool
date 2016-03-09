@@ -9,7 +9,7 @@
 			$scope.allCommTemplates = response.data;
 		});
 		$scope.dropboxitemselected = function(commTempl) {
-			alert(commTempl.code);
+			//alert(commTempl.code);
 			$scope.selectedItem = commTempl.description;
 			$scope.getCommParamByCode(commTempl);
 			$scope.code=commTempl.code;
