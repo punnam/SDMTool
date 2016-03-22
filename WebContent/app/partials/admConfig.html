@@ -1,7 +1,7 @@
 <div class="container" ng-controller="admConfigCtrl"> 
 <div class="container" > 
 	<h2>Add ADM Configuration</h2>
-	<form class="form-horizontal" role="form">
+	<form class="form-horizontal" role="form" name="admConfigForm" ng-submit="addAdmConfig()" novalidate>
 		<div class="form-group  col-sm-6 col-md-6">
 			<label class="control-label col-sm-6 col-md-6" for="email">Environment:</label>
 			<div class="dropdown col-sm-6 col-md-6">
@@ -29,25 +29,24 @@
 			</div>
 		</div>
 
-		<div class="form-group   col-sm-6 col-md-6">
+		<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : admConfigForm.seibelServer.$invalid && !admConfigForm.seibelServer.$pristine }">
 			<label class="control-label   col-sm-6 col-md-6" for="email">Seibel Server:</label>
 			<div class="  col-sm-6 col-md-6">
 				<input type="text" class="form-control" placeholder="Enter Server Name"
-					name="enterpriseName" ng-model="seibelServer" />
+					name="enterpriseName" ng-model="seibelServer" required/>
 			</div>
 		</div>
-		<div class="form-group  col-sm-6 col-md-6">
+		<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : admConfigForm.sessionId.$invalid && !admConfigForm.sessionId.$pristine }">
 			<label class="control-label   col-sm-6 col-md-6" for="email">Session Id:</label>
 			<div class="col-sm-6 col-md-6">
 				<input type="text" class="form-control"
 					placeholder="Enter Repository Name" name="sessionId"
-					ng-model="sessionId" />
+					ng-model="sessionId" required/>
 			</div>
 		</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default"
-						ng-click="addAdmConfig()">
+					<button type="submit" class="btn btn-default" ng-disabled="admConfigForm.$invalid">
 						<span ng-show="id">Update</span> <span ng-show="!id">Save</span>
 					</button>
 				</div>

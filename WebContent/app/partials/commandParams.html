@@ -1,7 +1,7 @@
 <div class="container" ng-controller="commParamsCtrl">
 	<div class="container">
-		<h2>Add Environment Information</h2>
-		<form class="form-horizontal" role="form">
+		<h2>Add/Update Command Parameters Information</h2>
+		<form class="form-horizontal" role="form" name="cmdParamForm" ng-submit="addCommParamInfo()" novalidate>
 			<div class="dropdown">
 				<button class="btn btn-primary dropdown-toggle" type="button"
 					data-toggle="dropdown">
@@ -13,41 +13,40 @@
 				</ul>
 			</div>    
    
-			<div class="form-group  col-sm-6 col-md-6">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdParamForm.code.$invalid && !cmdParamForm.code.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Code:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Command Code" name="code" ng-model="code" ng-readonly="true"/>
+						placeholder="Enter Command Code" name="code" ng-model="code" ng-readonly="true" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6  col-md-6">
+			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : cmdParamForm.param.$invalid && !cmdParamForm.param.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Param:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Param" name="param"
-						ng-model="param" />
+						ng-model="param" required/>
 				</div>
 			</div>
-			<div class="form-group   col-sm-6 col-md-6">
+			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdParamForm.order.$invalid && !cmdParamForm.order.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Order:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Order" name="order"
-						ng-model="order" />
+						ng-model="order" required/>
 				</div>
 			</div>
-			<div class="form-group   col-sm-6 col-md-6">
+			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdParamForm.description.$invalid && !cmdParamForm.description.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Description:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Description" name="description"
-						ng-model="description" />
+						ng-model="description" required/>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default"
-						ng-click="addCommParamInfo()">
+					<button type="submit" class="btn btn-default" ng-disabled="cmdParamForm.$invalid">
 						<span ng-show="id">Update</span> <span ng-show="!id">Save</span>
 					</button>
 				</div>

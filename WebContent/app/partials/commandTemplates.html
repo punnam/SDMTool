@@ -1,42 +1,41 @@
 <div class="container" ng-controller="commTemplCtrl">
 	<div class="container">
-		<h2>Add Environment Information</h2>
-		<form class="form-horizontal" role="form">
-			<div class="form-group  col-sm-6 col-md-6">
+		<h2>Add/Update Command Template Information</h2>
+		<form class="form-horizontal" role="form" name="cmdTempl" ng-submit="addEnvInfo()" novalidate>
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdTempl.code.$invalid && !cmdTempl.code.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Code:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Command Code" name="code" ng-model="code" />
+						placeholder="Enter Command Code" name="code" ng-model="code" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6  col-md-6">
+			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : cmdTempl.description.$invalid && !cmdTempl.description.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Description:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Description" name="description"
-						ng-model="description" />
+						ng-model="description" required/>
 				</div>
 			</div>
-			<div class="form-group   col-sm-6 col-md-6">
+			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdTempl.command.$invalid && !cmdTempl.command.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Command:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Command" name="command"
-						ng-model="command" />
+						ng-model="command" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdTempl.uiScreenLocation.$invalid && !cmdTempl.uiScreenLocation.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">UI Screen Location:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter UI Screen Location" name="uiScreenLocation"
-						ng-model="uiScreenLocation" />
+						ng-model="uiScreenLocation" required/>
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default"
-						ng-click="addEnvInfo()">
+				<div class="col-sm-offset-2 col-sm-10" >
+					<button type="submit" class="btn btn-default" ng-disabled="cmdTempl.$invalid">
 						<span ng-show="id">Update</span> <span ng-show="!id">Save</span>
 					</button>
 				</div>

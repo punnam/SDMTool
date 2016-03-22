@@ -7,25 +7,38 @@
 		</h3>
 		<div class="row omb_row-sm-offset-3">
 			<div class="col-lg-4 col-md-4">
-				<form class="omb_loginForm" action="" autocomplete="off"
-					method="POST">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="fa fa-user"></i></span>
-						<input type="text" class="form-control" ng-model="username"
-							placeholder="email address">
+				<form name="userForm" ng-submit="logIn()" novalidate>
+					<!-- USER ID -->
+					<div class="form-group"
+						ng-class="{ 'has-error' : userForm.username.$invalid && !userForm.username.$pristine }">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-user"></i></span>
+							<input type="text" name="username" class="form-control"
+								ng-model="username" ng-minlength="3" placeholder="User Id"
+								ng-maxlength="8">
+						</div>
+						<p ng-show="userForm.username.$error.minlength" class="help-block">Username is too short.</p>
+						<p ng-show="userForm.username.$error.maxlength" class="help-block">Username	is too long.</p>
 					</div>
-					<span class="help-block"></span>
 
-					<div class="input-group">
-						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-						<input type="password" class="form-control" ng-model="password"
-							placeholder="Password">
+					<!-- Password -->
+					<div class="form-group"
+						ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+							<input type="password" class="form-control" ng-model="password"
+								placeholder="Password" required>
+						</div>
+						<p
+							ng-show="userForm.password.$invalid && !userForm.password.$pristine"
+							class="help-block">Enter a valid password.</p>
 					</div>
-					<span class="help-block">Password error</span>
 
-					<button class="btn btn-lg btn-primary btn-block" type="button" ng-click="logIn()">Login</button>
-	
+					<button type="submit" class="btn btn-primary"
+						ng-disabled="userForm.$invalid">LogIn</button>
+
 				</form>
+
 			</div>
 		</div>
 		<div class="row omb_row-sm-offset-3">
@@ -36,12 +49,9 @@
 			</div>
 			<div class="col-xs-12 col-sm-3">
 				<p class="omb_forgotPwd">
-				<a href="#forgotPass">Forgot password?</a>
+					<a href="#forgotPass">Forgot password?</a>
 				</p>
 			</div>
 		</div>
 	</div>
-
-
-
 </div>

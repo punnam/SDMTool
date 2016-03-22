@@ -1,7 +1,7 @@
 <div class="container" ng-controller="reposCtrl">
 	<div class="container">
 		<h2>Add Repository Configuration</h2>
-		<form class="form-horizontal" role="form">
+		<form class="form-horizontal" role="form" name="repoForm" ng-submit="addRepos()" novalidate>
 			<div class="form-group  col-sm-6 col-md-6">
 				<label class="control-label col-sm-6 col-md-6" for="email">Environment:</label>
 				<div class="dropdown col-sm-6 col-md-6">
@@ -33,72 +33,72 @@
 					</ul>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.userId.$invalid && !repoForm.userId.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">User
 					Id :</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter User Id"
-						name="name" ng-model="userId" />
+						name="name" ng-model="userId" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6  col-md-6">
+			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : repoForm.password.$invalid && !repoForm.password.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Password:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Password" name="hostName" ng-model="password" />
+						placeholder="Enter Password" name="hostName" ng-model="password" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.tableOwner.$invalid && !repoForm.tableOwner.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Table Owner :</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter User Id"
-						name="name" ng-model="tableOwner" />
+						name="name" ng-model="tableOwner" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6  col-md-6">
+			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : repoForm.hostName.$invalid && !repoForm.hostName.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Table Owner Password: </label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Password" name="hostName" ng-model="tableOwnerPassword" />
+						placeholder="Enter Password" name="hostName" ng-model="tableOwnerPassword" required/>
 				</div>
 			</div>
-			<div class="form-group   col-sm-6 col-md-6">
+			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.odbc.$invalid && !repoForm.odbc.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">ODBC:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter ODBC"
-						name="enterpriseName" ng-model="odbc" />
+						name="enterpriseName" ng-model="odbc" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.repoName.$invalid && !repoForm.repoName.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Repository
 					Name:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Repository Name" name="serverHost"
-						ng-model="repoName" />
+						ng-model="repoName" required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.service.$invalid && !repoForm.service.$pristine }">
 				<label class="control-label  col-sm-6 col-md-6" for="email">Table
 					Space for DDLSynch:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Log File Path" name="service"
-						ng-model="tableDDLSync" " />
+						ng-model="tableDDLSync" " required/>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.indexDDLSync.$invalid && !repoForm.indexDDLSync.$pristine }">
 				<label class="control-label  col-sm-6 col-md-6" for="email">Index
 					Space for DDLSynch:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Log File Path" name="service"
-						ng-model="indexDDLSync" />
+						ng-model="indexDDLSync" required/>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default" ng-click="addRepos()">
+					<button type="submit" class="btn btn-default" ng-disabled="repoForm.$invalid">
 						<span ng-show="id">Update</span> 
 						<span ng-show="!id">Save</span>
 					</button>
