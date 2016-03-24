@@ -18,6 +18,7 @@
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Command Code" name="code" ng-model="code" ng-readonly="true" required/>
+					<p ng-show="cmdParamForm.code.$invalid && !cmdParamForm.code.$pristine" class="help-block">Command is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : cmdParamForm.param.$invalid && !cmdParamForm.param.$pristine }">
@@ -26,6 +27,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Param" name="param"
 						ng-model="param" required/>
+					<p ng-show="cmdParamForm.param.$invalid && !cmdParamForm.param.$pristine" class="help-block">Parameter is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdParamForm.order.$invalid && !cmdParamForm.order.$pristine }">
@@ -34,6 +36,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Order" name="order"
 						ng-model="order" required/>
+					<p ng-show="cmdParamForm.order.$invalid && !cmdParamForm.order.$pristine" class="help-block">Order is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdParamForm.description.$invalid && !cmdParamForm.description.$pristine }">
@@ -42,6 +45,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Description" name="description"
 						ng-model="description" required/>
+					<p ng-show="cmdParamForm.description.$invalid && !cmdParamForm.description.$pristine" class="help-block">Description is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group">

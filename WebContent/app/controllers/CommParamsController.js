@@ -79,7 +79,7 @@
 			$scope.getCommParamByCode(dataObj);
 		};
 		$scope.addCommParamInfo = function() {
-			alert("addCommParamInfo");
+			//alert("addCommParamInfo");
 			var dataObj = {
 				id : $scope.id,
 				code : $scope.code,
@@ -91,7 +91,7 @@
 				createdUser : $scope.createdUser,
 				updatedUser : $scope.updatedUser	
 			};
-			alert(angular.toJson(dataObj, true));
+			//alert(angular.toJson(dataObj, true));
 			$http({
 				data : dataObj,
 				method : 'POST',

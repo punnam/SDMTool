@@ -23,16 +23,16 @@
 				userId : "Punnam",
 				sessionId : "xxxxx",
 			};
-			alert('Punnam register:' + dataObj);
+			//alert('Punnam register:' + dataObj);
 			$http({
 				data : dataObj,
 				method : 'POST',
 				url : 'rest/UserInfo/registerUser/'
 			}).then(function successCallback(response) {
-				alert("Success p");
+				//alert("Success p");
 				if (response.data) {
 					//FlashService.Success('Registration successful', true);
-					alert("Success");
+					//alert("Success");
 					//vm.dataLoading=true;
 					$location.path('/login');
 					$Scope.flash = {

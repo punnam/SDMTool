@@ -17,16 +17,16 @@
 				password : vm.user.password,
 				confirmPassword : vm.user.confirmPassword
 			};
-			alert('Punnam reset Password:' + dataObj);
+			//alert('Punnam reset Password:' + dataObj);
 			$http({
 				data : dataObj,
 				method : 'POST',
 				url : 'rest/UserInfo/resetPassword/'
 			}).then(function successCallback(response) {
-				alert("Success p:"+response.data.data);
+				//alert("Success p:"+response.data.data);
 				if (response.data.data != undefined) {
 					//FlashService.Success('Registration successful', true);
-					alert("Success");
+					//alert("Success");
 					//vm.dataLoading=true;
 					$location.path('/login');
 					$Scope.flash = {
@@ -35,7 +35,7 @@
 						keepAfterLocationChange : 'false'
 					};
 				} else {
-					alert("fail");
+					//alert("fail");
 					//FlashService.Error(response.message);
 					$location.path('/forgotPass');
 					$Scope.flash = {

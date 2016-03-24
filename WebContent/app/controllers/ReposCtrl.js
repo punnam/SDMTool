@@ -107,7 +107,7 @@
 				createdUser : $scope.createdUser,
 				updatedUser : $scope.updatedUser
 			};
-alert(dataObj);
+//alert(dataObj);
 			$http({
 				data : dataObj,
 				method : 'POST',

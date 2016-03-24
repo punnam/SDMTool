@@ -82,7 +82,7 @@ app.run(['$rootScope', '$location', '$cookieStore', '$http',
         	  if (!$rootScope.globals.currentUser)  {
         		  //alert($location.path());
         		  if($location.path() != '/login.html' && $location.path() != '/login' && $location.path() != '/register' && $location.path() != '/forgotPass'){
-        			  alert("Please login.");
+        			 // alert("Please login.");
         			  $location.path('/login');
         		  }	  
               }

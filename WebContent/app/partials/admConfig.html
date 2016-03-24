@@ -33,7 +33,8 @@
 			<label class="control-label   col-sm-6 col-md-6" for="email">Seibel Server:</label>
 			<div class="  col-sm-6 col-md-6">
 				<input type="text" class="form-control" placeholder="Enter Server Name"
-					name="enterpriseName" ng-model="seibelServer" required/>
+					name="seibelServer" ng-model="seibelServer" required/>
+				<p ng-show="admConfigForm.seibelServer.$invalid && !admConfigForm.seibelServer.$pristine" class="help-block">Seibel Server is Required.</p>					
 			</div>
 		</div>
 		<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : admConfigForm.sessionId.$invalid && !admConfigForm.sessionId.$pristine }">
@@ -42,6 +43,7 @@
 				<input type="text" class="form-control"
 					placeholder="Enter Repository Name" name="sessionId"
 					ng-model="sessionId" required/>
+				<p ng-show="admConfigForm.sessionId.$invalid && !admConfigForm.sessionId.$pristine" class="help-block">SessionId is Required.</p>					
 			</div>
 		</div>
 			<div class="form-group">

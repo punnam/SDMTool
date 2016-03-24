@@ -120,7 +120,7 @@
 		init-method="start" destroy-method="stop">
 		<constructor-arg value="-web,-webAllowOthers,-webPort,8082" />
 	</bean>
-	<jdbc:initialize-database data-source="dataSource">
+	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 		<jdbc:script location="classpath:dmtool.sql" />
 	</jdbc:initialize-database>
 </beans>

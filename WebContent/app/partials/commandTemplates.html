@@ -7,6 +7,7 @@
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Command Code" name="code" ng-model="code" required/>
+					<p ng-show="cmdTempl.code.$invalid && !cmdTempl.code.$pristine" class="help-block">Code is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : cmdTempl.description.$invalid && !cmdTempl.description.$pristine }">
@@ -15,6 +16,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Description" name="description"
 						ng-model="description" required/>
+					<p ng-show="cmdTempl.description.$invalid && !cmdTempl.description.$pristine" class="help-block">Description is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdTempl.command.$invalid && !cmdTempl.command.$pristine }">
@@ -23,6 +25,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Command" name="command"
 						ng-model="command" required/>
+					<p ng-show="cmdTempl.command.$invalid && !cmdTempl.command.$pristine" class="help-block">Command is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : cmdTempl.uiScreenLocation.$invalid && !cmdTempl.uiScreenLocation.$pristine }">
@@ -31,6 +34,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter UI Screen Location" name="uiScreenLocation"
 						ng-model="uiScreenLocation" required/>
+					<p ng-show="cmdTempl.uiScreenLocation.$invalid && !cmdTempl.uiScreenLocation.$pristine" class="help-block">UI Screen Location is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group">

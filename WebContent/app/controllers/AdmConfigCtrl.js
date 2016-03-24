@@ -57,7 +57,7 @@
     	};
     	$scope.modifyAdmConfig = function(admConfig) {
 
-    		alert("In modify:" + admConfig.name);
+    		//alert("In modify:" + admConfig.name);
 
     		$scope.id = admConfig.id;
     		$scope.envName = admConfig.envName;
@@ -86,7 +86,7 @@
     			createdUser : $scope.createdUser,
     			updatedUser : $scope.updatedUser
     		};
-    		alert(angular.toJson(dataObj, true));
+    		//alert(angular.toJson(dataObj, true));
     		$http({
     			data : dataObj,
     			method : 'POST',

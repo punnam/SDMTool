@@ -38,35 +38,40 @@
 					Id :</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter User Id"
-						name="name" ng-model="userId" required/>
+						name="userId" ng-model="userId" required/>
+				<p ng-show="repoForm.userId.$invalid && !repoForm.userId.$pristine" class="help-block">User Id is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : repoForm.password.$invalid && !repoForm.password.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Password:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Password" name="hostName" ng-model="password" required/>
+						placeholder="Enter Password" name="password" ng-model="password" required/>
+				<p ng-show="repoForm.password.$invalid && !repoForm.password.$pristine" class="help-block">Password is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.tableOwner.$invalid && !repoForm.tableOwner.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Table Owner :</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter User Id"
-						name="name" ng-model="tableOwner" required/>
+						name="tableOwner" ng-model="tableOwner" required/>
+				<p ng-show="repoForm.tableOwner.$invalid && !repoForm.tableOwner.$pristine" class="help-block">Table Owner is Required.</p>						
 				</div>
 			</div>
-			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : repoForm.hostName.$invalid && !repoForm.hostName.$pristine }">
+			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : repoForm.tableOwnerPassword.$invalid && !repoForm.tableOwnerPassword.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Table Owner Password: </label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Password" name="hostName" ng-model="tableOwnerPassword" required/>
+						placeholder="Enter Password" name="tableOwnerPassword" ng-model="tableOwnerPassword" required/>
+				<p ng-show="repoForm.tableOwnerPassword.$invalid && !repoForm.tableOwnerPassword.$pristine" class="help-block">Table Owner Password is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.odbc.$invalid && !repoForm.odbc.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">ODBC:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter ODBC"
-						name="enterpriseName" ng-model="odbc" required/>
+						name="odbc" ng-model="odbc" required/>
+				<p ng-show="repoForm.odbc.$invalid && !repoForm.odbc.$pristine" class="help-block">ODBC is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.repoName.$invalid && !repoForm.repoName.$pristine }">
@@ -74,17 +79,19 @@
 					Name:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Repository Name" name="serverHost"
+						placeholder="Enter Repository Name" name="repoName"
 						ng-model="repoName" required/>
+				<p ng-show="repoForm.repoName.$invalid && !repoForm.repoName.$pristine" class="help-block">Repo Name is Required.</p>						
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.service.$invalid && !repoForm.service.$pristine }">
+			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.tableDDLSync.$invalid && !repoForm.tableDDLSync.$pristine }">
 				<label class="control-label  col-sm-6 col-md-6" for="email">Table
 					Space for DDLSynch:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Log File Path" name="service"
+						placeholder="Enter Log File Path" name="tableDDLSync"
 						ng-model="tableDDLSync" " required/>
+				<p ng-show="repoForm.tableDDLSync.$invalid && !repoForm.tableDDLSync.$pristine" class="help-block">Table DDL Sync is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : repoForm.indexDDLSync.$invalid && !repoForm.indexDDLSync.$pristine }">
@@ -92,8 +99,9 @@
 					Space for DDLSynch:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Log File Path" name="service"
+						placeholder="Enter Log File Path" name="indexDDLSync"
 						ng-model="indexDDLSync" required/>
+				<p ng-show="repoForm.indexDDLSync.$invalid && !repoForm.indexDDLSync.$pristine" class="help-block">Index DDL Sync is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group">

@@ -8,6 +8,7 @@
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Environment Name" name="name" ng-model="name" required/>
+				<p ng-show="envForm.name.$invalid && !envForm.name.$pristine" class="help-block">Enterprise Name is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : envForm.hostName.$invalid && !envForm.hostName.$pristine }">
@@ -17,6 +18,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Gateway Host Name" name="hostName"
 						ng-model="hostName" required/>
+				<p ng-show="envForm.hostName.$invalid && !envForm.hostName.$pristine" class="help-block">Gateway Host Name is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.enterpriseName.$invalid && !envForm.enterpriseName.$pristine }">
@@ -26,6 +28,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Enterprise Name" name="enterpriseName"
 						ng-model="enterpriseName" required/>
+				<p ng-show="envForm.enterpriseName.$invalid && !envForm.enterpriseName.$pristine" class="help-block">Enterprise Name is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.serverHost.$invalid && !envForm.serverHost.$pristine }">
@@ -35,6 +38,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Server Host" name="serverHost"
 						ng-model="serverHost" required/>
+					<p ng-show="envForm.serverHost.$invalid && !envForm.serverHost.$pristine" class="help-block">Server Host is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.serverName.$invalid && !envForm.serverName.$pristine }">
@@ -44,6 +48,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Server Name" name="serverName"
 						ng-model="serverName" required/>
+					<p ng-show="envForm.serverName.$invalid && !envForm.serverName.$pristine" class="help-block">Server Name is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.service.$invalid && !envForm.service.$pristine }">
@@ -51,6 +56,7 @@
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter Service"
 						name="service" ng-model="service" required/>
+					<p ng-show="envForm.service.$invalid && !envForm.service.$pristine" class="help-block">Service is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.seibelPath.$invalid && !envForm.seibelPath.$pristine }">
@@ -60,6 +66,7 @@
 					<input type="text" class="form-control"
 						placeholder="Enter Seibel Path" name="seibelPath"
 						ng-model="seibelPath" required/>
+					<p ng-show="envForm.seibelPath.$invalid && !envForm.seibelPath.$pristine" class="help-block">Seibel Path is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.migrationPath.$invalid && !envForm.migrationPath.$pristine }">
@@ -67,13 +74,15 @@
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Migration Path" name="migrationPath" ng-model="migrationPath" required/>
+					<p ng-show="envForm.migrationPath.$invalid && !envForm.migrationPath.$pristine" class="help-block">Migration Path is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.logFilePath.$invalid && !envForm.logFilePath.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Log File Path:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Log File Path" name="admPath" ng-model="logFilePath" required/>
+						placeholder="Enter Log File Path" name="logFilePath" ng-model="logFilePath" required/>
+					<p ng-show="envForm.logFilePath.$invalid && !envForm.logFilePath.$pristine" class="help-block">Log File Path is Required.</p>						
 				</div>
 			</div>
 			<div class="form-group">
