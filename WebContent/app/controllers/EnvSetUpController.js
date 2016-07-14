@@ -3,12 +3,21 @@
 
 	angular.module('app').controller('envSetupCtrl', envSetupCtrl);
 	envSetupCtrl.$inject = [ '$scope', '$http', '$filter' ];
-
+	var selectEnvString = "Select Environment";
 	function envSetupCtrl($scope, $http, $filter) {
 		$http.get("rest/getAllenvs/").success(function(response) {
 			$scope.allEnvs = response.data;
 		});
+				
+		$scope.envName = selectEnvString;
+		$scope.dropboxitemselected = function(item) {
+			$scope.envName = item;
+		}
+
+		$scope.showEnvTxtBox = false;
 		var clearFields = function() {
+			$scope.showEnvTxtBox = false;
+			$scope.envName = "Select Environment";
 			$scope.name = null;
 			$scope.desc = null;
 			$scope.id = null;
@@ -25,6 +34,8 @@
 			$scope.updatedTime = null;
 			$scope.createdUser = null;
 			$scope.updatedUser = null;
+			$scope.envForm.$setPristine(true);
+			
 		}
 		$scope.deleteEnvInfo = function(envObj) {
 			$http({
@@ -43,7 +54,14 @@
 			});
 		};
 		$scope.modifyEnvInfo = function(envObj) {
+			$scope.showEnvTxtBox = false;
 			$scope.name = envObj.name;
+			alert($scope.name);
+			if($scope.name != "" && $scope.name!= null ){
+				$scope.envName = envObj.name;
+			}else{
+				$scope.envName = "Select Environment";
+			}	
 			$scope.desc = envObj.desc;
 			$scope.id = envObj.id;
 			$scope.hostName = envObj.hostName;
@@ -66,7 +84,7 @@
 		};
 		$scope.addEnvInfo = function() {
 			var dataObj = {
-				name : $scope.name,
+				name : $scope.envName,
 				desc:$scope.name,
 				id : $scope.id,
 				hostName : $scope.hostName,
@@ -94,7 +112,26 @@
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
 			});
-		}
+		};
+		$scope.addNewEnvName = function() {
+			alert('Punnam');
+			$scope.showEnvTxtBox = true;
+
+		};
+		$scope.showExisitingEnvNames = function() {
+			alert('Punnam');
+			$scope.showEnvTxtBox = false;
+		};
+		$scope.submitForm = function(isValid) {
+
+		    // check to make sure the form is completely valid
+		    if (isValid) {
+		      alert('our form is amazing');
+		    }else{
+		    	alert('our form is NOT NOT amazing');
+		    }
+
+		 };
 	}
 	;
 

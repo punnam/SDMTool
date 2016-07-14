@@ -1,93 +1,158 @@
 <div class="container" ng-controller="envSetupCtrl">
 	<div class="container">
 		<h2>Add Environment Information</h2>
-		<form class="form-horizontal" role="form" name="envForm" ng-submit="addEnvInfo()" novalidate>
-			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.name.$invalid && !envForm.name.$pristine }">
+		<form class="form-horizontal" role="form" name="envForm"
+			ng-submit="addEnvInfo()" novalidate>
+			<div class="form-group  col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.name.$invalid && !envForm.name.$pristine }"
+				ng-show="showEnvTxtBox">
 				<label class="control-label col-sm-6 col-md-6" for="email">Environment
 					Name:</label>
 				<div class="col-sm-6 col-md-6">
-					<input type="text" class="form-control"
-						placeholder="Enter Environment Name" name="name" ng-model="name" required/>
-				<p ng-show="envForm.name.$invalid && !envForm.name.$pristine" class="help-block">Enterprise Name is Required.</p>						
+					<span> <input type="text" class="form-control"
+						placeholder="Enter Environment Name" name="name" ng-model="envName"/>
+						<button type="button" class="btn btn-default"
+							aria-label="Left Align" ng-click="showExisitingEnvNames()">
+							<span ng-show="showEnvTxtBox">Show Exisitng Env.</span>
+						</button>
+					</span>
+ 
+					<p ng-show="showEnvTxtBox && envForm.name.$invalid && !envForm.name.$pristine"
+						class="help-block">Enterprise Name is Required.</p>
+	
 				</div>
 			</div>
-			<div class="form-group  col-sm-6  col-md-6" ng-class="{ 'has-error' : envForm.hostName.$invalid && !envForm.hostName.$pristine }">
+			<div class="form-group  col-sm-6 col-md-6" ng-show="!showEnvTxtBox">
+				<label class="control-label col-sm-6 col-md-6" for="email">Environment
+						Name:</label>
+				<div class="dropdown col-sm-6 col-md-6">
+					<div class="input-group">
+						<button class="btn btn-primary dropdown-toggle" type="button"
+							data-toggle="dropdown">
+							{{envName}} <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu form-group  col-sm-6 col-md-6">
+							<li ng-repeat="env in allEnvs"><a
+								ng-click="dropboxitemselected(env.name)" ng-model="envName">{{env.name}}</a>
+							</li>
+						</ul>
+						<span>
+							<button type="button" class="btn btn-default"
+								aria-label="Left Align" ng-click="addNewEnvName()">
+							</button>
+						</span>
+						<!-- 
+						<p ng-show="!showEnvTxtBox && envForm.name.$invalid && !envForm.name.$pristine"
+							class="help-block">Enterprise Name is Required.</p>
+						-->							
+					</div>
+				</div>
+			</div>
+			<div class="form-group  col-sm-6  col-md-6"
+				ng-class="{ 'has-error' : envForm.hostName.$invalid && !envForm.hostName.$pristine }">
 				<label class="control-label col-sm-6 col-md-6" for="email">Gateway
 					Host Name:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Gateway Host Name" name="hostName"
-						ng-model="hostName" required/>
-				<p ng-show="envForm.hostName.$invalid && !envForm.hostName.$pristine" class="help-block">Gateway Host Name is Required.</p>						
+						ng-model="hostName" required />
+					<p
+						ng-show="envForm.hostName.$invalid && !envForm.hostName.$pristine"
+						class="help-block">Gateway Host Name is Required.</p>
 				</div>
 			</div>
-			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.enterpriseName.$invalid && !envForm.enterpriseName.$pristine }">
+			<div class="form-group   col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.enterpriseName.$invalid && !envForm.enterpriseName.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Enterprise
 					Name:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Enterprise Name" name="enterpriseName"
-						ng-model="enterpriseName" required/>
-				<p ng-show="envForm.enterpriseName.$invalid && !envForm.enterpriseName.$pristine" class="help-block">Enterprise Name is Required.</p>						
+						ng-model="enterpriseName" required />
+					<p
+						ng-show="envForm.enterpriseName.$invalid && !envForm.enterpriseName.$pristine"
+						class="help-block">Enterprise Name is Required.</p>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.serverHost.$invalid && !envForm.serverHost.$pristine }">
+			<div class="form-group  col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.serverHost.$invalid && !envForm.serverHost.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Server
 					Host:</label>
 				<div class="col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Server Host" name="serverHost"
-						ng-model="serverHost" required/>
-					<p ng-show="envForm.serverHost.$invalid && !envForm.serverHost.$pristine" class="help-block">Server Host is Required.</p>						
+						ng-model="serverHost" required />
+					<p
+						ng-show="envForm.serverHost.$invalid && !envForm.serverHost.$pristine"
+						class="help-block">Server Host is Required.</p>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.serverName.$invalid && !envForm.serverName.$pristine }">
+			<div class="form-group  col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.serverName.$invalid && !envForm.serverName.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Server
 					Name:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Server Name" name="serverName"
-						ng-model="serverName" required/>
-					<p ng-show="envForm.serverName.$invalid && !envForm.serverName.$pristine" class="help-block">Server Name is Required.</p>						
+						ng-model="serverName" required />
+					<p
+						ng-show="envForm.serverName.$invalid && !envForm.serverName.$pristine"
+						class="help-block">Server Name is Required.</p>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.service.$invalid && !envForm.service.$pristine }">
+			<div class="form-group  col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.service.$invalid && !envForm.service.$pristine }">
 				<label class="control-label  col-sm-6 col-md-6" for="email">Service:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control" placeholder="Enter Service"
-						name="service" ng-model="service" required/>
-					<p ng-show="envForm.service.$invalid && !envForm.service.$pristine" class="help-block">Service is Required.</p>						
+						name="service" ng-model="service" required />
+					<p ng-show="envForm.service.$invalid && !envForm.service.$pristine"
+						class="help-block">Service is Required.</p>
 				</div>
 			</div>
-			<div class="form-group   col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.seibelPath.$invalid && !envForm.seibelPath.$pristine }">
+			<div class="form-group   col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.seibelPath.$invalid && !envForm.seibelPath.$pristine }">
 				<label class="control-label   col-sm-6 col-md-6" for="email">Seibel
 					Path:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
 						placeholder="Enter Seibel Path" name="seibelPath"
-						ng-model="seibelPath" required/>
-					<p ng-show="envForm.seibelPath.$invalid && !envForm.seibelPath.$pristine" class="help-block">Seibel Path is Required.</p>						
+						ng-model="seibelPath" required />
+					<p
+						ng-show="envForm.seibelPath.$invalid && !envForm.seibelPath.$pristine"
+						class="help-block">Seibel Path is Required.</p>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.migrationPath.$invalid && !envForm.migrationPath.$pristine }">
-				<label class="control-label   col-sm-6 col-md-6" for="email">Migration Path:</label>
+			<div class="form-group  col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.migrationPath.$invalid && !envForm.migrationPath.$pristine }">
+				<label class="control-label   col-sm-6 col-md-6" for="email">Migration
+					Path:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Migration Path" name="migrationPath" ng-model="migrationPath" required/>
-					<p ng-show="envForm.migrationPath.$invalid && !envForm.migrationPath.$pristine" class="help-block">Migration Path is Required.</p>						
+						placeholder="Enter Migration Path" name="migrationPath"
+						ng-model="migrationPath" required />
+					<p
+						ng-show="envForm.migrationPath.$invalid && !envForm.migrationPath.$pristine"
+						class="help-block">Migration Path is Required.</p>
 				</div>
 			</div>
-			<div class="form-group  col-sm-6 col-md-6" ng-class="{ 'has-error' : envForm.logFilePath.$invalid && !envForm.logFilePath.$pristine }">
-				<label class="control-label   col-sm-6 col-md-6" for="email">Log File Path:</label>
+			<div class="form-group  col-sm-6 col-md-6"
+				ng-class="{ 'has-error' : envForm.logFilePath.$invalid && !envForm.logFilePath.$pristine }">
+				<label class="control-label   col-sm-6 col-md-6" for="email">Log
+					File Path:</label>
 				<div class="  col-sm-6 col-md-6">
 					<input type="text" class="form-control"
-						placeholder="Enter Log File Path" name="logFilePath" ng-model="logFilePath" required/>
-					<p ng-show="envForm.logFilePath.$invalid && !envForm.logFilePath.$pristine" class="help-block">Log File Path is Required.</p>						
+						placeholder="Enter Log File Path" name="logFilePath"
+						ng-model="logFilePath" required />
+					<p
+						ng-show="envForm.logFilePath.$invalid && !envForm.logFilePath.$pristine"
+						class="help-block">Log File Path is Required.</p>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default" ng-disabled="envForm.$invalid">
+					<button type="submit" class="btn btn-default"
+						ng-disabled="envForm.$invalid">
 						<span ng-show="id">Update</span> <span ng-show="!id">Save</span>
 					</button>
 				</div>
