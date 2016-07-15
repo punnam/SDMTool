@@ -114,24 +114,12 @@
 			});
 		};
 		$scope.addNewEnvName = function() {
-			alert('Punnam');
 			$scope.showEnvTxtBox = true;
 
 		};
 		$scope.showExisitingEnvNames = function() {
-			alert('Punnam');
 			$scope.showEnvTxtBox = false;
 		};
-		$scope.submitForm = function(isValid) {
-
-		    // check to make sure the form is completely valid
-		    if (isValid) {
-		      alert('our form is amazing');
-		    }else{
-		    	alert('our form is NOT NOT amazing');
-		    }
-
-		 };
 	}
 	;
 
